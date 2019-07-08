@@ -7,7 +7,7 @@ import com.dumbpug.jfc8.JFC8;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width     = 512;
+		config.width     = 768;
 		config.height    = 512;
 		config.resizable = false;
 		new LwjglApplication(new JFC8(), config);

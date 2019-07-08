@@ -3,7 +3,6 @@ package com.dumbpug.jfc8.font;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.dumbpug.jfc8.Constants;
 
 /**
  * The provider of application fonts.

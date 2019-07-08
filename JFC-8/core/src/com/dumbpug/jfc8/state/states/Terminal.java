@@ -30,7 +30,26 @@ public class Terminal extends State {
     /**
      * This string contains text we can't edit (eg previously executed commands/command output).
      */
-    String outputGarbage = "hello \nto \nyou \n";
+    String outputGarbage = "JFC\n\n" +
+            "\tfunction  enterKeyPress() {\n" +
+            "\t\t// Execute current command (if there is one)\n" +
+            "\t\tif(currentInput != \"\") {\n" +
+            "\t\t\t// Process the input as a command\n" +
+            "\t\t\tString commandOutput = commandProcessor.process(currentInput);\n" +
+            "\t\t\t// Add the current command to the garbage pile with a newline\n" +
+            "\t\t\toutputGarbage += \"> \" + currentInput + \"\\n\";\n" +
+            "\t\t\t// Append any output from the command to the garbage pile\n" +
+            "\t\t\tif(commandOutput != null) {\n" +
+            "\t\t\t\toutputGarbage += commandOutput + \"\\n\";\n" +
+            "\t\t\t}\n" +
+            "\t\t\t// If we have a 'clear' command then we can handle that here. clear the terminal\n" +
+            "\t\t\tif(currentInput.trim().toLowerCase().equals(\"clear\")) {\n" +
+            "\t\t\t\toutputGarbage = \"\";\n" +
+            "\t\t\t}\n" +
+            "\t\t\t// Reset the current input\n" +
+            "\t\t\tcurrentInput = \"\";\n" +
+            "\t\t}\n" +
+            "\t}";
     /**
      * This string is the current line in the shell, this text we CAN edit.
      */
@@ -51,8 +70,8 @@ public class Terminal extends State {
         terminalTextArea.setBounds(
                 Constants.TERMINAL_MARGIN_SIZE,
                 Constants.TERMINAL_MARGIN_SIZE,
-                Gdx.graphics.getWidth() - (Constants.TERMINAL_MARGIN_SIZE * 2),
-                Gdx.graphics.getHeight() - (Constants.TERMINAL_MARGIN_SIZE * 2)
+                Gdx.graphics.getWidth() - (Constants.TERMINAL_MARGIN_SIZE * 3),
+                Gdx.graphics.getHeight() - (Constants.TERMINAL_MARGIN_SIZE * 3)
         );
         terminalTextArea.setFocusTraversal(true);
         terminalStage.addActor(terminalTextArea);
