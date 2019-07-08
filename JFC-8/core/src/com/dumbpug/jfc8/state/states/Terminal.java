@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.dumbpug.jfc8.Constants;
 import com.dumbpug.jfc8.font.FontProvider;
-import com.dumbpug.jfc8.font.FontType;
 import com.dumbpug.jfc8.state.State;
 import com.dumbpug.jfc8.terminal.CommandProcessor;
 
@@ -30,7 +30,7 @@ public class Terminal extends State {
     /**
      * This string contains text we can't edit (eg previously executed commands/command output).
      */
-    String outputGarbage = "hello";
+    String outputGarbage = "hello \nto \nyou \n";
     /**
      * This string is the current line in the shell, this text we CAN edit.
      */
@@ -41,14 +41,19 @@ public class Terminal extends State {
      */
     public Terminal() {
         // Set the text field style.
-        TextField.TextFieldStyle txtStyle = new TextField.TextFieldStyle();
-        txtStyle.font                     = FontProvider.getFont(FontType.SHELL_FONT);
-        txtStyle.fontColor                = Color.WHITE;
+        TextField.TextFieldStyle textStyle = new TextField.TextFieldStyle();
+        textStyle.font                     = FontProvider.getFont(Constants.TERMINAL_FONT_SIZE);
+        textStyle.fontColor                = Color.WHITE;
 
         // Create the terminal text area.
         terminalStage    = new Stage();
-        terminalTextArea = new TextArea("", txtStyle);
-        terminalTextArea.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        terminalTextArea = new TextArea("", textStyle);
+        terminalTextArea.setBounds(
+                Constants.TERMINAL_MARGIN_SIZE,
+                Constants.TERMINAL_MARGIN_SIZE,
+                Gdx.graphics.getWidth() - (Constants.TERMINAL_MARGIN_SIZE * 2),
+                Gdx.graphics.getHeight() - (Constants.TERMINAL_MARGIN_SIZE * 2)
+        );
         terminalTextArea.setFocusTraversal(true);
         terminalStage.addActor(terminalTextArea);
     }
@@ -67,7 +72,7 @@ public class Terminal extends State {
         terminalTextArea.setText("");
 
         // We must use 'appendText' to force focus to bottom of terminal
-        terminalTextArea.appendText(outputGarbage + ">> " + currentInput);
+        terminalTextArea.appendText(outputGarbage + "> " + currentInput);
         terminalTextArea.act(Gdx.graphics.getDeltaTime());
     }
 
