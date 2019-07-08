@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.state.StateManager;
 import com.dumbpug.jfc8.state.states.Splash;
 import com.dumbpug.jfc8.state.states.Terminal;
@@ -23,6 +24,9 @@ public class JFC8 extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		// Load the application fonts.
+		FontProvider.loadFonts();
+
 		// Create the state manager and add the application states.
 		stateManager = new StateManager();
 		stateManager.addState(new Splash());
