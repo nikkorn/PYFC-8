@@ -30,7 +30,7 @@ public class Terminal extends State {
     /**
      * This string contains text we can't edit (eg previously executed commands/command output).
      */
-    String outputGarbage = "JFC\n\n" +
+    String outputGarbage = "[RED]J[RED]FC\n\n" +
             "\tfunction  enterKeyPress() {\n" +
             "\t\t// Execute current command (if there is one)\n" +
             "\t\tif(currentInput != \"\") {\n" +

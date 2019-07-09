@@ -24,6 +24,8 @@ public class FontProvider {
         // Generate and return the font.
         BitmapFont font = generator.generateFont(parameter);
 
+        font.getData().markupEnabled = true;
+
         generator.dispose();
 
         // Return the font.
