@@ -43,7 +43,7 @@ public class Line {
         }
 
         // Get rid of the chopped columns.
-        for (int columnIndex = this.getColumnCount() - 1; columnIndex > column; columnIndex--) {
+        for (int columnIndex = this.getColumnCount() - 1; columnIndex >= column; columnIndex--) {
             this.columns.remove(columnIndex);
         }
 

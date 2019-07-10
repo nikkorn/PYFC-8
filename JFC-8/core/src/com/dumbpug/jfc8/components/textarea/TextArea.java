@@ -95,7 +95,7 @@ public class TextArea {
         if (targetColumnNumber < 0) {
             targetColumnNumber = 0;
         } else if (targetColumnNumber > targetLine.getColumnCount()) {
-            targetColumnNumber = targetLine.getColumnCount() - 1;
+            targetColumnNumber = targetLine.getColumnCount();
         }
 
         // Set the cursor column number.

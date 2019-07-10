@@ -6,9 +6,17 @@ import com.dumbpug.jfc8.components.textarea.TextArea;
 public class TextAreaTests {
 
     public static void main(String[] args) {
+        SingleLineCursorTraversal();
+        MultiLineCursorTraversal();
+        BreakExistingLine();
+    }
+
+    public static void SingleLineCursorTraversal() {
         TextArea textArea = new TextArea(0, 0, 16,12, 10, 30);
 
         textArea.setText("My favourite thing is cake!");
+
+        //textArea.insertText(" is cake!");
 
         // Move back a bit.
         textArea.moveCursor(CursorMovement.LEFT);
@@ -25,6 +33,30 @@ public class TextAreaTests {
 
         // Stick in some text at the cursor position.
         textArea.insertText("not actually ");
+
+        System.out.println(textArea.getText());
+    }
+
+    public static void MultiLineCursorTraversal() {
+        TextArea textArea = new TextArea(0, 0, 16,12, 10, 30);
+
+        textArea.setText("This is line one!\nThis is line nine!\nThis is the last one, line three!");
+
+        textArea.moveCursor(CursorMovement.UP);
+
+        textArea.insertText(" or is it?");
+
+        System.out.println(textArea.getText());
+    }
+
+    private static void BreakExistingLine() {
+        TextArea textArea = new TextArea(0, 0, 16,12, 10, 30);
+
+        textArea.setText("This is line 1!\nThis is line 2!This is line 3!\nThis is line 4!");
+
+        textArea.moveCursor(CursorMovement.UP);
+
+        textArea.insertText("\nThis is line 2.5!\n");
 
         System.out.println(textArea.getText());
     }
