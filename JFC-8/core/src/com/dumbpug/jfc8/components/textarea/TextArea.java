@@ -1,15 +1,20 @@
 package com.dumbpug.jfc8.components.textarea;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dumbpug.jfc8.palette.Colour;
 import java.util.ArrayList;
-
-import javax.xml.stream.events.Characters;
 
 /**
  * A text area that supports terminal and code editor type functionality.
  */
 public class TextArea {
+    /**
+     * The text area configuration.
+     */
+    private TextAreaConfiguration configuration = new TextAreaConfiguration();
     /**
      * The number of rows and columns.
      */
@@ -66,6 +71,21 @@ public class TextArea {
 
         // Add the initial empty line.
         this.lines.add(new Line());
+    }
+
+    /**
+     * Creates a new instance of the TextArea class.
+     * @param x The x position of the text area.
+     * @param y The y position of the text area.
+     * @param lineHeight The height of each line.
+     * @param columnWidth The width of each column.
+     * @param lines The height of the area as a total number of lines.
+     * @param columns The width of the area as a total number of columns.
+     * @param config The additional text area configuration.
+     */
+    public TextArea(float x, float y, float lineHeight, float columnWidth, int lines, int columns, TextAreaConfiguration config) {
+        this(x, y, lineHeight,columnWidth, lines, columns);
+        this.configuration = config;
     }
 
     /**
@@ -217,9 +237,29 @@ public class TextArea {
     /**
      * Draw the text area.
      * @param batch The sprite batch.
+     * @param shapeRenderer The shape renderer.
      * @param font The font to use in drawing the text within the text area.
      */
-    public void draw(SpriteBatch batch, BitmapFont font) {
-        // Draw the text area.
+    public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, BitmapFont font) {
+        // Draw the text area background if one is defined.
+        if (this.configuration.backgroundColour != Colour.NOT_SET) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+            // Set the background colour. TODO This should eventually map to the colour defined in the config.
+            shapeRenderer.setColor(Color.NAVY);
+
+            // Draw the background.
+            shapeRenderer.rect(x, y, width, height);
+
+            shapeRenderer.end();
+        }
+
+        // TODO Draw the line number bar background.
+
+        // TODO Draw cursor and selection.
+
+        // TODO Draw the line numbers.
+
+        // TODO Draw the text.
     }
 }

@@ -15,7 +15,7 @@ public class FontProvider {
      * @return The font of the specified type.
      */
     public static BitmapFont getFont(int size) {
-        FreeTypeFontGenerator generator                       = new FreeTypeFontGenerator(Gdx.files.internal("fonts/kongtext.ttf"));
+        FreeTypeFontGenerator generator                       = new FreeTypeFontGenerator(Gdx.files.internal("fonts/press-start-2p.regular.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
         // Set the size of the font.

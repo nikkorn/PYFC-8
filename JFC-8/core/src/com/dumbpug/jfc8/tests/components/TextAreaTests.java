@@ -14,9 +14,9 @@ public class TextAreaTests {
     public static void SingleLineCursorTraversal() {
         TextArea textArea = new TextArea(0, 0, 16,12, 10, 30);
 
-        textArea.setText("My favourite thing is cake!");
+        textArea.setText("My favourite thing");
 
-        //textArea.insertText(" is cake!");
+        textArea.insertText(" is cake!");
 
         // Move back a bit.
         textArea.moveCursor(CursorMovement.LEFT);

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.jfc8.state.StateManager;
+import com.dumbpug.jfc8.state.states.ScriptEditor;
 import com.dumbpug.jfc8.state.states.Splash;
 import com.dumbpug.jfc8.state.states.Terminal;
 
@@ -27,9 +28,10 @@ public class JFC8 extends ApplicationAdapter {
 		stateManager = new StateManager();
 		stateManager.addState(new Splash());
 		stateManager.addState(new Terminal());
+		stateManager.addState(new ScriptEditor());
 
 		// Set the initial application state.
-		stateManager.setCurrentState("SPLASH");
+		stateManager.setCurrentState("SCRIPT_EDITOR");
 
 		// Create the application sprite batch.
 		batch = new SpriteBatch();
