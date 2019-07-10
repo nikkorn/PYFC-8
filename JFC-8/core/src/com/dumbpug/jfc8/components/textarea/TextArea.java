@@ -47,6 +47,10 @@ public class TextArea {
      * The line offset between the first line and the first visible line in the text area.
      */
     private int lineOffset = 0;
+    /**
+     * The column offset between the first column and the first visible column in the text area.
+     */
+    private int columnOffset = 0;
 
     /**
      * Creates a new instance of the TextArea class.
@@ -109,6 +113,8 @@ public class TextArea {
         // Set the cursor line number.
         this.cursor.setLineNumber(this.lines.indexOf(targetLine));
 
+        // TODO Update the lineOffset value to keep the cursor in the current view.
+
         int targetColumnNumber = column;
 
         // Try to get a valid column position, bounded by the actual number of columns in the target line.
@@ -120,6 +126,8 @@ public class TextArea {
 
         // Set the cursor column number.
         this.cursor.setColumnNumber(targetColumnNumber);
+
+        // TODO Update the columnOffset value to keep the cursor in the current view.
     }
 
     /**
@@ -242,11 +250,11 @@ public class TextArea {
      */
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, BitmapFont font) {
         // Draw the text area background if one is defined.
-        if (this.configuration.backgroundColour != Colour.NOT_SET) {
+        if (this.configuration.backgroundColour != null /* TODO Replace with Colour.NOT_SET */) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
             // Set the background colour. TODO This should eventually map to the colour defined in the config.
-            shapeRenderer.setColor(Color.NAVY);
+            shapeRenderer.setColor(this.configuration.backgroundColour);
 
             // Draw the background.
             shapeRenderer.rect(x, y, width, height);
@@ -256,10 +264,27 @@ public class TextArea {
 
         // TODO Draw the line number bar background.
 
-        // TODO Draw cursor and selection.
+        // TODO Draw the selection.
+
+        // Draw the cursor.
+        this.fillColumn(this.cursor.getLineNumber(), this.cursor.getColumnNumber(), this.configuration.cursorColour, shapeRenderer);
 
         // TODO Draw the line numbers.
 
         // TODO Draw the text.
+    }
+
+    /**
+     * Fill a single column on a line with a colour.
+     * @param shapeRenderer The shape renderer.
+     */
+    private void fillColumn(int line, int column, Color colour, ShapeRenderer shapeRenderer) {
+        float columnX =  x + (column * columnWidth); // TODO Account for columnOffset.
+        float columnY = (y + height) - ((line + 1) * lineHeight); // TODO Account for columnOffset.
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(colour);
+        shapeRenderer.rect(columnX, columnY, columnWidth, lineHeight);
+        shapeRenderer.end();
     }
 }
