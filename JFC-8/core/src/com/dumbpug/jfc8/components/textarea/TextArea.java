@@ -2,8 +2,10 @@ package com.dumbpug.jfc8.components.textarea;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Align;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
 
@@ -273,7 +275,7 @@ public class TextArea {
         batch.end();
 
         // Draw the text area background if one is defined.
-        if (this.configuration.backgroundColour != null /* TODO Replace with Colour.NOT_SET */) {
+        if (this.configuration.backgroundColour == null /* TODO Replace with Colour.NOT_SET */) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Palette.getColour(this.configuration.backgroundColour)); // TODO This should eventually map to the colour defined in the config.
             shapeRenderer.rect(x, y, width, height);
@@ -325,8 +327,12 @@ public class TextArea {
                     continue;
                 }
 
-                float columnX = x + ((columnIndex - columnOffset) * columnWidth);
-                float columnY = y + (lineCount - (lineIndex - lineOffset)) * lineHeight;
+                // Create a glyph layout so we can get the actual size of the character we are about to draw.
+                GlyphLayout glyphLayout = new GlyphLayout();
+                glyphLayout.setText(font, String.valueOf(character));
+
+                float columnX = x + ((columnIndex - columnOffset) * columnWidth) + (columnWidth / 2 - glyphLayout.width / 2);
+                float columnY = y + ((lineCount - (lineIndex - lineOffset)) * lineHeight) - (lineHeight / 2 - glyphLayout.height / 2);
 
                 // Draw the character!
                 font.draw(batch, String.valueOf(character), columnX, columnY);
