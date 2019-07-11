@@ -49,8 +49,8 @@ public class ScriptEditor extends State {
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE,
-                29,
-                45
+                15,
+                15
         );
 
         // Create the input processor for this state.

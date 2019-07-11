@@ -115,8 +115,6 @@ public class TextArea {
         // Set the cursor line number.
         this.cursor.setLineNumber(this.lines.indexOf(targetLine));
 
-        // TODO Update the lineOffset value to keep the cursor in the current view.
-
         int targetColumnNumber = column;
 
         // Try to get a valid column position, bounded by the actual number of columns in the target line.
@@ -129,7 +127,8 @@ public class TextArea {
         // Set the cursor column number.
         this.cursor.setColumnNumber(targetColumnNumber);
 
-        // TODO Update the columnOffset value to keep the cursor in the current view.
+        // The cursor may have moved out of the visible portion of the text area, get it back in view.
+        this.focusCursor();
     }
 
     /**
@@ -155,6 +154,25 @@ public class TextArea {
                 break;
             default:
                 throw new RuntimeException("unknown cursor movement: " + movement);
+        }
+    }
+
+    /**
+     * Attempt to focus on the cursor.
+     */
+    public void focusCursor() {
+        // Modify line offset so that the cursor stays in area vertically.
+        if (this.cursor.getLineNumber() < lineOffset) {
+            lineOffset = this.cursor.getLineNumber();
+        } else if (this.cursor.getLineNumber() + 1 > lineOffset + lineCount) {
+            lineOffset = (this.cursor.getLineNumber() + 1) - lineCount;
+        }
+
+        // Modify column offset so cursor is in area.
+        if (this.cursor.getColumnNumber() < columnOffset) {
+            columnOffset = this.cursor.getColumnNumber();
+        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + columnCount) {
+            columnOffset = (this.cursor.getColumnNumber() + 1) - columnCount;
         }
     }
 
@@ -267,7 +285,7 @@ public class TextArea {
         // TODO Draw the selection.
 
         // Draw the cursor.
-        this.fillColumn(this.cursor.getLineNumber(), this.cursor.getColumnNumber(), Palette.getColour(this.configuration.cursorColour), shapeRenderer);
+        this.fillColumn(this.cursor.getLineNumber() - lineOffset, this.cursor.getColumnNumber() - columnOffset, Palette.getColour(this.configuration.cursorColour), shapeRenderer);
 
         // TODO Draw the line numbers.
 
