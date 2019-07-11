@@ -208,7 +208,7 @@ public class TextArea {
             Line targetLine = this.lines.get(this.cursor.getLineNumber());
 
             // Check whether the current character is a new-line character.
-            if (character == '\n') {
+            if (character == '\n' || character == '\r') {
                 // Gather any columns that follow the cursor on the current line.
                 ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
 

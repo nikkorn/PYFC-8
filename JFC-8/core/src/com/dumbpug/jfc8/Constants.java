@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 
 public class Constants {
     //===========================================================
-    // GENERAL
+    // INPUT
     //===========================================================
-    public static final String GENERAL_VALID_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<>:;[]{}=+-_/?!\"£$%^&*())#~\\|";
+    public static final String INPUT_VALID_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<>:;[]{}=+-_/?!\"£$%^&*())#~\\|\n\r";
 
     //===========================================================
     // DISPLAY
