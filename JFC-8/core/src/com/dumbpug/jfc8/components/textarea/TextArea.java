@@ -205,13 +205,7 @@ public class TextArea {
      * @return The text area text.
      */
     public String getText() {
-        String value = "";
-
-        for (Line line : this.lines) {
-            value += (line.getText() + "\n");
-        }
-
-        return value;
+        return this.text;
     }
 
     /**
@@ -269,8 +263,12 @@ public class TextArea {
 
         // Update the text area text.
         this.text = "";
-        for (Line line : this.lines) {
-            this.text += (line.getText() + "\n");
+        for (int lineIndex = 0; lineIndex< this.lines.size(); lineIndex++) {
+            this.text += this.lines.get(lineIndex).getText();
+
+            if (lineIndex != this.lines.size() - 1) {
+                this.text += "\n";
+            }
         }
     }
 

@@ -6,7 +6,7 @@ public class Constants {
     //===========================================================
     // INPUT
     //===========================================================
-    public static final String INPUT_VALID_CHARACTERS               = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<>:;.,'[]{}=+-_/?!\"£$%^&*())#~\\|\n\r ";
+    public static final String INPUT_VALID_CHARACTERS               = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<>:;.,'[]{}=+-_/?!\"£$%^&*())#~\\|\n\r\t ";
 
     //===========================================================
     // DISPLAY
