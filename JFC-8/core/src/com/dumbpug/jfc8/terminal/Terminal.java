@@ -1,4 +1,4 @@
-package com.dumbpug.jfc8.state.states;
+package com.dumbpug.jfc8.terminal;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.dumbpug.jfc8.Constants;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.state.State;
-import com.dumbpug.jfc8.terminal.CommandProcessor;
 
 /**
  * The terminal state of the application.

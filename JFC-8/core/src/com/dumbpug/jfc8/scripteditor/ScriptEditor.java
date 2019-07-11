@@ -1,8 +1,9 @@
-package com.dumbpug.jfc8.state.states;
+package com.dumbpug.jfc8.scripteditor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.Constants;
@@ -10,7 +11,6 @@ import com.dumbpug.jfc8.components.textarea.TextArea;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
-import com.dumbpug.jfc8.scripteditor.ScriptEditorInputProcessor;
 import com.dumbpug.jfc8.state.State;
 
 /**
@@ -34,6 +34,10 @@ public class ScriptEditor extends State {
      * The editor text area.
      */
     private TextArea editorTextArea;
+    /**
+     * The background sprite.
+     */
+    private Sprite background;
 
     /**
      * Create a new instance of the ScriptEditor class.
@@ -49,12 +53,17 @@ public class ScriptEditor extends State {
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
-                19,
-                45
+                18,
+                44
         );
 
         // Create the input processor for this state.
         scriptEditorInputProcessor = new ScriptEditorInputProcessor(editorTextArea);
+
+        // Create and position the background sprite.
+        background = new Sprite(new Texture(Gdx.files.internal("images/script_editor/background.png")));
+        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        background.setPosition(0, 0);
     }
 
     @Override
@@ -76,6 +85,10 @@ public class ScriptEditor extends State {
 
     @Override
     public void render(SpriteBatch batch) {
+        // Draw the state background.
+        this.background.draw(batch);
+
+        // Draw the editor text area.
         editorTextArea.draw(batch, shapeRenderer, this.editorFont);
     }
 

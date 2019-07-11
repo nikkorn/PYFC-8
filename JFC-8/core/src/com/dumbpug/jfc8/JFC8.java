@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.jfc8.state.StateManager;
-import com.dumbpug.jfc8.state.states.ScriptEditor;
+import com.dumbpug.jfc8.scripteditor.ScriptEditor;
 import com.dumbpug.jfc8.state.states.Splash;
-import com.dumbpug.jfc8.state.states.Terminal;
+import com.dumbpug.jfc8.terminal.Terminal;
 
 /**
  * The JFC8 application.

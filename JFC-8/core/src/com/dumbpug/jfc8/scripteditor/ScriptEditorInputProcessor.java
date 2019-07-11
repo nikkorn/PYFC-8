@@ -90,6 +90,8 @@ public class ScriptEditorInputProcessor implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        return false;
+        // Scrolling up/down should move the cursor.
+        this.editorTextArea.moveCursor(amount > 0 ? CursorMovement.DOWN : CursorMovement.UP);
+        return true;
     }
 }
