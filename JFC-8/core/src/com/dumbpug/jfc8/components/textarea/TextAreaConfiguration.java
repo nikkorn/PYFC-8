@@ -20,7 +20,7 @@ public class TextAreaConfiguration {
      * The colour to use for the cursor.
      * TODO Use Colour
      */
-    public Colour cursorColour = Colour.LIME;
+    public Colour cursorColour = Colour.FOREST;
     /**
      * The colour to use for the text selection.
      * TODO Use Colours

@@ -3,6 +3,7 @@ package com.dumbpug.jfc8.scripteditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -90,6 +91,21 @@ public class ScriptEditor extends State {
 
         // Draw the editor text area.
         editorTextArea.draw(batch, shapeRenderer, this.editorFont);
+
+        // Create the text to use as the character count limit.
+        String characterCountText = this.editorTextArea.getText().length() + "/" + Constants.SCRIPT_EDITOR_MAX_CHARACTERS;
+
+        // Create a glyph layout so we can get the actual size of the character count text.
+        GlyphLayout glyphLayout = new GlyphLayout();
+        glyphLayout.setText(this.editorFont, characterCountText);
+
+        // Draw the character count.
+        this.editorFont.draw(
+                batch,
+                characterCountText,
+                Gdx.graphics.getWidth() - (glyphLayout.width + (4 * Constants.DISPLAY_PIXEL_SIZE)),
+                Gdx.graphics.getHeight() - 6 * Constants.DISPLAY_PIXEL_SIZE
+        );
     }
 
     @Override

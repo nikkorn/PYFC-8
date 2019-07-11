@@ -55,6 +55,10 @@ public class TextArea {
      * The column offset between the first column and the first visible column in the text area.
      */
     private int columnOffset = 0;
+    /**
+     * The text area text.
+     */
+    private String text = "";
 
     /**
      * Creates a new instance of the TextArea class.
@@ -261,6 +265,12 @@ public class TextArea {
                 // The cursor column position will have to be moved to the right to account for the added column.
                 this.moveCursor(CursorMovement.RIGHT);
             }
+        }
+
+        // Update the text area text.
+        this.text = "";
+        for (Line line : this.lines) {
+            this.text += (line.getText() + "\n");
         }
     }
 
