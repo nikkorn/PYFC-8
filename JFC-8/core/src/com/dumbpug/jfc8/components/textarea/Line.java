@@ -30,6 +30,21 @@ public class Line {
     }
 
     /**
+     * Get the character at the given column, or null if there isn't one.
+     * @param column The column from which to get the character.
+     * @return The character at the given column, or null if there isn't on
+     */
+    public Character getCharacter(int column) {
+        // Is there even a character at the column?
+        if (column >= this.getColumnCount()) {
+            return null;
+        }
+
+        // Return the character at the column.
+        return this.columns.get(column).getCharacter();
+    }
+
+    /**
      * Get rid of any columns following on from the specified column and return their characters.
      * @param column Teh column number to remove columns from.
      * @return The chopped characters.

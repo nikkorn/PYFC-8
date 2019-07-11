@@ -249,16 +249,14 @@ public class TextArea {
      * @param font The font to use in drawing the text within the text area.
      */
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, BitmapFont font) {
+        // As we are about to use the shape renderer content we should end our batch render temporarily.
+        batch.end();
+
         // Draw the text area background if one is defined.
         if (this.configuration.backgroundColour != null /* TODO Replace with Colour.NOT_SET */) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-            // Set the background colour. TODO This should eventually map to the colour defined in the config.
-            shapeRenderer.setColor(this.configuration.backgroundColour);
-
-            // Draw the background.
+            shapeRenderer.setColor(this.configuration.backgroundColour); // TODO This should eventually map to the colour defined in the config.
             shapeRenderer.rect(x, y, width, height);
-
             shapeRenderer.end();
         }
 
@@ -271,7 +269,49 @@ public class TextArea {
 
         // TODO Draw the line numbers.
 
-        // TODO Draw the text.
+        // Resume our batch render.
+        batch.begin();
+
+        // Draw the text.
+        this.drawText(batch, font);
+    }
+
+    /**
+     * Draw the text.
+     * @param batch The sprite batch.
+     * @param font The font to use in drawing the text within the text area.
+     */
+    private void drawText(SpriteBatch batch, BitmapFont font) {
+        for (int lineIndex = lineOffset + lineCount - 1; lineIndex >= lineOffset; lineIndex--) {
+            // There is nothing to do if the current line index exceeds the actual number of lines in the area.
+            if (lineIndex >= this.lines.size()) {
+                continue;
+            }
+
+            // Get the line at the current line index.
+            Line line = this.lines.get(lineIndex);
+
+            for (int columnIndex = columnOffset; columnIndex < columnOffset + columnCount; columnIndex++) {
+                // There is nothing to do if the current column index exceeds the actual number of columns in the current line.
+                if (columnIndex >= line.getColumnCount()) {
+                    break;
+                }
+
+                // Get the character at the current line/column location.
+                Character character = line.getCharacter(columnIndex);
+
+                // There is nothing to do if there is no character.
+                if (character == null) {
+                    continue;
+                }
+
+                float columnX = x + ((columnIndex - columnOffset) * columnWidth);
+                float columnY = y + (lineCount - (lineIndex - lineOffset)) * lineHeight;
+
+                // Draw the character!
+                font.draw(batch, String.valueOf(character), columnX, columnY);
+            }
+        }
     }
 
     /**

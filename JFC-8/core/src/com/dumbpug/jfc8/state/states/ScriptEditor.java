@@ -38,7 +38,7 @@ public class ScriptEditor extends State {
      */
     public ScriptEditor() {
         // Create the editor font.
-        editorFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE);
+        editorFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
         editorFont.setColor(Color.WHITE);
 
         // Create the editor text area.
