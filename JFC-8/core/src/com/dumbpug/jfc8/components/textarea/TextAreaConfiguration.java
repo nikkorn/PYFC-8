@@ -1,6 +1,5 @@
 package com.dumbpug.jfc8.components.textarea;
 
-import com.badlogic.gdx.graphics.Color;
 import com.dumbpug.jfc8.palette.Colour;
 
 /**
@@ -11,22 +10,22 @@ public class TextAreaConfiguration {
      * The colour to use for the text.
      * TODO Use Colour
      */
-    public Color fontColour = Color.WHITE;
+    public Colour fontColour = Colour.WHITE;
     /**
      * The colour to use for the text area background.
      * TODO Use Colour
      */
-    public Color backgroundColour = Color.NAVY;
+    public Colour backgroundColour = Colour.NAVY;
     /**
      * The colour to use for the cursor.
      * TODO Use Colour
      */
-    public Color cursorColour = Color.LIME;
+    public Colour cursorColour = Colour.LIME;
     /**
      * The colour to use for the text selection.
-     * TODO Use Colour
+     * TODO Use Colours
      */
-    public Color selectionColour = Color.FOREST;
+    public Colour selectionColour = Colour.FOREST;
     /**
      * Whether to include line numbers to the left of the text area.
      */

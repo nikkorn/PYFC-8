@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.Constants;
 import com.dumbpug.jfc8.components.textarea.TextArea;
 import com.dumbpug.jfc8.font.FontProvider;
+import com.dumbpug.jfc8.palette.Colour;
+import com.dumbpug.jfc8.palette.Palette;
 import com.dumbpug.jfc8.scripteditor.ScriptEditorInputProcessor;
 import com.dumbpug.jfc8.state.State;
 
@@ -39,7 +41,7 @@ public class ScriptEditor extends State {
     public ScriptEditor() {
         // Create the editor font.
         editorFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
-        editorFont.setColor(Color.WHITE);
+        editorFont.setColor(Palette.getColour(Colour.WHITE));
 
         // Create the editor text area.
         editorTextArea = new TextArea(

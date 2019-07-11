@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.palette.Colour;
+import com.dumbpug.jfc8.palette.Palette;
+
 import java.util.ArrayList;
 
 /**
@@ -255,7 +257,7 @@ public class TextArea {
         // Draw the text area background if one is defined.
         if (this.configuration.backgroundColour != null /* TODO Replace with Colour.NOT_SET */) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(this.configuration.backgroundColour); // TODO This should eventually map to the colour defined in the config.
+            shapeRenderer.setColor(Palette.getColour(this.configuration.backgroundColour)); // TODO This should eventually map to the colour defined in the config.
             shapeRenderer.rect(x, y, width, height);
             shapeRenderer.end();
         }
@@ -265,7 +267,7 @@ public class TextArea {
         // TODO Draw the selection.
 
         // Draw the cursor.
-        this.fillColumn(this.cursor.getLineNumber(), this.cursor.getColumnNumber(), this.configuration.cursorColour, shapeRenderer);
+        this.fillColumn(this.cursor.getLineNumber(), this.cursor.getColumnNumber(), Palette.getColour(this.configuration.cursorColour), shapeRenderer);
 
         // TODO Draw the line numbers.
 
