@@ -30,6 +30,20 @@ public class Line {
     }
 
     /**
+     * Remove a character from the specified column.
+     * @param column The column to remove the character from.
+     */
+    public void removeCharacter(int column) {
+        // Check to make sure that this column event exists.
+        if (column > this.getColumnCount() + 1) {
+            throw new RuntimeException("cannot remove character at column " + column);
+        }
+
+        // Remove the column.
+        this.columns.remove(column);
+    }
+
+    /**
      * Get the character at the given column, or null if there isn't one.
      * @param column The column from which to get the character.
      * @return The character at the given column, or null if there isn't on

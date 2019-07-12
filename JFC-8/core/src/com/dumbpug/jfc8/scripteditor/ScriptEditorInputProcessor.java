@@ -52,7 +52,7 @@ public class ScriptEditorInputProcessor implements InputProcessor {
     public boolean keyTyped(char character) {
         // Process any backspace characters.
         if (character == '\b') {
-            // TODO Do a text area backspace.
+            this.editorTextArea.backspace();
             return true;
         }
 

@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.Align;
-import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
-
 import java.util.ArrayList;
 
 /**
@@ -262,14 +259,80 @@ public class TextArea {
         }
 
         // Update the text area text.
-        this.text = "";
-        for (int lineIndex = 0; lineIndex< this.lines.size(); lineIndex++) {
-            this.text += this.lines.get(lineIndex).getText();
+        this.updateTextAreaText();
+    }
 
-            if (lineIndex != this.lines.size() - 1) {
-                this.text += "\n";
+    /**
+     * Carry out a backspace operation.
+     */
+    public void backspace() {
+        // TODO Do this per selected column, but at least once.
+
+        // There are two scenarios.
+        // 1- cursor is at start of the line. So:
+        //         - Chop the remaining.
+        //         - delete the current line
+        //         - move cursor up a line and to the end of it
+        //         - reinsert chopped text.
+        // 2- cursor is not at start of the line. So:
+        //         - remove previous column from current line
+        //         - update the cursor column
+
+        // Get the line targeted by the cursor.
+        Line targetLine = this.lines.get(this.cursor.getLineNumber());
+
+        if (this.cursor.getColumnNumber() == 0) {
+            // If this is the first line then we cannot backspace onto another line.
+            if (this.cursor.getLineNumber() == 0) {
+                return;
             }
+
+            // Gather any columns that follow the cursor on the current line.
+            ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
+
+            // Get rid of the current line.
+            this.lines.remove(targetLine);
+
+            // Move the cursor super far to the right so that it will be clamped to the end of the previous line.
+            this.cursor.setColumnNumber(Integer.MAX_VALUE);
+
+            // Move the cursor up to the previous line.
+            this.moveCursor(CursorMovement.UP);
+
+            // Get the line we are now targeting.
+            targetLine = this.lines.get(this.cursor.getLineNumber());
+
+            // Get the column number that we need to set the cursor at after moving the chopped text up.
+            int finalColumnNumber = this.cursor.getColumnNumber();
+
+            // Move the chopped characters to the current line.
+            for (Character chopped : choppedCharacters) {
+                // Add the character to the current line (the one targeted by the cursor)
+                targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
+
+                // The cursor column position will have to be moved to the right to account for the added column.
+                this.moveCursor(CursorMovement.RIGHT);
+            }
+
+            // Move the cursor back to the position that was originally the end of the line that we backspaced to.
+            this.cursor.setColumnNumber(finalColumnNumber);
+
+            // Focus on the cursor.
+            this.focusCursor();
+        } else {
+            // Get rid of the column before the cursor.
+            targetLine.removeCharacter(this.cursor.getColumnNumber() - 1);
+
+            // Update the cursor position to account for the removed column.
+            this.moveCursor(CursorMovement.LEFT);
         }
+
+        // Update the text area text.
+        this.updateTextAreaText();
+    }
+
+    public void delete() {
+        // TODO If not on last document character then move forward 1 and do a backspace.
     }
 
     /**
@@ -360,5 +423,19 @@ public class TextArea {
         shapeRenderer.setColor(colour);
         shapeRenderer.rect(columnX, columnY, columnWidth, lineHeight);
         shapeRenderer.end();
+    }
+
+    /**
+     * Updates the text area text string to reflect the state of the text area.
+     */
+    private void updateTextAreaText() {
+        this.text = "";
+        for (int lineIndex = 0; lineIndex< this.lines.size(); lineIndex++) {
+            this.text += this.lines.get(lineIndex).getText();
+
+            if (lineIndex != this.lines.size() - 1) {
+                this.text += "\n";
+            }
+        }
     }
 }
