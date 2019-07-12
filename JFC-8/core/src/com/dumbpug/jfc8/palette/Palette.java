@@ -14,29 +14,29 @@ public class Palette {
 
     static {
         colourMap = new HashMap<Colour, Color>() {{
-            this.put(Colour.BLACK, Color.BLACK);
-            this.put(Colour.WHITE, Color.WHITE);
-            this.put(Colour.PLUM, Color.PURPLE);
-            this.put(Colour.RED, Color.RED);
-            this.put(Colour.ORANGE, Color.ORANGE);
-            this.put(Colour.YELLOW, Color.YELLOW);
-            this.put(Colour.LIME, Color.LIME);
-            this.put(Colour.GREEN, Color.GREEN);
-            this.put(Colour.FOREST, Color.FOREST);
-            this.put(Colour.NAVY, Color.NAVY);
-            this.put(Colour.BLUE, Color.BLUE);
-            this.put(Colour.CERULEAN, Color.SKY);
-            this.put(Colour.CYAN, Color.CYAN);
-            this.put(Colour.GREY, Color.LIGHT_GRAY);
-            this.put(Colour.IRON, Color.GRAY);
-            this.put(Colour.CHARCOAL, Color.DARK_GRAY);
+            this.put(Colour.BLACK, new Color(0x38383DFF));
+            this.put(Colour.WHITE, new Color(0xEFEFEFFF));
+            this.put(Colour.PURPLE, new Color(0x813681FF));
+            this.put(Colour.RED, new Color(0xBC414FFF));
+            this.put(Colour.ORANGE, new Color(0xEF895EFF));
+            this.put(Colour.YELLOW, new Color(0xFAD973FF));
+            this.put(Colour.LIME, new Color(0xA7F070FF));
+            this.put(Colour.GREEN, new Color(0x38B764FF));
+            this.put(Colour.FOREST, new Color(0x257179FF));
+            this.put(Colour.NAVY, new Color(0x29366FFF));
+            this.put(Colour.BLUE, new Color(0x3B5DC9FF));
+            this.put(Colour.CERULEAN, new Color(0x41A6F6FF));
+            this.put(Colour.CYAN, new Color(0x73EFF7FF));
+            this.put(Colour.GREY, new Color(0xB3B3B3FF));
+            this.put(Colour.IRON, new Color(0x737373FF));
+            this.put(Colour.CHARCOAL, new Color(0x4B4B4BFF));
         }};
     }
 
     /**
      * Get the gdx equivalent of the given colour.
      * @param colour The colour.
-     * @return The gdx equivalent of the given colou
+     * @return The gdx equivalent of the given colour.s
      */
     public static Color getColour(Colour colour) {
         return colourMap.get(colour);

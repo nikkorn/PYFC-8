@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.Constants;
 import com.dumbpug.jfc8.components.textarea.TextArea;
+import com.dumbpug.jfc8.components.textarea.TextAreaConfiguration;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
@@ -49,6 +50,11 @@ public class ScriptEditor extends State {
         editorFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
         editorFont.setColor(Palette.getColour(Colour.WHITE));
 
+        // Create the text area config.
+        TextAreaConfiguration editorTextAreaConfig = new TextAreaConfiguration();
+        editorTextAreaConfig.includeLineNumbers    = true;
+        editorTextAreaConfig.lineNumberFontColour  = Colour.GREY;
+
         // Create the editor text area.
         editorTextArea = new TextArea(
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
@@ -56,7 +62,8 @@ public class ScriptEditor extends State {
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 19,
-                44
+                44,
+                editorTextAreaConfig
         );
 
         // Create the input processor for this state.
