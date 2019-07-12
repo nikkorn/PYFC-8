@@ -1,6 +1,7 @@
 package com.dumbpug.jfc8.scripteditor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -84,12 +85,15 @@ public class ScriptEditor extends State {
     @Override
     public void onExit() {
         // Unset the application input processor to be the one associated with this state.
-        Gdx.input.setInputProcessor(this.scriptEditorInputProcessor);
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override
     public void update() {
-
+        // Check whether the user is attempting to move state.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            this.changeState("TERMINAL");
+        }
     }
 
     @Override
