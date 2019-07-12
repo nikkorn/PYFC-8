@@ -171,11 +171,11 @@ public class TextArea {
             lineOffset = (this.cursor.getLineNumber() + 1) - lineCount;
         }
 
-        // Modify column offset so cursor is in area.
+        // Modify column offset so the cursor remains in the area horizontally, excluding the columns taken up by the line number column.
         if (this.cursor.getColumnNumber() < columnOffset) {
             columnOffset = this.cursor.getColumnNumber();
-        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + columnCount) {
-            columnOffset = (this.cursor.getColumnNumber() + 1) - columnCount;
+        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + (columnCount - this.getLineNumberColumnWidth())) {
+            columnOffset = (this.cursor.getColumnNumber() + 1) - (columnCount - this.getLineNumberColumnWidth());
         }
     }
 
@@ -345,27 +345,20 @@ public class TextArea {
         // As we are about to use the shape renderer content we should end our batch render temporarily.
         batch.end();
 
-        // Draw the text area background if one is defined.
-        if (this.configuration.backgroundColour == null /* TODO Replace with Colour.NOT_SET */) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Palette.getColour(this.configuration.backgroundColour)); // TODO This should eventually map to the colour defined in the config.
-            shapeRenderer.rect(x, y, width, height);
-            shapeRenderer.end();
-        }
-
-        // TODO Draw the line number bar background.
-
         // TODO Draw the selection.
 
         // Draw the cursor.
-        this.fillColumn(this.cursor.getLineNumber() - lineOffset, this.cursor.getColumnNumber() - columnOffset, Palette.getColour(this.configuration.cursorColour), shapeRenderer);
-
-        // TODO Draw the line numbers.
+        this.fillColumn(
+                this.cursor.getLineNumber() - lineOffset,
+                (this.cursor.getColumnNumber() - columnOffset) + this.getLineNumberColumnWidth(),
+                Palette.getColour(this.configuration.cursorColour),
+                shapeRenderer
+        );
 
         // Resume our batch render.
         batch.begin();
 
-        // Draw the text.
+        // Draw the text, including the line numbers if applicable.
         this.drawText(batch, font);
     }
 
@@ -375,6 +368,33 @@ public class TextArea {
      * @param font The font to use in drawing the text within the text area.
      */
     private void drawText(SpriteBatch batch, BitmapFont font) {
+        // Draw the line numbers if we need to.
+        if (this.configuration.includeLineNumbers) {
+            // Set the line number font colour.
+            font.setColor(Palette.getColour(this.configuration.lineNumberFontColour));
+
+            // Draw each line number.
+            for (int lineIndex = lineOffset + lineCount - 1; lineIndex >= lineOffset; lineIndex--) {
+
+                String lineNumber = String.valueOf(lineIndex);
+
+                // Create a glyph layout so we can get the actual size of the character we are about to draw.
+                GlyphLayout glyphLayout = new GlyphLayout();
+                glyphLayout.setText(font, lineNumber);
+
+                float lineNumberY = y + ((lineCount - (lineIndex - lineOffset)) * lineHeight) - (lineHeight / 2 - glyphLayout.height / 2);
+
+                // Draw the number for the line!
+                font.draw(batch, lineNumber, x, lineNumberY);
+            }
+
+            // Reset the default editor font colour.
+            font.setColor(Palette.getColour(this.configuration.fontColour));
+        }
+
+        int lineNumberColumnOffset = this.getLineNumberColumnWidth();
+
+        // Draw the actual text.
         for (int lineIndex = lineOffset + lineCount - 1; lineIndex >= lineOffset; lineIndex--) {
             // There is nothing to do if the current line index exceeds the actual number of lines in the area.
             if (lineIndex >= this.lines.size()) {
@@ -384,7 +404,7 @@ public class TextArea {
             // Get the line at the current line index.
             Line line = this.lines.get(lineIndex);
 
-            for (int columnIndex = columnOffset; columnIndex < columnOffset + columnCount; columnIndex++) {
+            for (int columnIndex = columnOffset; columnIndex < (columnOffset + columnCount) - lineNumberColumnOffset; columnIndex++) {
                 // There is nothing to do if the current column index exceeds the actual number of columns in the current line.
                 if (columnIndex >= line.getColumnCount()) {
                     break;
@@ -402,7 +422,7 @@ public class TextArea {
                 GlyphLayout glyphLayout = new GlyphLayout();
                 glyphLayout.setText(font, String.valueOf(character));
 
-                float columnX = x + ((columnIndex - columnOffset) * columnWidth) + (columnWidth / 2 - glyphLayout.width / 2);
+                float columnX = x + (lineNumberColumnOffset * columnWidth) + ((columnIndex - columnOffset) * columnWidth) + (columnWidth / 2 - glyphLayout.width / 2);
                 float columnY = y + ((lineCount - (lineIndex - lineOffset)) * lineHeight) - (lineHeight / 2 - glyphLayout.height / 2);
 
                 // Draw the character!
@@ -416,8 +436,8 @@ public class TextArea {
      * @param shapeRenderer The shape renderer.
      */
     private void fillColumn(int line, int column, Color colour, ShapeRenderer shapeRenderer) {
-        float columnX =  x + (column * columnWidth); // TODO Account for columnOffset.
-        float columnY = (y + height) - ((line + 1) * lineHeight); // TODO Account for columnOffset.
+        float columnX = x + (column * columnWidth);
+        float columnY = (y + height) - ((line + 1) * lineHeight);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(colour);
@@ -437,5 +457,18 @@ public class TextArea {
                 this.text += "\n";
             }
         }
+    }
+
+    /**
+     * Gets the width of the line number column in individual columns.
+     * @return The width of the line number column in individual column
+     */
+    private int getLineNumberColumnWidth() {
+        // Are we even showing a line number column?
+        if (!this.configuration.includeLineNumbers) {
+            return 0;
+        }
+
+        return String.valueOf(lineOffset + lineCount - 1).length() + 1;
     }
 }

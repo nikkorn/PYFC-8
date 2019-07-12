@@ -7,7 +7,7 @@ public enum Colour {
     NOT_SET,
     BLACK,
     WHITE,
-    PLUM,
+    PURPLE,
     RED,
     ORANGE,
     YELLOW,
