@@ -2,6 +2,7 @@ package com.dumbpug.jfc8;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.jfc8.state.StateManager;
@@ -35,12 +36,20 @@ public class JFC8 extends ApplicationAdapter {
 
 		// Create the application sprite batch.
 		batch = new SpriteBatch();
+
+		// Capture the system cursor.
+		Gdx.input.setCursorCatched(true);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0.219f, 0.219f, 0.239f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		// Toggle whether the system cursor is caught on pressed of the F12 key.
+		if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
+			Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
+		}
 
 		// Update the current application state.
 		this.stateManager.update();

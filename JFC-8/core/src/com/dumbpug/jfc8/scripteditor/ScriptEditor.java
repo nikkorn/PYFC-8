@@ -12,6 +12,7 @@ import com.dumbpug.jfc8.components.textarea.TextArea;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
+import com.dumbpug.jfc8.resources.ImageResources;
 import com.dumbpug.jfc8.state.State;
 
 /**
@@ -106,6 +107,11 @@ public class ScriptEditor extends State {
                 Gdx.graphics.getWidth() - (glyphLayout.width + (4 * Constants.DISPLAY_PIXEL_SIZE)),
                 Gdx.graphics.getHeight() - 6 * Constants.DISPLAY_PIXEL_SIZE
         );
+
+        // Draw the cursor.
+        Sprite cursor = ImageResources.getCursorSprite();
+        cursor.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - cursor.getHeight());
+        cursor.draw(batch);
     }
 
     @Override
