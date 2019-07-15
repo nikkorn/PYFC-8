@@ -9,7 +9,7 @@ import com.dumbpug.jfc8.palette.Palette;
 import java.util.ArrayList;
 
 /**
- * A text area that supports terminal and code editor type functionality.
+ * A text area that supports code editor type functionality.
  */
 public class TextArea {
     /**
@@ -58,7 +58,7 @@ public class TextArea {
     private String text = "";
 
     /**
-     * Creates a new instance of the TextArea class.
+     * Creates a new instance of the TerminalArea class.
      * @param x The x position of the text area.
      * @param y The y position of the text area.
      * @param lineHeight The height of each line.
@@ -83,7 +83,7 @@ public class TextArea {
     }
 
     /**
-     * Creates a new instance of the TextArea class.
+     * Creates a new instance of the TerminalArea class.
      * @param x The x position of the text area.
      * @param y The y position of the text area.
      * @param lineHeight The height of each line.

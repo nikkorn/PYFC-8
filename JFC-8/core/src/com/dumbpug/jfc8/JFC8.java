@@ -32,7 +32,7 @@ public class JFC8 extends ApplicationAdapter {
 		stateManager.addState(new ScriptEditor());
 
 		// Set the initial application state.
-		stateManager.setCurrentState("SPLASH");
+		stateManager.setCurrentState("TERMINAL");
 
 		// Create the application sprite batch.
 		batch = new SpriteBatch();

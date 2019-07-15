@@ -7,8 +7,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.Constants;
-import com.dumbpug.jfc8.components.textarea.CursorMovement;
-import com.dumbpug.jfc8.components.textarea.TextArea;
+import com.dumbpug.jfc8.components.terminal.CursorMovement;
+import com.dumbpug.jfc8.components.terminal.TerminalArea;
+import com.dumbpug.jfc8.components.terminal.TerminalAreaConfiguration;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
@@ -22,7 +23,7 @@ public class Terminal extends State implements InputProcessor {
     /**
      * The text area used as the terminal.
      */
-    TextArea terminalTextArea;
+    TerminalArea terminalArea;
     /**
      * The shape renderer to use in drawing the editor.
      */
@@ -38,11 +39,7 @@ public class Terminal extends State implements InputProcessor {
     /**
      * This string contains text we can't edit (eg previously executed commands/command output).
      */
-    String outputGarbage = "gddddddddddddddddddddddddddddfgggggggggggggrrrrrrrrrrrrrrrrhfgf\ndsfdsdhggggggggggggggggggggggggggggggggggjjjjjjjjjjjjjjjjjjjssf\nsaghhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjdasasdasasdasd\n";
-    /**
-     * This string is the current line in the shell, this text we CAN edit.
-     */
-    String input = "";
+    String outputGarbage = "RUBBISH";
     /**
      * The previously executed commands.
      */
@@ -57,17 +54,18 @@ public class Terminal extends State implements InputProcessor {
         terminalFont.setColor(Palette.getColour(Colour.WHITE));
 
         // Create the terminal text area.
-        terminalTextArea = new TextArea(
+        terminalArea = new TerminalArea(
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 18,
-                46
+                46,
+                new TerminalAreaConfiguration()
         );
 
-        // Do the initial terminal update.
-        updateTerminal();
+        // Text print output garbage
+        terminalArea.printLine(outputGarbage);
     }
 
     @Override
@@ -93,7 +91,7 @@ public class Terminal extends State implements InputProcessor {
     @Override
     public void render(SpriteBatch batch) {
         // Draw the terminal text area.
-        terminalTextArea.draw(batch, shapeRenderer, this.terminalFont);
+        terminalArea.draw(batch, shapeRenderer, this.terminalFont);
     }
 
     @Override
@@ -106,10 +104,10 @@ public class Terminal extends State implements InputProcessor {
             // Cycle down through previous command
             return true;
         } else if (keycode == Input.Keys.LEFT) {
-            this.terminalTextArea.moveCursor(CursorMovement.LEFT);
+            this.terminalArea.moveCursor(CursorMovement.LEFT);
             return true;
         } else if (keycode == Input.Keys.RIGHT) {
-            this.terminalTextArea.moveCursor(CursorMovement.RIGHT);
+            this.terminalArea.moveCursor(CursorMovement.RIGHT);
             return true;
         }
         return false;
@@ -124,26 +122,14 @@ public class Terminal extends State implements InputProcessor {
     public boolean keyTyped(char character) {
         // Check whether the current character is a new-line character.
         if (character == '\n' || character == '\r') {
-            // Throw the input on the output.
-            this.outputGarbage += (this.input + '\n');
-
-            // Add this command to the list of previously executred commands
-            if (this.input.length() > 0) {
-                this.executed.add(this.input);
-            }
-
-            // Clear the current input.
-            this.input = "";
-
             // TODO Execute the current input as a command!
         } else if (Constants.INPUT_VALID_CHARACTERS.indexOf(character) != -1) {
-            // Add the character to the current input.
-            this.input += character;
+            // Add the character to the current terminal input.
+            this.terminalArea.insertText(String.valueOf(character));
         } else if (character == '\b') {
-            // TODO Add config to stop this from moving the cursor to the previous line
+            // Take care of the backspace.
+            this.terminalArea.backspace();
         }
-
-        updateTerminal();
 
         // The event was handled here.
         return true;
@@ -177,12 +163,5 @@ public class Terminal extends State implements InputProcessor {
     @Override
     public String getStateName() {
         return "TERMINAL";
-    }
-
-    private void updateTerminal() {
-        // This character should be inserted at the current terminal cursor position.
-        this.terminalTextArea.setText(this.outputGarbage + "> " + this.input);
-
-        // TODO Set he correct cursor position.
     }
 }
