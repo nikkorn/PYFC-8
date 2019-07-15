@@ -131,6 +131,13 @@ public class TerminalArea {
      * Attempt to focus on the cursor.
      */
     public void focusCursor() {
+        // Modify line offset so that the cursor stays in area vertically.
+        if ((this.lines.size() - 1) < lineOffset) {
+            lineOffset = (this.lines.size() - 1);
+        } else if (this.lines.size() > lineOffset + lineCount) {
+            lineOffset = this.lines.size() - lineCount;
+        }
+
         // Modify column offset so the cursor remains in the area horizontally, excluding the columns taken up by the line number column.
         if (this.cursor.getColumnNumber() < columnOffset) {
             columnOffset = this.cursor.getColumnNumber();
@@ -167,7 +174,7 @@ public class TerminalArea {
      * Sets the text in the input line.
      * @param text The text to set as the text value for the input line.
      */
-    public void setText(String text) {
+    public void setInput(String text) {
         // Clear the input line.
         this.inputLine.clear();
 
@@ -176,6 +183,17 @@ public class TerminalArea {
 
         // Insert the text.
         this.insertText(text);
+
+        // Focus on the cursor
+        focusCursor();
+    }
+
+    /**
+     * Gets the text in the input line.
+     * @return The text in the input line.
+     */
+    public String getInput() {
+        return this.inputLine.getText();
     }
 
     /**
@@ -273,7 +291,7 @@ public class TerminalArea {
                 GlyphLayout glyphLayout = new GlyphLayout();
                 glyphLayout.setText(font, String.valueOf(character));
 
-                float columnX = x + columnWidth + ((columnIndex - columnOffset) * columnWidth) + (columnWidth / 2 - glyphLayout.width / 2);
+                float columnX = x + ((columnIndex - columnOffset) * columnWidth) + (columnWidth / 2 - glyphLayout.width / 2);
                 float columnY = y + ((lineCount - (lineIndex - lineOffset)) * lineHeight) - (lineHeight / 2 - glyphLayout.height / 2);
 
                 // Draw the character!
@@ -325,6 +343,9 @@ public class TerminalArea {
                 outputLine.addCharacter(character);
             }
         }
+
+        // Focus on the cursor
+        focusCursor();
     }
 
     /**

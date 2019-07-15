@@ -56,10 +56,10 @@ public class Terminal extends State implements InputProcessor {
         // Create the terminal text area.
         terminalArea = new TerminalArea(
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
-                Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
+                150, //Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
-                18,
+                4, //18,
                 46,
                 new TerminalAreaConfiguration()
         );
@@ -122,7 +122,14 @@ public class Terminal extends State implements InputProcessor {
     public boolean keyTyped(char character) {
         // Check whether the current character is a new-line character.
         if (character == '\n' || character == '\r') {
+            // Get the current input.
+            String input = this.terminalArea.getInput();
+
             // TODO Execute the current input as a command!
+            this.terminalArea.printLine("input: " + input);
+
+            //  Clear the current input.
+            this.terminalArea.setInput("");
         } else if (Constants.INPUT_VALID_CHARACTERS.indexOf(character) != -1) {
             // Add the character to the current terminal input.
             this.terminalArea.insertText(String.valueOf(character));
