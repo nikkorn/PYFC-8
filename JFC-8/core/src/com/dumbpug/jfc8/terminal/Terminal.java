@@ -3,7 +3,9 @@ package com.dumbpug.jfc8.terminal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.Constants;
@@ -39,11 +41,15 @@ public class Terminal extends State implements InputProcessor {
     /**
      * This string contains text we can't edit (eg previously executed commands/command output).
      */
-    String outputGarbage = "JFC v0.0.1\n\nType 'help' for help\n";
+    String outputGarbage = "v0.0.1  Nikolas Howard (c)\n\nType 'help' for help\n";
     /**
      * The previously executed commands.
      */
     ArrayList<String> executed = new ArrayList<String>();
+    /**
+     * The background sprite.
+     */
+    private Sprite background;
 
     /**
      * Create a new instance of the Terminal class.
@@ -66,6 +72,11 @@ public class Terminal extends State implements InputProcessor {
 
         // Text print output garbage
         terminalArea.printLine(outputGarbage);
+
+        // Create and position the background sprite.
+        background = new Sprite(new Texture(Gdx.files.internal("images/terminal/background.png")));
+        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        background.setPosition(0, 0);
     }
 
     @Override
@@ -90,6 +101,9 @@ public class Terminal extends State implements InputProcessor {
 
     @Override
     public void render(SpriteBatch batch) {
+        // Draw the state background.
+        this.background.draw(batch);
+
         // Draw the terminal text area.
         terminalArea.draw(batch, shapeRenderer, this.terminalFont);
     }
