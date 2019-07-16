@@ -39,7 +39,7 @@ public class Terminal extends State implements InputProcessor {
     /**
      * This string contains text we can't edit (eg previously executed commands/command output).
      */
-    String outputGarbage = "RUBBISH";
+    String outputGarbage = "JFC v0.0.1\n\nType 'help' for help\n";
     /**
      * The previously executed commands.
      */
@@ -56,10 +56,10 @@ public class Terminal extends State implements InputProcessor {
         // Create the terminal text area.
         terminalArea = new TerminalArea(
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
-                150, //Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
+                Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
-                4, //18,
+                18,
                 46,
                 new TerminalAreaConfiguration()
         );

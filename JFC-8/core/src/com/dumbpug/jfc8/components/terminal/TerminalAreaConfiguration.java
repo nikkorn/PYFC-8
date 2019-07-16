@@ -21,5 +21,5 @@ public class TerminalAreaConfiguration {
     /**
      * The input line prefix.
      */
-    public String inputPrefix = ">";
+    public String inputPrefix = "> ";
 }

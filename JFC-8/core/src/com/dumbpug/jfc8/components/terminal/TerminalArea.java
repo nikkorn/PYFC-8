@@ -141,8 +141,8 @@ public class TerminalArea {
         // Modify column offset so the cursor remains in the area horizontally, excluding the columns taken up by the line number column.
         if (this.cursor.getColumnNumber() < columnOffset) {
             columnOffset = this.cursor.getColumnNumber();
-        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + columnCount) {
-            columnOffset = (this.cursor.getColumnNumber() + 1) - columnCount;
+        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + columnCount - this.inputLine.getPrefix().length()) {
+            columnOffset = (this.cursor.getColumnNumber() + this.inputLine.getPrefix().length()) - columnCount;
         }
     }
 
@@ -245,7 +245,7 @@ public class TerminalArea {
         // Draw the cursor.
         this.fillColumn(
                 this.lines.indexOf(this.inputLine) - lineOffset,
-                (this.cursor.getColumnNumber() - columnOffset),
+                (this.cursor.getColumnNumber() - columnOffset) + this.inputLine.getPrefix().length(),
                 Palette.getColour(this.configuration.cursorColour),
                 shapeRenderer
         );
@@ -273,14 +273,18 @@ public class TerminalArea {
             // Get the line at the current line index.
             Line line = this.lines.get(lineIndex);
 
+            // Get the line text, including the prefix.
+            String text = line.getPrefix() + line.getText();
+
+            // Draw each column character withing the terminal area.
             for (int columnIndex = columnOffset; columnIndex < (columnOffset + columnCount); columnIndex++) {
                 // There is nothing to do if the current column index exceeds the actual number of columns in the current line.
-                if (columnIndex >= line.getColumnCount()) {
+                if (columnIndex >= text.length()) {
                     break;
                 }
 
                 // Get the character at the current line/column location.
-                Character character = line.getCharacter(columnIndex);
+                Character character = text.charAt(columnIndex);
 
                 // There is nothing to do if there is no character.
                 if (character == null) {

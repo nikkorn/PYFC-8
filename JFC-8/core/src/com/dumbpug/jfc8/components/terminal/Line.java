@@ -31,7 +31,7 @@ public class Line {
      * Creates a new instance of the Line class.
      */
     public Line() {
-        this(null);
+        this("");
     }
 
     /**
@@ -79,6 +79,14 @@ public class Line {
 
         // Return the character at the column.
         return this.columns.get(column).getCharacter();
+    }
+
+    /**
+     * Gets the line prefix.
+     * @return The line prefix.
+     */
+    public String getPrefix() {
+        return prefix;
     }
 
     /**
