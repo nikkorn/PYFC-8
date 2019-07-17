@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
 import java.util.ArrayList;
 
@@ -149,10 +150,11 @@ public class TerminalArea {
     /**
      * Print the text to the terminal output with the following print starting from the same line.
      * @param text The text to print.
+     * @param colour The text colour.
      */
-    public void print(String text) {
+    public void print(String text, Colour colour) {
         // Print the text to the terminal output.
-        this.printOutputText(text);
+        this.printOutputText(text, colour);
 
         // The next print should continue from the current line.
         printToNewOutputLine = false;
@@ -161,13 +163,30 @@ public class TerminalArea {
     /**
      * Print the text to the terminal output with the following print starting from a new line.
      * @param text The text to print.
+     * @param colour The text colour.
      */
-    public void printLine(String text) {
+    public void printLine(String text, Colour colour) {
         // Print the text to the terminal output.
-        this.printOutputText(text);
+        this.printOutputText(text, colour);
 
         // The next print should not continue from the current line and should start on a new one.
         printToNewOutputLine = true;
+    }
+
+    /**
+     * Print the text to the terminal output with the following print starting from the same line.
+     * @param text The text to print.
+     */
+    public void print(String text) {
+        this.print(text, this.configuration.fontColour);
+    }
+
+    /**
+     * Print the text to the terminal output with the following print starting from a new line.
+     * @param text The text to print.
+     */
+    public void printLine(String text) {
+        this.printLine(text, this.configuration.fontColour);
     }
 
     /**
@@ -200,19 +219,29 @@ public class TerminalArea {
      * Inserts the text at the cursor position.
      * Any text selection will be cleared before the text is inserted.
      * @param text The text insert at the cursor position.
+     * @param colour The colour of the text.
      */
-    public void insertText(String text) {
+    public void insertText(String text, Colour colour) {
         // Insert the text at the cursor position, one character at a time.
         for (int characterIndex = 0; characterIndex < text.length(); characterIndex++){
             // Get the next character.
             char character = text.charAt(characterIndex);
 
             // Add the character to the current line (the one targeted by the cursor)
-            this.inputLine.addCharacter(character, this.cursor.getColumnNumber());
+            this.inputLine.addCharacter(character, colour, this.cursor.getColumnNumber());
 
             // The cursor column position will have to be moved to the right to account for the added column.
             this.moveCursor(CursorMovement.RIGHT);
         }
+    }
+
+    /**
+     * Inserts the text at the cursor position using the default font colour.
+     * Any text selection will be cleared before the text is inserted.
+     * @param text The text insert at the cursor position.
+     */
+    public void insertText(String text) {
+        this.insertText(text, this.configuration.fontColour);
     }
 
     /**
@@ -263,6 +292,9 @@ public class TerminalArea {
      * @param font The font to use in drawing the text within the text area.
      */
     private void drawText(SpriteBatch batch, BitmapFont font) {
+        // Always reset the font colour back to the editor default.
+        font.setColor(Palette.getColour(this.configuration.fontColour));
+
         // Draw the actual text.
         for (int lineIndex = lineOffset + lineCount - 1; lineIndex >= lineOffset; lineIndex--) {
             // There is nothing to do if the current line index exceeds the actual number of lines in the area.
@@ -273,33 +305,38 @@ public class TerminalArea {
             // Get the line at the current line index.
             Line line = this.lines.get(lineIndex);
 
-            // Get the line text, including the prefix.
-            String text = line.getPrefix() + line.getText();
+            // Get the columns that make up the current line.
+            ArrayList<Column> columns = line.getColumns();
 
             // Draw each column character withing the terminal area.
             for (int columnIndex = columnOffset; columnIndex < (columnOffset + columnCount); columnIndex++) {
                 // There is nothing to do if the current column index exceeds the actual number of columns in the current line.
-                if (columnIndex >= text.length()) {
+                if (columnIndex >= columns.size()) {
                     break;
                 }
 
-                // Get the character at the current line/column location.
-                Character character = text.charAt(columnIndex);
+                // Get the column at the current line/column location.
+                Column column = columns.get(columnIndex);
 
                 // There is nothing to do if there is no character.
-                if (character == null) {
+                if (column.getCharacter() == null) {
                     continue;
                 }
 
                 // Create a glyph layout so we can get the actual size of the character we are about to draw.
                 GlyphLayout glyphLayout = new GlyphLayout();
-                glyphLayout.setText(font, String.valueOf(character));
+                glyphLayout.setText(font, String.valueOf(column.getCharacter()));
 
                 float columnX = x + ((columnIndex - columnOffset) * columnWidth) + (columnWidth / 2 - glyphLayout.width / 2);
                 float columnY = y + ((lineCount - (lineIndex - lineOffset)) * lineHeight) - (lineHeight / 2 - glyphLayout.height / 2);
 
+                // Set the font colour to match the column colour if there is one.
+                if (column.getColour() != null) {
+                    font.setColor(Palette.getColour(column.getColour()));
+                }
+
                 // Draw the character!
-                font.draw(batch, String.valueOf(character), columnX, columnY);
+                font.draw(batch, String.valueOf(column.getCharacter()), columnX, columnY);
             }
         }
     }
@@ -321,8 +358,9 @@ public class TerminalArea {
     /**
      * Prints the text to the terminal output.
      * @param text The text to print to the terminal output.
+     * @param colour The text colour.
      */
-    private void printOutputText(String text) {
+    private void printOutputText(String text, Colour colour) {
         if (this.printToNewOutputLine) {
             this.lines.add(this.lines.size() - 1, new Line());
         }
@@ -344,7 +382,7 @@ public class TerminalArea {
                 outputLine = this.getLastOutputLine();
             } else {
                 // Add the character to the end of the current output line.
-                outputLine.addCharacter(character);
+                outputLine.addCharacter(character, colour);
             }
         }
 

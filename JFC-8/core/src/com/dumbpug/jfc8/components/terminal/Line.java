@@ -1,5 +1,6 @@
 package com.dumbpug.jfc8.components.terminal;
 
+import com.dumbpug.jfc8.palette.Colour;
 import java.util.ArrayList;
 
 /**
@@ -23,8 +24,8 @@ public class Line {
         // Set the line prefix.
         this.prefix = prefix;
 
-        // Add the initial empty column.
-        columns.add(new Column());
+        // Add the initial empty column with a null column colour.
+        columns.add(new Column(null));
     }
 
     /**
@@ -37,19 +38,21 @@ public class Line {
     /**
      * Add a character to the line at the specified column.
      * @param character The character to add.
+     * @param colour The colour of the character.
      * @param column The column to add the character at.
      */
-    public void addCharacter(char character, int column) {
+    public void addCharacter(char character, Colour colour, int column) {
         // Add a character to the specified column position.
-        this.columns.add(column, new Column(character));
+        this.columns.add(column, new Column(character, colour));
     }
 
     /**
      * Add a character to the end of the line
      * @param character The character to add.
+     * @param colour The colour of the character.
      */
-    public void addCharacter(char character) {
-        this.columns.add(this.columns.size() - 1, new Column(character));
+    public void addCharacter(char character, Colour colour) {
+        this.columns.add(this.columns.size() - 1, new Column(character, colour));
     }
 
     /**
@@ -117,7 +120,7 @@ public class Line {
         this.columns = new ArrayList<Column>();
 
         // Add the initial empty column.
-        columns.add(new Column());
+        columns.add(new Column(null));
     }
 
     /**
@@ -142,5 +145,22 @@ public class Line {
         }
 
         return value;
+    }
+
+    /**
+     * Gets the columns including the prefix.
+     */
+    public ArrayList<Column> getColumns() {
+        ArrayList<Column> columns = new ArrayList<Column>();
+
+        for (char character : this.prefix.toCharArray()) {
+            columns.add(new Column(character, null));
+        }
+
+        for (Column column : this.columns) {
+            columns.add(column);
+        }
+
+        return columns;
     }
 }

@@ -39,10 +39,6 @@ public class Terminal extends State implements InputProcessor {
      */
     private CommandProcessor commandProcessor = new CommandProcessor();
     /**
-     * This string contains text we can't edit (eg previously executed commands/command output).
-     */
-    String outputGarbage = "v0.0.1  Nikolas Howard (c)\n\nType 'help' for help\n";
-    /**
      * The previously executed commands.
      */
     ArrayList<String> executed = new ArrayList<String>();
@@ -70,8 +66,10 @@ public class Terminal extends State implements InputProcessor {
                 new TerminalAreaConfiguration()
         );
 
-        // Text print output garbage
-        terminalArea.printLine(outputGarbage);
+        // Print the terminal header.
+        terminalArea.print("nikolas howard 2019 (c) ", Colour.GREY);
+        terminalArea.printLine("v0.0.1", Colour.FOREST);
+        terminalArea.printLine("\nType 'help' for help\n");
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/terminal/background.png")));
@@ -140,7 +138,7 @@ public class Terminal extends State implements InputProcessor {
             String input = this.terminalArea.getInput();
 
             // TODO Execute the current input as a command!
-            this.terminalArea.printLine("input: " + input);
+            this.terminalArea.printLine("error: " + input, Colour.RED);
 
             //  Clear the current input.
             this.terminalArea.setInput("");
