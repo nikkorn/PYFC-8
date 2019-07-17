@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.dumbpug.jfc8.device.Device;
 import com.dumbpug.jfc8.state.StateManager;
 import com.dumbpug.jfc8.scripteditor.ScriptEditor;
 import com.dumbpug.jfc8.state.states.Splash;
@@ -25,11 +26,14 @@ public class JFC8 extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		// Create the actual representation of the fantasy console device.
+		Device device = new Device();
+
 		// Create the state manager and add the application states.
 		stateManager = new StateManager();
 		stateManager.addState(new Splash());
-		stateManager.addState(new Terminal());
-		stateManager.addState(new ScriptEditor());
+		stateManager.addState(new Terminal(device));
+		stateManager.addState(new ScriptEditor(device));
 
 		// Set the initial application state.
 		stateManager.setCurrentState("TERMINAL");

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.Constants;
 import com.dumbpug.jfc8.components.textarea.TextArea;
 import com.dumbpug.jfc8.components.textarea.TextAreaConfiguration;
+import com.dumbpug.jfc8.device.Device;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
@@ -22,8 +23,11 @@ import com.dumbpug.jfc8.state.State;
  */
 public class ScriptEditor extends State {
     /**
+     * The console device.
+     */
+    private Device device;
+    /**
      * The input processor for this state.
-     * TODO These can be chained and input event can fall through. Have a general state one and THEN a text area one.
      */
     private ScriptEditorInputProcessor scriptEditorInputProcessor;
     /**
@@ -45,8 +49,12 @@ public class ScriptEditor extends State {
 
     /**
      * Create a new instance of the ScriptEditor class.
+     * @param device The console device.
      */
-    public ScriptEditor() {
+    public ScriptEditor(Device device) {
+        // Get a reference to the console device.
+        this.device = device;
+
         // Create the editor font.
         editorFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
         editorFont.setColor(Palette.getColour(Colour.WHITE));

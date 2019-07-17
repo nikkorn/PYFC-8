@@ -12,6 +12,7 @@ import com.dumbpug.jfc8.Constants;
 import com.dumbpug.jfc8.components.terminal.CursorMovement;
 import com.dumbpug.jfc8.components.terminal.TerminalArea;
 import com.dumbpug.jfc8.components.terminal.TerminalAreaConfiguration;
+import com.dumbpug.jfc8.device.Device;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
@@ -22,6 +23,10 @@ import java.util.ArrayList;
  * The terminal state of the application.
  */
 public class Terminal extends State implements InputProcessor {
+    /**
+     * The console device.
+     */
+    private Device device;
     /**
      * The text area used as the terminal.
      */
@@ -49,8 +54,12 @@ public class Terminal extends State implements InputProcessor {
 
     /**
      * Create a new instance of the Terminal class.
+     * @param device The console device.
      */
-    public Terminal() {
+    public Terminal(Device device) {
+        // Get a reference to the console device.
+        this.device = device;
+
         // Create the terminal font.
         terminalFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
         terminalFont.setColor(Palette.getColour(Colour.WHITE));
@@ -96,10 +105,14 @@ public class Terminal extends State implements InputProcessor {
      * Handle a help request command.
      */
     public void onHelpCommand() {
-        terminalArea.print("clear    ", Colour.ORANGE);
+        terminalArea.print("clear          ", Colour.ORANGE);
         terminalArea.printLine("clear the screen", Colour.GREY);
-        terminalArea.print("help     ", Colour.ORANGE);
-        terminalArea.printLine("get help with commands", Colour.GREY);
+        terminalArea.print("create [name]  ", Colour.ORANGE);
+        terminalArea.printLine("create a cartridge", Colour.GREY);
+        terminalArea.print("ls             ", Colour.ORANGE);
+        terminalArea.printLine("list directory contents", Colour.GREY);
+        terminalArea.print("cd [path]      ", Colour.ORANGE);
+        terminalArea.printLine("change the current directory", Colour.GREY);
     }
 
     @Override
