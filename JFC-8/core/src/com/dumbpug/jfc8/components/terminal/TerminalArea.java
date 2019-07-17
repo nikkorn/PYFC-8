@@ -148,6 +148,20 @@ public class TerminalArea {
     }
 
     /**
+     * Clear the terminal area.
+     */
+    public void clear() {
+        // Get rid of all terminal lines.
+        this.lines.clear();
+
+        // Re-add the input line.
+        this.lines.add(this.inputLine);
+
+        // Reset the line offset.
+        this.lineOffset = 0;
+    }
+
+    /**
      * Print the text to the terminal output with the following print starting from the same line.
      * @param text The text to print.
      * @param colour The text colour.
@@ -361,7 +375,7 @@ public class TerminalArea {
      * @param colour The text colour.
      */
     private void printOutputText(String text, Colour colour) {
-        if (this.printToNewOutputLine) {
+        if (this.printToNewOutputLine || this.lines.size() == 1) {
             this.lines.add(this.lines.size() - 1, new Line());
         }
 

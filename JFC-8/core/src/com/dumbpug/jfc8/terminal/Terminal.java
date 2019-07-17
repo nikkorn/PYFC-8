@@ -37,7 +37,7 @@ public class Terminal extends State implements InputProcessor {
     /**
      * The terminal command processor.
      */
-    private CommandProcessor commandProcessor = new CommandProcessor();
+    private CommandProcessor commandProcessor = new CommandProcessor(this);
     /**
      * The previously executed commands.
      */
@@ -61,7 +61,7 @@ public class Terminal extends State implements InputProcessor {
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
-                19,
+                18,
                 46,
                 new TerminalAreaConfiguration()
         );
@@ -75,6 +75,31 @@ public class Terminal extends State implements InputProcessor {
         background = new Sprite(new Texture(Gdx.files.internal("images/terminal/background.png")));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         background.setPosition(0, 0);
+    }
+
+    /**
+     * Handle a clear command.
+     */
+    public void onClearCommand() {
+        this.terminalArea.clear();
+    }
+
+    /**
+     * Handle an unknown command.
+     * @param command The unknown command.
+     */
+    public void onUnknownCommand(String command) {
+        terminalArea.printLine("invalid command: " + command, Colour.RED);
+    }
+
+    /**
+     * Handle a help request command.
+     */
+    public void onHelpCommand() {
+        terminalArea.print("clear    ", Colour.ORANGE);
+        terminalArea.printLine("clear the screen", Colour.GREY);
+        terminalArea.print("help     ", Colour.ORANGE);
+        terminalArea.printLine("get help with commands", Colour.GREY);
     }
 
     @Override
@@ -137,8 +162,8 @@ public class Terminal extends State implements InputProcessor {
             // Get the current input.
             String input = this.terminalArea.getInput();
 
-            // TODO Execute the current input as a command!
-            this.terminalArea.printLine("error: " + input, Colour.RED);
+            // Execute the trimmed current input as a command!
+            this.commandProcessor.process(input.trim());
 
             //  Clear the current input.
             this.terminalArea.setInput("");
