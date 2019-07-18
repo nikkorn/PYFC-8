@@ -226,6 +226,14 @@ public class Terminal extends State implements InputProcessor {
             // Get the current input.
             String input = this.terminalArea.getInput();
 
+            // Do nothing if there is no input.
+            if (input.equals("")) {
+                return true;
+            }
+
+            // Print the input to the terminal.
+            terminalArea.printLine(input.trim());
+
             // Execute the trimmed current input as a command!
             this.commandProcessor.process(input.trim());
 
