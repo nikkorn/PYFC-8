@@ -86,7 +86,7 @@ public class TerminalArea {
         this.height = lines * lineHeight;
 
         // Create the input line.
-        this.inputLine = new Line(config.inputPrefix);
+        this.inputLine = new Line(config.inputPrompt);
 
         // Add the input line.
         this.lines.add(inputLine);
@@ -109,6 +109,15 @@ public class TerminalArea {
 
         // The cursor may have moved out of the visible portion of the terminal area, get it back in view.
         this.focusCursor();
+    }
+
+    /**
+     * Sets the prefix text and colour.
+     * @param prefix The prefix text.
+     * @param colour The prefix colour.
+     */
+    public void setInputLinePrefix(String prefix, Colour colour) {
+        this.inputLine.setPrefix(prefix, colour);
     }
 
     /**
@@ -142,8 +151,8 @@ public class TerminalArea {
         // Modify column offset so the cursor remains in the area horizontally, excluding the columns taken up by the line number column.
         if (this.cursor.getColumnNumber() < columnOffset) {
             columnOffset = this.cursor.getColumnNumber();
-        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + columnCount - this.inputLine.getPrefix().length()) {
-            columnOffset = (this.cursor.getColumnNumber() + this.inputLine.getPrefix().length()) - columnCount;
+        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + columnCount - this.inputLine.getInputOffset()) {
+            columnOffset = (this.cursor.getColumnNumber() + this.inputLine.getInputOffset()) - columnCount;
         }
     }
 
@@ -288,7 +297,7 @@ public class TerminalArea {
         // Draw the cursor.
         this.fillColumn(
                 this.lines.indexOf(this.inputLine) - lineOffset,
-                (this.cursor.getColumnNumber() - columnOffset) + this.inputLine.getPrefix().length(),
+                (this.cursor.getColumnNumber() - columnOffset) + this.inputLine.getInputOffset(),
                 Palette.getColour(this.configuration.cursorColour),
                 shapeRenderer
         );
@@ -351,6 +360,9 @@ public class TerminalArea {
 
                 // Draw the character!
                 font.draw(batch, String.valueOf(column.getCharacter()), columnX, columnY);
+
+                // Reset the font colour back to the editor default.
+                font.setColor(Palette.getColour(this.configuration.fontColour));
             }
         }
     }

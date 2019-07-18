@@ -1,5 +1,7 @@
 package com.dumbpug.jfc8.device;
 
+import com.dumbpug.jfc8.device.filesystem.FileSystem;
+
 /**
  * Represents the physical console device.
  */
@@ -11,14 +13,14 @@ public class Device {
     /**
      * The device file system.
      */
-    private FileSystem fileSystem;
+    private com.dumbpug.jfc8.device.filesystem.FileSystem fileSystem;
 
     /**
      * Creates a new instance of the Device class.
      */
     public Device() {
         // Create the console file system.
-        this.fileSystem = new FileSystem();
+        this.fileSystem = new com.dumbpug.jfc8.device.filesystem.FileSystem();
     }
 
     /**
@@ -42,5 +44,13 @@ public class Device {
      */
     public void unload() {
         this.cartridge = null;
+    }
+
+    /**
+     * Get the file system of the device.
+     * @return The device file system.
+     */
+    public FileSystem getFileSystem() {
+        return this.fileSystem;
     }
 }

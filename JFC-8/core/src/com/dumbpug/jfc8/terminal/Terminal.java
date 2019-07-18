@@ -13,6 +13,7 @@ import com.dumbpug.jfc8.components.terminal.CursorMovement;
 import com.dumbpug.jfc8.components.terminal.TerminalArea;
 import com.dumbpug.jfc8.components.terminal.TerminalAreaConfiguration;
 import com.dumbpug.jfc8.device.Device;
+import com.dumbpug.jfc8.device.filesystem.InvalidPathException;
 import com.dumbpug.jfc8.font.FontProvider;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
@@ -76,9 +77,9 @@ public class Terminal extends State implements InputProcessor {
         );
 
         // Print the terminal header.
-        terminalArea.print("nikolas howard 2019 (c) ", Colour.GREY);
-        terminalArea.printLine("v0.0.1", Colour.FOREST);
-        terminalArea.printLine("\nType 'help' for help\n");
+        terminalArea.print("(c) nikolas howard 2019 ", Colour.GREY);
+        terminalArea.printLine("v0.0.1", Colour.IRON);
+        terminalArea.printLine("Type 'help' for help\n", Colour.GREY);
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/terminal/background.png")));
@@ -105,14 +106,52 @@ public class Terminal extends State implements InputProcessor {
      * Handle a help request command.
      */
     public void onHelpCommand() {
-        terminalArea.print("clear          ", Colour.ORANGE);
+        terminalArea.printLine("commands", Colour.PURPLE);
+        terminalArea.print("clear          ", Colour.YELLOW);
         terminalArea.printLine("clear the screen", Colour.GREY);
-        terminalArea.print("create [name]  ", Colour.ORANGE);
-        terminalArea.printLine("create a cartridge", Colour.GREY);
-        terminalArea.print("ls             ", Colour.ORANGE);
+        terminalArea.print("create [name]  ", Colour.YELLOW);
+        terminalArea.printLine("create a new cartridge", Colour.GREY);
+        terminalArea.print("load [name]    ", Colour.YELLOW);
+        terminalArea.printLine("load an exiting cartridge", Colour.GREY);
+        terminalArea.print("save           ", Colour.YELLOW);
+        terminalArea.printLine("save to current cartridge", Colour.GREY);
+        terminalArea.print("ls             ", Colour.YELLOW);
         terminalArea.printLine("list directory contents", Colour.GREY);
-        terminalArea.print("cd [path]      ", Colour.ORANGE);
+        terminalArea.print("cd [path]      ", Colour.YELLOW);
         terminalArea.printLine("change the current directory", Colour.GREY);
+        terminalArea.print("mkdir [path]   ", Colour.YELLOW);
+        terminalArea.printLine("make a directory", Colour.GREY);
+
+        terminalArea.printLine("\nshortcuts", Colour.PURPLE);
+        terminalArea.print("F1             ", Colour.YELLOW);
+        terminalArea.printLine("go to terminal", Colour.GREY);
+        terminalArea.print("F2             ", Colour.YELLOW);
+        terminalArea.printLine("go to script editor", Colour.GREY);
+    }
+
+    /**
+     * Handle a 'change directory' command.
+     * @param path The directory path.
+     */
+    public void onChangeDirectoryCommand(String path) {
+        try {
+            // Attempt to change the current directory in the filesystem.
+            this.device.getFileSystem().changeDirectory(path);
+
+            // Update the terminal input prefix to represent the current path.
+            this.terminalArea.setInputLinePrefix(this.device.getFileSystem().getPath(), Colour.FOREST);
+        } catch (InvalidPathException exception) {
+            terminalArea.printLine("invalid path: " + exception.getPath(), Colour.RED);
+        }
+    }
+
+    /**
+     * Handle a 'make directory' command.
+     * @param path The directory path.
+     */
+    public void onMakeDirectoryCommand(String path) {
+        // Attempt to change the current directory in the filesystem.
+        this.device.getFileSystem().makeDirectory(path);
     }
 
     @Override

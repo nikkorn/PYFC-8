@@ -28,9 +28,21 @@ public class CommandProcessor {
             return;
         }
 
-        // Is this a 'clear' command?
+        // Is this a 'help' command?
         if (command.toLowerCase().equals("help")) {
             this.terminal.onHelpCommand();
+            return;
+        }
+
+        // Is this a 'cd' command?
+        if (command.length() >= 3 && command.toLowerCase().substring(0, 3).equals("cd ")) {
+            this.terminal.onChangeDirectoryCommand(command.substring(3).trim());
+            return;
+        }
+
+        // Is this a 'mkdir' command?
+        if (command.length() >= 6 && command.toLowerCase().substring(0, 6).equals("mkdir ")) {
+            this.terminal.onMakeDirectoryCommand(command.substring(6).trim());
             return;
         }
 

@@ -14,15 +14,23 @@ public class Line {
     /**
      * The line prefix.
      */
-    private String prefix;
+    private String prefix = "";
+    /**
+     * The line prefix colour.
+     */
+    private Colour prefixColour = null;
+    /**
+     * The line prompt.
+     */
+    private String prompt;
 
     /**
      * Creates a new instance of the Line class.
-     * @param prefix The line prefix.
+     * @param prompt The line prompt.
      */
-    public Line(String prefix) {
-        // Set the line prefix.
-        this.prefix = prefix;
+    public Line(String prompt) {
+        // Set the line prompt.
+        this.prompt = prompt;
 
         // Add the initial empty column with a null column colour.
         columns.add(new Column(null));
@@ -33,6 +41,24 @@ public class Line {
      */
     public Line() {
         this("");
+    }
+
+    /**
+     * Sets the prefix text and colour.
+     * @param prefix The prefix text.
+     * @param colour The prefix colour.
+     */
+    public void setPrefix(String prefix, Colour colour) {
+        this.prefix       = prefix;
+        this.prefixColour = colour;
+    }
+
+    /**
+     * Gets the input offset.
+     * @return The input offset.
+     */
+    public int getInputOffset() {
+        return this.prefix.length() + this.prompt.length();
     }
 
     /**
@@ -82,14 +108,6 @@ public class Line {
 
         // Return the character at the column.
         return this.columns.get(column).getCharacter();
-    }
-
-    /**
-     * Gets the line prefix.
-     * @return The line prefix.
-     */
-    public String getPrefix() {
-        return prefix;
     }
 
     /**
@@ -154,6 +172,10 @@ public class Line {
         ArrayList<Column> columns = new ArrayList<Column>();
 
         for (char character : this.prefix.toCharArray()) {
+            columns.add(new Column(character, this.prefixColour));
+        }
+
+        for (char character : this.prompt.toCharArray()) {
             columns.add(new Column(character, null));
         }
 
