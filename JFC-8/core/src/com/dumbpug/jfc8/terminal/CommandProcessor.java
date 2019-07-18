@@ -34,6 +34,12 @@ public class CommandProcessor {
             return;
         }
 
+        // Is this a 'ls' command?
+        if (command.toLowerCase().equals("ls")) {
+            this.terminal.onListFilesCommand();
+            return;
+        }
+
         // Is this a 'cd' command?
         if (command.length() >= 3 && command.toLowerCase().substring(0, 3).equals("cd ")) {
             this.terminal.onChangeDirectoryCommand(command.substring(3).trim());

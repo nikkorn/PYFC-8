@@ -130,6 +130,18 @@ public class Terminal extends State implements InputProcessor {
     }
 
     /**
+     * Handle a 'list files' command.
+     */
+    public void onListFilesCommand() {
+        for (String name : this.device.getFileSystem().getDirectoryNamesInCurrentDirectory()) {
+            terminalArea.printLine(name + "/", Colour.PURPLE);
+        }
+        for (String name : this.device.getFileSystem().getFileNamesInCurrentDirectory()) {
+            terminalArea.printLine(name, Colour.YELLOW);
+        }
+    }
+
+    /**
      * Handle a 'change directory' command.
      * @param path The directory path.
      */

@@ -2,6 +2,10 @@ package com.dumbpug.jfc8.device.filesystem;
 
 import com.dumbpug.jfc8.Constants;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Represents the console file system.
@@ -30,7 +34,43 @@ public class FileSystem {
      * @return The path of the current directory.
      */
     public String getPath() {
-        return this.currentDir.getPath().substring(Constants.FILE_SYSTEM_ROOT.length());
+        return this.rootDir.toPath().relativize(this.currentDir.toPath()).normalize().toString();
+    }
+
+    /**
+     * Gets a sorted list of file names for files in the current directory.
+     * @return A sorted list of file names for files in the current directory.
+     */
+    public ArrayList<String> getFileNamesInCurrentDirectory() {
+        ArrayList<String> names = new ArrayList<String>();
+
+        for (File file : this.currentDir.listFiles()) {
+            if (!file.isDirectory()) {
+                names.add(file.getName());
+            }
+        }
+
+        Collections.sort(names);
+
+        return names;
+    }
+
+    /**
+     * Gets a sorted list of directory names for directories in the current directory.
+     * @return A sorted list of directory names for directories in the current directory.
+     */
+    public ArrayList<String> getDirectoryNamesInCurrentDirectory() {
+        ArrayList<String> names = new ArrayList<String>();
+
+        for (File file : this.currentDir.listFiles()) {
+            if (file.isDirectory()) {
+                names.add(file.getName());
+            }
+        }
+
+        Collections.sort(names);
+
+        return names;
     }
 
     /**
@@ -42,11 +82,16 @@ public class FileSystem {
         // Get the file that is a join of the current path and the new directory path.
         File targetDirectoryFile = new File(this.currentDir, path);
 
+        // Check whether the given path is a valid one and inside the root directory.
+        if (!this.isPathValid(targetDirectoryFile.toPath())) {
+            throw new InvalidPathException(this.rootDir.toPath().relativize(targetDirectoryFile.toPath()).normalize().toString());
+        }
+
         // Check to make sure that this is a valid directory to move to.
         if (targetDirectoryFile.exists() && targetDirectoryFile.isDirectory()) {
             this.currentDir = targetDirectoryFile;
         } else {
-            throw new InvalidPathException(targetDirectoryFile.getPath().substring(Constants.FILE_SYSTEM_ROOT.length()));
+            throw new InvalidPathException(this.rootDir.toPath().relativize(targetDirectoryFile.toPath()).normalize().toString());
         }
     }
 
@@ -82,5 +127,17 @@ public class FileSystem {
      */
     public void createCartridge(String cartridge) {
 
+    }
+
+    /**
+     * Gets whether the given path is valid.
+     * @param path The path to check.
+     * @return whether the given path is valid.
+     */
+    private boolean isPathValid(Path path) {
+        try {
+            return path.normalize().toFile().getCanonicalPath().startsWith(this.rootDir.getCanonicalPath());
+        } catch (IOException e) {}
+        return false;
     }
 }
