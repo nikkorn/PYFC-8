@@ -67,12 +67,12 @@ public class Terminal extends State implements InputProcessor {
 
         // Create the terminal text area.
         terminalArea = new TerminalArea(
-                Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
-                Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
+                (Constants.SCRIPT_EDITOR_MARGIN_SIZE * 3) * Constants.DISPLAY_PIXEL_SIZE,
+                (Constants.SCRIPT_EDITOR_MARGIN_SIZE * 2) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 18,
-                46,
+                44,
                 new TerminalAreaConfiguration()
         );
 
