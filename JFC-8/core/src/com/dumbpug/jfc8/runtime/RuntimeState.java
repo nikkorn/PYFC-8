@@ -2,6 +2,10 @@ package com.dumbpug.jfc8.runtime;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.jfc8.device.Device;
 import com.dumbpug.jfc8.state.State;
@@ -15,6 +19,7 @@ public class RuntimeState extends State {
      */
     private Device device;
 
+    private Texture _pixmapTexture;
     /**
      * Create a new instance of the RuntimeState class.
      * @param device The console device.
@@ -22,6 +27,11 @@ public class RuntimeState extends State {
     public RuntimeState(Device device) {
         // Get a reference to the console device.
         this.device = device;
+
+        Pixmap _pixmap = new Pixmap( 384, 256, Pixmap.Format.RGBA8888 );
+        _pixmap.setColor(Color.RED);
+        _pixmap.fillRectangle(12, 12, 20, 20);
+        _pixmapTexture = new Texture(_pixmap, Pixmap.Format.RGB888, false);
     }
 
     @Override
@@ -47,7 +57,7 @@ public class RuntimeState extends State {
 
     @Override
     public void render(SpriteBatch batch) {
-
+        batch.draw(_pixmapTexture,0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
