@@ -5,11 +5,16 @@ import com.badlogic.gdx.InputProcessor;
 import com.dumbpug.jfc8.Constants;
 import com.dumbpug.jfc8.components.textarea.CursorMovement;
 import com.dumbpug.jfc8.components.textarea.TextArea;
+import com.dumbpug.jfc8.device.Device;
 
 /**
  * The input processor to handle all input for the script editor application state.
  */
 public class ScriptEditorInputProcessor implements InputProcessor {
+    /**
+     * The console device.
+     */
+    private Device device;
     /**
      * The editor text area.
      */
@@ -17,9 +22,11 @@ public class ScriptEditorInputProcessor implements InputProcessor {
 
     /**
      * Creates a new instance of the ScriptEditorInputProcessor class.
+     * @param device The console device.
      * @param editorTextArea The editor text area.
      */
-    public ScriptEditorInputProcessor(TextArea editorTextArea) {
+    public ScriptEditorInputProcessor(Device device, TextArea editorTextArea) {
+        this.device         = device;
         this.editorTextArea = editorTextArea;
     }
 
@@ -52,17 +59,20 @@ public class ScriptEditorInputProcessor implements InputProcessor {
     public boolean keyTyped(char character) {
         // Process any backspace characters.
         if (character == '\b') {
+            // Do a backspace!
             this.editorTextArea.backspace();
-            return true;
+        } else {
+            // We want to ignore any key presses of invalid characters.
+            if (Constants.INPUT_VALID_CHARACTERS.indexOf(character) == -1) {
+                return false;
+            }
+
+            // This character should be inserted at the current editor cursor position.
+            this.editorTextArea.insertText(String.valueOf(character));
         }
 
-        // We want to ignore any key presses of invalid characters.
-        if (Constants.INPUT_VALID_CHARACTERS.indexOf(character) == -1) {
-            return false;
-        }
-
-        // This character should be inserted at the current editor cursor position.
-        this.editorTextArea.insertText(String.valueOf(character));
+        // Update the device's script editor to reflect this change.
+        this.device.getScriptEditor().setText(this.editorTextArea.getText());
 
         // The event was handled here.
         return true;

@@ -6,10 +6,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.jfc8.device.Device;
+import com.dumbpug.jfc8.scripteditor.ScriptEditorState;
 import com.dumbpug.jfc8.state.StateManager;
-import com.dumbpug.jfc8.scripteditor.ScriptEditor;
 import com.dumbpug.jfc8.state.states.Splash;
-import com.dumbpug.jfc8.terminal.Terminal;
+import com.dumbpug.jfc8.terminal.TerminalState;
 
 /**
  * The JFC8 application.
@@ -32,8 +32,8 @@ public class JFC8 extends ApplicationAdapter {
 		// Create the state manager and add the application states.
 		stateManager = new StateManager();
 		stateManager.addState(new Splash());
-		stateManager.addState(new Terminal(device));
-		stateManager.addState(new ScriptEditor(device));
+		stateManager.addState(new TerminalState(device));
+		stateManager.addState(new ScriptEditorState(device));
 
 		// Set the initial application state.
 		stateManager.setCurrentState("TERMINAL");

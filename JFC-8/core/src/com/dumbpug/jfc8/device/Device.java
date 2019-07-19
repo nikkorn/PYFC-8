@@ -13,15 +13,11 @@ public class Device {
     /**
      * The device file system.
      */
-    private com.dumbpug.jfc8.device.filesystem.FileSystem fileSystem;
-
+    private FileSystem fileSystem = new FileSystem();
     /**
-     * Creates a new instance of the Device class.
+     * The representation of the script editor in the context of the console device.
      */
-    public Device() {
-        // Create the console file system.
-        this.fileSystem = new com.dumbpug.jfc8.device.filesystem.FileSystem();
-    }
+    private ScriptEditor scriptEditor = new ScriptEditor();
 
     /**
      * Gets the currently loaded cartridge.
@@ -52,5 +48,13 @@ public class Device {
      */
     public FileSystem getFileSystem() {
         return this.fileSystem;
+    }
+
+    /**
+     * Gets the representation of the script editor in the context of the console device.
+     * @return The representation of the script editor in the context of the console device.
+     */
+    public ScriptEditor getScriptEditor() {
+        return this.scriptEditor;
     }
 }

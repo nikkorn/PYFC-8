@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * The terminal state of the application.
  */
-public class Terminal extends State implements InputProcessor {
+public class TerminalState extends State implements InputProcessor {
     /**
      * The console device.
      */
@@ -54,10 +54,10 @@ public class Terminal extends State implements InputProcessor {
     private Sprite background;
 
     /**
-     * Create a new instance of the Terminal class.
+     * Create a new instance of the TerminalState class.
      * @param device The console device.
      */
-    public Terminal(Device device) {
+    public TerminalState(Device device) {
         // Get a reference to the console device.
         this.device = device;
 

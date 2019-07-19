@@ -21,7 +21,7 @@ import com.dumbpug.jfc8.state.State;
 /**
  * The script editor state of the application.
  */
-public class ScriptEditor extends State {
+public class ScriptEditorState extends State {
     /**
      * The console device.
      */
@@ -48,10 +48,10 @@ public class ScriptEditor extends State {
     private Sprite background;
 
     /**
-     * Create a new instance of the ScriptEditor class.
+     * Create a new instance of the ScriptEditorState class.
      * @param device The console device.
      */
-    public ScriptEditor(Device device) {
+    public ScriptEditorState(Device device) {
         // Get a reference to the console device.
         this.device = device;
 
@@ -76,7 +76,7 @@ public class ScriptEditor extends State {
         );
 
         // Create the input processor for this state.
-        scriptEditorInputProcessor = new ScriptEditorInputProcessor(editorTextArea);
+        scriptEditorInputProcessor = new ScriptEditorInputProcessor(device, editorTextArea);
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/script_editor/background.png")));
@@ -88,6 +88,11 @@ public class ScriptEditor extends State {
     public void onEntry(State state) {
         // Set the application input processor to be the one associated with this state.
         Gdx.input.setInputProcessor(this.scriptEditorInputProcessor);
+
+        // If the device's script editor text differs from the editor text area text then update it now.
+        if (!this.editorTextArea.getText().equals(this.device.getScriptEditor().getText())) {
+            this.editorTextArea.setText(this.device.getScriptEditor().getText());
+        }
     }
 
     @Override
