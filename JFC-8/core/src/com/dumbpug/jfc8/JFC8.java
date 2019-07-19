@@ -7,12 +7,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.jfc8.device.Device;
 import com.dumbpug.jfc8.display.Screenshot;
+import com.dumbpug.jfc8.runtime.RuntimeState;
 import com.dumbpug.jfc8.scripteditor.ScriptEditorState;
 import com.dumbpug.jfc8.state.StateManager;
 import com.dumbpug.jfc8.state.states.Splash;
 import com.dumbpug.jfc8.terminal.TerminalState;
-
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +43,7 @@ public class JFC8 extends ApplicationAdapter {
 		stateManager.addState(new Splash());
 		stateManager.addState(new TerminalState(device));
 		stateManager.addState(new ScriptEditorState(device));
+		stateManager.addState(new RuntimeState(device));
 
 		// Set the initial application state.
 		stateManager.setCurrentState("TERMINAL");

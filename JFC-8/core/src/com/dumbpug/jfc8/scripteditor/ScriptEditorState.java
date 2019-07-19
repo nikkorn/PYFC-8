@@ -107,6 +107,9 @@ public class ScriptEditorState extends State {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             this.changeState("TERMINAL");
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            this.changeState("RUNTIME");
+        }
     }
 
     @Override

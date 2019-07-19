@@ -127,6 +127,8 @@ public class TerminalState extends State implements InputProcessor {
         terminalArea.printLine("go to terminal", Colour.GREY);
         terminalArea.print("F2             ", Colour.YELLOW);
         terminalArea.printLine("go to script editor", Colour.GREY);
+        terminalArea.print("F3             ", Colour.YELLOW);
+        terminalArea.printLine("run", Colour.GREY);
         terminalArea.print("F9             ", Colour.YELLOW);
         terminalArea.printLine("take screenshot", Colour.GREY);
     }
@@ -185,6 +187,9 @@ public class TerminalState extends State implements InputProcessor {
         // Check whether the user is attempting to move state.
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             this.changeState("SCRIPT_EDITOR");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            this.changeState("RUNTIME");
         }
     }
 
