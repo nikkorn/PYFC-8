@@ -30,11 +30,19 @@ public class FileSystem {
     }
 
     /**
-     * Get the path of the current directory.
+     * Gets the path of the current directory.
      * @return The path of the current directory.
      */
     public String getPath() {
         return this.rootDir.toPath().relativize(this.currentDir.toPath()).normalize().toString();
+    }
+
+    /**
+     * Gets the current directory.
+     * @return The current directory.
+     */
+    public File getCurrentDirectory() {
+        return this.currentDir;
     }
 
     /**

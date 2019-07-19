@@ -6,15 +6,25 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.jfc8.device.Device;
+import com.dumbpug.jfc8.display.Screenshot;
 import com.dumbpug.jfc8.scripteditor.ScriptEditorState;
 import com.dumbpug.jfc8.state.StateManager;
 import com.dumbpug.jfc8.state.states.Splash;
 import com.dumbpug.jfc8.terminal.TerminalState;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * The JFC8 application.
  */
 public class JFC8 extends ApplicationAdapter {
+	/**
+	 * The console device.
+	 */
+	private Device device;
 	/**
 	 * The state manager.
 	 */
@@ -27,7 +37,7 @@ public class JFC8 extends ApplicationAdapter {
 	@Override
 	public void create () {
 		// Create the actual representation of the fantasy console device.
-		Device device = new Device();
+		device = new Device();
 
 		// Create the state manager and add the application states.
 		stateManager = new StateManager();
@@ -62,6 +72,12 @@ public class JFC8 extends ApplicationAdapter {
 		batch.begin();
 		this.stateManager.render(batch);
 		batch.end();
+
+		// Process requests to take a screenshot of the application.
+		if (Gdx.input.isKeyJustPressed(Input.Keys.F9)) {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss.SSS");
+			Screenshot.capture(this.device.getFileSystem().getCurrentDirectory(), dateFormat.format(new Date()));
+		}
 	}
 	
 	@Override

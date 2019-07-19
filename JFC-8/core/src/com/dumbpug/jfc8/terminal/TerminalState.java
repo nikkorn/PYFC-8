@@ -127,6 +127,8 @@ public class TerminalState extends State implements InputProcessor {
         terminalArea.printLine("go to terminal", Colour.GREY);
         terminalArea.print("F2             ", Colour.YELLOW);
         terminalArea.printLine("go to script editor", Colour.GREY);
+        terminalArea.print("F9             ", Colour.YELLOW);
+        terminalArea.printLine("take screenshot", Colour.GREY);
     }
 
     /**
