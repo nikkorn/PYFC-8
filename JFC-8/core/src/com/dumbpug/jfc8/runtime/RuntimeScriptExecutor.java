@@ -33,6 +33,7 @@ public class RuntimeScriptExecutor {
 
         engine.put("_adapter_", scriptAdapter);
         engine.eval("this['line'] = function (x,y,w,h,c) { _adapter_.line(x,y,w,h,c); };");
+        engine.eval("this['circle'] = function (x,y,r,c,f) { _adapter_.circle(x,y,r,c,f); };");
 
         // Evaluate the actual script.
         engine.eval(script);

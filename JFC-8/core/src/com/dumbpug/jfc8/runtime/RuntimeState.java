@@ -91,6 +91,11 @@ public class RuntimeState extends State {
             }
         }
 
+        // Dispose of any previously created texture to avoid memory leaks.
+        if (this.displayPixmapTexture != null) {
+            this.displayPixmapTexture.dispose();
+        }
+
         // Create a drawable texture based on the contents of the display pixmap.
         this.displayPixmapTexture = new Texture(this.displayPixmap, Pixmap.Format.RGB888, false);
     }
