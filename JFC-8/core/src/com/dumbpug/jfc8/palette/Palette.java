@@ -41,4 +41,19 @@ public class Palette {
     public static Color getColour(Colour colour) {
         return colourMap.get(colour);
     }
+
+    /**
+     * Get the gdx equivalent of the given colour.
+     * @param value The colour value as an integer.
+     * @return The ordinal of the given colour.
+     */
+    public static Colour getColour(int value) {
+        for (Colour colour : colourMap.keySet()) {
+            if (colourMap.get(colour).toIntBits() == value) {
+                return colour;
+            }
+        }
+
+        return null;
+    }
 }
