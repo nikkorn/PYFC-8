@@ -19,39 +19,77 @@ public class ScriptAdapter {
         this.pixmap = pixmap;
     }
 
+    /**
+     * Get the colour of a pixel
+     * @param x The x position of the pixel.
+     * @param y The y position of the pixel.
+     * @return The colour of the pixel.
+     */
     public int getPixel(int x, int y) {
         return Palette.getColour(this.pixmap.getPixel(x, y)).ordinal();
     }
 
+    /**
+     * Set the colour of a pixel.
+     * @param x The x position of the pixel.
+     * @param y The y position of the pixel.
+     * @param colour The colour of the pixel.
+     */
     public void setPixel(int x, int y, int colour) {
         this.pixmap.setColor(Palette.getColour(Colour.values()[colour]));
         this.pixmap.drawPixel(x, y);
     }
 
+    /**
+     * Draw a line.
+     * @param x0 The x position of the first point.
+     * @param y0 The y position of the first point.
+     * @param x1 The x position of the second point.
+     * @param y1 The y position of the second point.
+     * @param colour The colour of the line.
+     */
     public void line(int x0, int y0, int x1, int y1, int colour) {
         this.pixmap.setColor(Palette.getColour(Colour.values()[colour]));
         this.pixmap.drawLine(x0, y0, x1, y1);
     }
 
-    public void circle(int x, int y, int radius, int colour, boolean fill) {
-        // TODO
-    }
-
     /**
-     * Draw a rect.
-     * @param x0
-     * @param y0
-     * @param x1
-     * @param y1
-     * @param colour
-     * @param fill
+     * Draw a circle.
+     * @param x The x position of the circle origin.
+     * @param y The y position of the circle origin.
+     * @param radius The radius of the circle.
+     * @param colour The colour of the circle.
+     * @param fill Whether to fill the circle.
      */
-    public void rect(int x0, int y0, int x1, int y1, int colour, boolean fill) {
-        // TODO
+    public void circle(int x, int y, int radius, int colour, boolean fill) {
+        this.pixmap.setColor(Palette.getColour(Colour.values()[colour]));
+        if (fill) {
+            this.pixmap.fillCircle(x, y, radius);
+        } else {
+            this.pixmap.drawCircle(x, y, radius);
+        }
     }
 
     /**
-     * Clear the screen
+     * Draw a rectangle.
+     * @param x The x position of the rectangle.
+     * @param y The y position of the rectangle.
+     * @param width The width of the rectangle.
+     * @param height The height of the rectangle.
+     * @param colour The colour of the rectangle.
+     * @param fill Whether to fill the rectangle.
+     */
+    public void rect(int x, int y, int width, int height, int colour, boolean fill) {
+        this.pixmap.setColor(Palette.getColour(Colour.values()[colour]));
+        if (fill) {
+            this.pixmap.fillRectangle(x, y, width, height);
+        } else {
+            this.pixmap.drawRectangle(x, y, width, height);
+        }
+    }
+
+    /**
+     * Clear the screen.
      */
     public void cls() {
         this.pixmap.setColor(Palette.getColour(Colour.BLACK));

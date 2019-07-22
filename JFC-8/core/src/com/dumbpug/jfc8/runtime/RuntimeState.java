@@ -9,7 +9,6 @@ import com.dumbpug.jfc8.device.Device;
 import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
 import com.dumbpug.jfc8.state.State;
-import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
@@ -49,7 +48,7 @@ public class RuntimeState extends State {
     @Override
     public void onEntry(State state) {
         // Create the display pixmap.
-        this.displayPixmap = new Pixmap( 384, 256, Pixmap.Format.RGBA8888 );
+        this.displayPixmap = new Pixmap( 384, 256, Pixmap.Format.RGBA8888);
         this.displayPixmap.setColor(Palette.getColour(Colour.BLACK));
         this.displayPixmap.fill();
 
@@ -66,7 +65,6 @@ public class RuntimeState extends State {
 
     @Override
     public void onExit() {
-
     }
 
     @Override
