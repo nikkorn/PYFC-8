@@ -15,7 +15,7 @@ public class ScriptAdapter {
      * Create a new instance of the ScriptAdapter class.
      * @param pixmap The display pixmap.
      */
-    public ScriptAdapter(Pixmap pixmap) {
+    ScriptAdapter(Pixmap pixmap) {
         this.pixmap = pixmap;
     }
 

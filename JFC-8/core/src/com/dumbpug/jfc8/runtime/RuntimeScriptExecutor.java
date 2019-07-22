@@ -33,6 +33,9 @@ public class RuntimeScriptExecutor {
 
         engine.put("_adapter_", scriptAdapter);
 
+        // Working!
+        engine.eval("this['line'] = function () { print('LINE'); };");
+
         engine.eval(script);
 
         // javax.script.Invocable is an optional interface.
