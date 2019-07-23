@@ -1,5 +1,6 @@
 package com.dumbpug.jfc8.device;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
@@ -10,6 +11,10 @@ public class Cartridge {
      * The file on disk that represents the cartridge.
      */
     private File cartridgeFile;
+    /**
+     * The cartridge label image.
+     */
+    private BufferedImage label;
 
     /**
      * Creates a new instance of the cartridge class.
@@ -20,9 +25,18 @@ public class Cartridge {
     }
 
     /**
+     * Sets the cartridge label.
+     * @param label The cartridge label.
+     */
+    public void setLabel(BufferedImage label) {
+        this.label = label;
+    }
+
+    /**
      * Overwrite the cartridge on disk.
      */
     public void overwrite() {
         // TODO ....
+        // TODO If a label has been set then we need to create a new cart image.
     }
 }

@@ -78,8 +78,16 @@ public class JFC8 extends ApplicationAdapter {
 
 		// Process requests to take a screenshot of the application.
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F9)) {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss.SSS");
-			Screenshot.capture(this.device.getFileSystem().getCurrentDirectory(), dateFormat.format(new Date()));
+			// If the control key was held when taking the screenshot the user is attempting to set the cartridge label.
+			if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) {
+				// Set current cartridge label image if a cartridge is loaded.
+				if (this.device.getCartridge() != null) {
+					this.device.getCartridge().setLabel(Screenshot.capture());
+				}
+			} else {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss.SSS");
+				Screenshot.write(this.device.getFileSystem().getCurrentDirectory(), dateFormat.format(new Date()));
+			}
 		}
 	}
 	
