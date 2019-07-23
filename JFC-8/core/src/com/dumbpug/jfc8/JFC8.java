@@ -57,13 +57,16 @@ public class JFC8 extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(0.219f, 0.219f, 0.239f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// Toggle whether the system cursor is caught on presses of the F12 key.
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
 			Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
 		}
+
+		// Write the FPS to the console.
+		System.out.println(Gdx.graphics.getFramesPerSecond() + " FPS");
 
 		// Update the current application state.
 		this.stateManager.update();
