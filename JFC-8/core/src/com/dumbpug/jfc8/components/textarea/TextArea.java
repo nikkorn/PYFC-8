@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
 import java.util.ArrayList;
 
@@ -452,7 +453,25 @@ public class TextArea {
         // As we are about to use the shape renderer content we should end our batch render temporarily.
         batch.end();
 
-        // TODO Draw the selection.
+        // TODO Draw the selection if there is one.
+        if (this.cursor.getSelectionOrigin() != null) {
+            int selectionMinLine   = Math.min(this.cursor.getLineNumber(), this.cursor.getSelectionOrigin().getLine());
+            int selectionMaxLine   = Math.max(this.cursor.getLineNumber(), this.cursor.getSelectionOrigin().getLine());
+            int selectionMinColumn = Math.min(this.cursor.getColumnNumber(), this.cursor.getSelectionOrigin().getColumn());
+            int selectionMaxColumn = Math.max(this.cursor.getColumnNumber(), this.cursor.getSelectionOrigin().getColumn());
+
+            for (int line = selectionMinLine; line <= selectionMaxLine; line++) {
+                for (int column = selectionMinColumn; column <= selectionMaxColumn; column++) {
+                    // Draw the selection column.
+                    this.fillColumn(
+                            line - lineOffset,
+                            (column - columnOffset) + this.getLineNumberColumnWidth(),
+                            Palette.getColour(Colour.NAVY),
+                            shapeRenderer
+                    );
+                }
+            }
+        }
 
         // Draw the cursor.
         this.fillColumn(
