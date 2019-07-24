@@ -2,6 +2,7 @@ package com.dumbpug.jfc8.scripteditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -27,9 +28,9 @@ public class ScriptEditorState extends State {
      */
     private Device device;
     /**
-     * The input processor for this state.
+     * The state input multiplexer.
      */
-    private ScriptEditorInputProcessor scriptEditorInputProcessor;
+    private InputMultiplexer stateInputProcessor;
     /**
      * The shape renderer to use in drawing the editor.
      */
@@ -75,8 +76,10 @@ public class ScriptEditorState extends State {
                 editorTextAreaConfig
         );
 
-        // Create the input processor for this state.
-        scriptEditorInputProcessor = new ScriptEditorInputProcessor(device, editorTextArea);
+        // Create the input multiplexer for the state.
+        stateInputProcessor = new InputMultiplexer();
+        stateInputProcessor.addProcessor(new ScriptEditorStateInputProcessor(device, editorTextArea));
+        stateInputProcessor.addProcessor(editorTextArea.getInputProcessor());
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/script_editor/background.png")));
@@ -87,7 +90,7 @@ public class ScriptEditorState extends State {
     @Override
     public void onEntry(State state) {
         // Set the application input processor to be the one associated with this state.
-        Gdx.input.setInputProcessor(this.scriptEditorInputProcessor);
+        Gdx.input.setInputProcessor(this.stateInputProcessor);
 
         // If the device's script editor text differs from the editor text area text then update it now.
         if (!this.editorTextArea.getText().equals(this.device.getScriptEditor().getText())) {

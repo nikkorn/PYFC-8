@@ -26,4 +26,8 @@ public class TextAreaConfiguration {
      * The colour to use for the line number font.
      */
     public Colour lineNumberFontColour = Colour.WHITE;
+    /**
+     * Whether to match previous line indentation on new lines.
+     */
+    public boolean matchIndentationOnNewLine = true;
 }

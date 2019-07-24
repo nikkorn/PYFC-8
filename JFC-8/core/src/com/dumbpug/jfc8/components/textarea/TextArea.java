@@ -17,6 +17,10 @@ public class TextArea {
      */
     private TextAreaConfiguration configuration = new TextAreaConfiguration();
     /**
+     * The input processor for this text area.
+     */
+    private TextAreaInputProcessor inputProcessor = new TextAreaInputProcessor(this);
+    /**
      * The number of rows and columns.
      */
     private int lineCount, columnCount;
@@ -95,6 +99,72 @@ public class TextArea {
     public TextArea(float x, float y, float lineHeight, float columnWidth, int lines, int columns, TextAreaConfiguration config) {
         this(x, y, lineHeight,columnWidth, lines, columns);
         this.configuration = config;
+    }
+
+    /**
+     * Gets the x position of the text area.
+     * @return The x position of the text area.
+     */
+    public float getX() {
+        return x;
+    }
+
+    /**
+     * Gets the y position of the text area.
+     * @return The the y position of the text area.
+     */
+    public float getY() {
+        return y;
+    }
+
+    /**
+     * Gets the width of the control.
+     * @return The width of the control.
+     */
+    public float getWidth() {
+        return width;
+    }
+
+    /**
+     * Gets the height of the control.
+     * @return The height of the control.
+     */
+    public float getHeight() {
+        return height;
+    }
+
+    /**
+     * Sets the text area text and resets the cursor position.
+     * @param text The text to set as the text area value.
+     */
+    public void setText(String text) {
+        // Clear the lines in the text area.
+        this.lines.clear();
+
+        // Add the initial empty line.
+        lines.add(new Line());
+
+        // Reset the cursor position.
+        this.cursor.reset();
+
+        // Insert the text.
+        this.insertText(text);
+    }
+
+    /**
+     * Gets the text area text.
+     * @return The text area text.
+     */
+    public String getText() {
+        return this.text;
+    }
+
+    /**
+     * Gets the text editor input processor.
+     * @return The text editor input processor.
+     */
+    public TextAreaInputProcessor getInputProcessor() {
+        return inputProcessor;
     }
 
     /**
@@ -177,32 +247,6 @@ public class TextArea {
         } else if (this.cursor.getColumnNumber() + 1 > columnOffset + (columnCount - this.getLineNumberColumnWidth())) {
             columnOffset = (this.cursor.getColumnNumber() + 1) - (columnCount - this.getLineNumberColumnWidth());
         }
-    }
-
-    /**
-     * Sets the text area text and resets the cursor position.
-     * @param text The text to set as the text area value.
-     */
-    public void setText(String text) {
-        // Clear the lines in the text area.
-        this.lines.clear();
-
-        // Add the initial empty line.
-        lines.add(new Line());
-
-        // Reset the cursor position.
-        this.cursor.reset();
-
-        // Insert the text.
-        this.insertText(text);
-    }
-
-    /**
-     * Gets the text area text.
-     * @return The text area text.
-     */
-    public String getText() {
-        return this.text;
     }
 
     /**
@@ -333,6 +377,40 @@ public class TextArea {
 
     public void delete() {
         // TODO If not on last document character then move forward 1 and do a backspace.
+    }
+
+    /**
+     * Process a pointer down event and return whether it was processed by the text area.
+     * @param pointerX The pointer x position.
+     * @param pointerY The pointer y position.
+     * @return Whether the pointer down event was processed by the text area.
+     */
+    public boolean processPointerDown(int pointerX, int pointerY) {
+        if (!this.isPointerInTextAreaBounds(pointerX, pointerY)) {
+            return false;
+        }
+
+        int relativeX = pointerX - (int) this.getX();
+        int relativeY = (int) this.height - (int) (pointerY - this.getY());
+
+        int targetLine = lineOffset + (int) (relativeY / lineHeight);
+
+        // System.out.println("x: " + relativeX);
+        // System.out.println("y: " + relativeY);
+
+        this.setCursorPosition(targetLine, 0);
+
+        return true;
+    }
+
+    /**
+     * Process a pointer up event and return whether it was processed by the text area.
+     * @param pointerX The pointer x position.
+     * @param pointerY The pointer y position.
+     * @return Whether the pointer down event was processed by the text area.
+     */
+    public boolean processPointerUp(int pointerX, int pointerY) {
+        return false;
     }
 
     /**
@@ -470,5 +548,28 @@ public class TextArea {
         }
 
         return String.valueOf(lineOffset + lineCount - 1).length() + 1;
+    }
+
+    /**
+     * Gets whether the given x/y pointer position is within the text area bounds.
+     * @param screenX The x position of the pointer.
+     * @param screenY The y position of the pointer.
+     * @return Whether the given x/y pointer position is within the text area bounds.
+     */
+    private boolean isPointerInTextAreaBounds(int screenX, int screenY) {
+        if (screenX < this.getX()) {
+            return false;
+        }
+        if (screenX > (this.getX() + this.getWidth())) {
+            return false;
+        }
+        if (screenY < this.getY()) {
+            return false;
+        }
+        if (screenY > (this.getY() + this.getHeight())) {
+            return false;
+        }
+
+        return true;
     }
 }
