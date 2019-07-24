@@ -79,7 +79,7 @@ public class TextAreaInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        return this.textArea.processPointerDrag(screenX, Gdx.graphics.getHeight() - screenY);
     }
 
     @Override

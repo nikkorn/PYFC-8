@@ -210,7 +210,7 @@ public class TextArea {
      */
     public void moveCursor(CursorMovement movement) {
         // Attempting to move the cursor in any direction will cause the cursor selection to be thrown away.
-        this.cursor.setSelectionLength(0);
+        this.cursor.setSelectionOrigin(null);
 
         switch (movement) {
             case UP:
@@ -256,7 +256,7 @@ public class TextArea {
      */
     public void insertText(String text) {
         // Remove the currently selected text from the text area if there is any.
-        if(this.cursor.getSelectionLength() > 0) {
+        if(this.cursor.getSelectionOrigin() != null) {
             // TODO Remove the currently selected text from the text area.
         }
 
@@ -380,7 +380,7 @@ public class TextArea {
     }
 
     /**
-     * Process a pointer down event and return whether it was processed by the text area.
+     * Try to process a pointer down event and return whether it was processed by the text area.
      * @param pointerX The pointer x position.
      * @param pointerY The pointer y position.
      * @return Whether the pointer down event was processed by the text area.
@@ -390,15 +390,44 @@ public class TextArea {
             return false;
         }
 
-        int relativeX = pointerX - (int) this.getX();
-        int relativeY = (int) this.height - (int) (pointerY - this.getY());
+        // Get the relative x/y pointer position in the text area, excluding the line number column.
+        int relativeX    = pointerX - (int) (this.getX() + this.getLineNumberColumnWidth() * columnWidth);
+        int relativeY    = (int) this.height - (int) (pointerY - this.getY());
 
-        int targetLine = lineOffset + (int) (relativeY / lineHeight);
+        // Get the line/column that the pointer is over.
+        int targetLine   = lineOffset + (int) (relativeY / lineHeight);
+        int targetColumn = columnOffset + (int) (relativeX / columnWidth);
 
-        // System.out.println("x: " + relativeX);
-        // System.out.println("y: " + relativeY);
+        // Set the cursor position to match the pointer location.
+        this.setCursorPosition(targetLine, targetColumn);
 
-        this.setCursorPosition(targetLine, 0);
+        // The pointer going down on a line/column marks the start of a text selection.
+        this.cursor.setSelectionOrigin(new SelectionOrigin(targetLine, targetColumn));
+
+        return true;
+    }
+
+    /**
+     * Try to process a pointer drag event and return whether it was processed by the text area.
+     * @param pointerX The pointer x position.
+     * @param pointerY The pointer y position.
+     * @return Whether the pointer down event was processed by the text area.
+     */
+    public boolean processPointerDrag(int pointerX, int pointerY) {
+        if (!this.isPointerInTextAreaBounds(pointerX, pointerY)) {
+            return false;
+        }
+
+        // Get the relative x/y pointer position in the text area, excluding the line number column.
+        int relativeX  = pointerX - (int) (this.getX() + this.getLineNumberColumnWidth() * columnWidth);
+        int relativeY  = (int) this.height - (int) (pointerY - this.getY());
+
+        // Get the line/column that the pointer is over.
+        int targetLine   = lineOffset + (int) (relativeY / lineHeight);
+        int targetColumn = columnOffset + (int) (relativeX / columnWidth);
+
+        // Set the cursor position to match the pointer location.
+        this.setCursorPosition(targetLine, targetColumn);
 
         return true;
     }
@@ -507,6 +536,18 @@ public class TextArea {
                 font.draw(batch, String.valueOf(character), columnX, columnY);
             }
         }
+    }
+
+    /**
+     * Clear the current text selection if there is any.
+     */
+    private void clearSelectedText() {
+        // There is nothing to do if there is no text selection origin.
+        if (this.cursor.getSelectionOrigin() == null) {
+            return;
+        }
+
+        // TODO Clear text selection.
     }
 
     /**
