@@ -599,14 +599,18 @@ public class TextArea {
      */
     private void clearText(int lineFrom, int columnFrom, int lineTo, int columnTo) {
         // Set the cursor at the correct position.
-        this.cursor.setLineNumber(lineTo);
-        this.cursor.setColumnNumber(columnTo);
+        this.cursor.setLineNumber(Math.max(lineFrom, lineTo));
+        this.cursor.setColumnNumber(Math.max(columnFrom, columnTo));
+
+        // Get the number of the line/column we are clearing until.
+        int targetLineNumber   = Math.min(lineFrom, lineTo);
+        int targetColumnNumber = Math.min(columnFrom, columnTo);
 
         // Move the cursor right once, as column removal takes place to the left of the cursor.
         this.moveCursor(CursorMovement.RIGHT);
 
         // We will be removing a column to the left of the cursor until we reach the first position in the selection.
-        while (!this.cursor.isAt(lineFrom, columnFrom)) {
+        while (!this.cursor.isAt(targetLineNumber, targetColumnNumber)) {
             // Get the line targeted by the cursor.
             Line targetLine = this.lines.get(this.cursor.getLineNumber());
 
