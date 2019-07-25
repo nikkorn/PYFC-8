@@ -411,7 +411,7 @@ public class TextArea {
         this.setCursorPosition(targetLine, targetColumn);
 
         // The pointer going down on a line/column marks the start of a text selection.
-        this.cursor.setSelectionOrigin(new SelectionOrigin(targetLine, targetColumn));
+        this.cursor.setSelectionOrigin(new SelectionOrigin(this.cursor.getLineNumber(), this.cursor.getColumnNumber()));
 
         return true;
     }
