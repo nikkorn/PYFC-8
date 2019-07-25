@@ -392,8 +392,8 @@ public class TextArea {
         }
 
         // Get the relative x/y pointer position in the text area, excluding the line number column.
-        int relativeX    = pointerX - (int) (this.getX() + this.getLineNumberColumnWidth() * columnWidth);
-        int relativeY    = (int) this.height - (int) (pointerY - this.getY());
+        int relativeX  = pointerX - (int) (this.getX() + this.getLineNumberColumnWidth() * columnWidth);
+        int relativeY  = (int) this.height - (int) (pointerY - this.getY());
 
         // Get the line/column that the pointer is over.
         int targetLine   = lineOffset + (int) (relativeY / lineHeight);
@@ -453,20 +453,45 @@ public class TextArea {
         // As we are about to use the shape renderer content we should end our batch render temporarily.
         batch.end();
 
-        // TODO Draw the selection if there is one.
+        // Draw the selection if there is one.
         if (this.cursor.getSelectionOrigin() != null) {
             int selectionMinLine   = Math.min(this.cursor.getLineNumber(), this.cursor.getSelectionOrigin().getLine());
             int selectionMaxLine   = Math.max(this.cursor.getLineNumber(), this.cursor.getSelectionOrigin().getLine());
             int selectionMinColumn = Math.min(this.cursor.getColumnNumber(), this.cursor.getSelectionOrigin().getColumn());
             int selectionMaxColumn = Math.max(this.cursor.getColumnNumber(), this.cursor.getSelectionOrigin().getColumn());
 
-            for (int line = selectionMinLine; line <= selectionMaxLine; line++) {
-                for (int column = selectionMinColumn; column <= selectionMaxColumn; column++) {
+            for (int lineNumber = selectionMinLine; lineNumber <= selectionMaxLine; lineNumber++) {
+                if (lineNumber >= this.lines.size()) {
+                    break;
+                }
+
+                // Get the current line.
+                Line line = this.lines.get(lineNumber);
+
+                for (int columnIndex = columnOffset; columnIndex < (columnOffset + columnCount) - this.getLineNumberColumnWidth(); columnIndex++) {
+                    // There is nothing to do if the current column index exceeds the actual number of columns in the current line.
+                    if (columnIndex >= line.getColumnCount()) {
+                        break;
+                    }
+
+                    // Get the character at the current line/column location.
+                    Character character = line.getCharacter(columnIndex);
+
+                    // There is nothing to do if there is no character.
+                    if (character == null) {
+                        continue;
+                    }
+
+                    // There is nothing to do if the current position is not in the selection range.
+                    if ((lineNumber == selectionMinLine && columnIndex < selectionMinColumn) || (lineNumber == selectionMaxLine && columnIndex > selectionMaxColumn)) {
+                        continue;
+                    }
+
                     // Draw the selection column.
                     this.fillColumn(
-                            line - lineOffset,
-                            (column - columnOffset) + this.getLineNumberColumnWidth(),
-                            Palette.getColour(Colour.NAVY),
+                            lineNumber - lineOffset,
+                            (columnIndex - columnOffset) + this.getLineNumberColumnWidth(),
+                            Palette.getColour(this.configuration.selectionColour),
                             shapeRenderer
                     );
                 }
@@ -576,6 +601,8 @@ public class TextArea {
     private void fillColumn(int line, int column, Color colour, ShapeRenderer shapeRenderer) {
         float columnX = x + (column * columnWidth);
         float columnY = (y + height) - ((line + 1) * lineHeight);
+
+        // TODO Return early if column x,y is not in viewable area.
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(colour);

@@ -17,7 +17,7 @@ public class TextAreaConfiguration {
     /**
      * The colour to use for the text selection.
      */
-    public Colour selectionColour = Colour.GREY;
+    public Colour selectionColour = Colour.FOREST;
     /**
      * Whether to include line numbers to the left of the text area.
      */
