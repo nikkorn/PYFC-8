@@ -221,10 +221,23 @@ public class TextArea {
                 this.setCursorPosition(this.cursor.getLineNumber() + 1, this.cursor.getColumnNumber());
                 break;
             case LEFT:
-                this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() - 1);
+                // Move to end of previous line if there is one and the cursor is at the start of the current line.
+                if (this.cursor.getColumnNumber() == 0 && this.cursor.getLineNumber() > 0) {
+                    this.setCursorPosition(this.cursor.getLineNumber() - 1, Integer.MAX_VALUE);
+                } else {
+                    this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() - 1);
+                }
                 break;
             case RIGHT:
-                this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() + 1);
+                // Get the current line.
+                Line currentLine = this.lines.get(this.cursor.getLineNumber());
+
+                // Move to start of the next line if there is one and the cursor is at the end of the current line.
+                if (this.cursor.getColumnNumber() == currentLine.getColumnCount() && this.cursor.getLineNumber() < this.lines.size() - 1) {
+                    this.setCursorPosition(this.cursor.getLineNumber() + 1, 0);
+                } else {
+                    this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() + 1);
+                }
                 break;
             default:
                 throw new RuntimeException("unknown cursor movement: " + movement);
@@ -258,7 +271,8 @@ public class TextArea {
     public void insertText(String text) {
         // Remove the currently selected text from the text area if there is any.
         if(this.cursor.getSelectionOrigin() != null) {
-            // TODO Remove the currently selected text from the text area.
+            // Remove the currently selected text from the text area.
+            this.delete();
         }
 
         // Insert the text at the cursor position, one character at a time.
@@ -377,7 +391,37 @@ public class TextArea {
     }
 
     public void delete() {
-        // TODO If not on last document character then move forward 1 and do a backspace.
+        // If there is no text selection then a delete will remove the character IN FRONT of the cursor.
+        if (this.cursor.getSelectionOrigin() == null) {
+            // TODO This does nothing if cursor is at end of file.
+            // We are just clearing all selected text.
+            this.clearText(
+                    this.cursor.getLineNumber(),
+                    this.cursor.getColumnNumber(),
+                    this.cursor.getLineNumber(),
+                    this.cursor.getColumnNumber() + 1
+            );
+        } else {
+            // We are just clearing all selected text.
+            this.clearText(
+                    this.cursor.getSelectionOrigin().getLine(),
+                    this.cursor.getSelectionOrigin().getColumn(),
+                    this.cursor.getLineNumber(),
+                    this.cursor.getColumnNumber()
+            );
+        }
+    }
+
+    /**
+     * Gets the selected text.
+     */
+    private String getSelectedText() {
+        // There is nothing to do if there is no text selection origin.
+        if (this.cursor.getSelectionOrigin() == null) {
+            return "";
+        }
+
+       return "";
     }
 
     /**
@@ -583,15 +627,73 @@ public class TextArea {
     }
 
     /**
-     * Clear the current text selection if there is any.
+     * Clear all text between a start and end line/column.
+     * @param lineFrom
+     * @param columnFrom
+     * @param lineTo
+     * @param columnTo
      */
-    private void clearSelectedText() {
-        // There is nothing to do if there is no text selection origin.
-        if (this.cursor.getSelectionOrigin() == null) {
-            return;
+    private void clearText(int lineFrom, int columnFrom, int lineTo, int columnTo) {
+        // Set the cursor at the correct position.
+        this.cursor.setLineNumber(lineTo);
+        this.cursor.setColumnNumber(columnTo + 1);
+
+        while (!(this.cursor.getLineNumber() == lineFrom && this.cursor.getColumnNumber() == columnFrom)) {
+            // Get the line targeted by the cursor.
+            Line targetLine = this.lines.get(this.cursor.getLineNumber());
+
+            // Check whether the cursor is at the very start of a line, if so then we are going to the previous line.
+            if (this.cursor.getColumnNumber() == 0) {
+                // If this is the first line then we cannot backspace onto another line.
+                if (this.cursor.getLineNumber() == 0) {
+                    break;
+                }
+
+                // Gather any columns that follow the cursor on the current line.
+                ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
+
+                // Get rid of the current line.
+                this.lines.remove(targetLine);
+
+                // Move the cursor super far to the right so that it will be clamped to the end of the previous line.
+                this.cursor.setColumnNumber(Integer.MAX_VALUE);
+
+                // Move the cursor up to the previous line.
+                this.moveCursor(CursorMovement.UP);
+
+                // Get the line we are now targeting.
+                targetLine = this.lines.get(this.cursor.getLineNumber());
+
+                // Get the column number that we need to set the cursor at after moving the chopped text up.
+                int finalColumnNumber = this.cursor.getColumnNumber();
+
+                // Move the chopped characters to the current line.
+                for (Character chopped : choppedCharacters) {
+                    // Add the character to the current line (the one targeted by the cursor)
+                    targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
+
+                    // The cursor column position will have to be moved to the right to account for the added column.
+                    this.moveCursor(CursorMovement.RIGHT);
+                }
+
+                // Move the cursor back to the position that was originally the end of the line that we backspaced to.
+                this.cursor.setColumnNumber(finalColumnNumber);
+            } else {
+                // Get rid of the column before the cursor.
+                targetLine.removeCharacter(this.cursor.getColumnNumber() - 1);
+
+                System.out.println(this.cursor.getColumnNumber());
+
+                // Update the cursor position to account for the removed column.
+                this.moveCursor(CursorMovement.LEFT);
+            }
         }
 
-        // TODO Clear text selection.
+        // Focus on the cursor.
+        this.focusCursor();
+
+        // Update the text area text.
+        this.updateTextAreaText();
     }
 
     /**

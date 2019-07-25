@@ -39,6 +39,12 @@ public class TextAreaInputProcessor implements InputProcessor {
             return true;
         }
 
+        // Process presses of the forward DELETE key.
+        if (keycode == Input.Keys.FORWARD_DEL) {
+            this.textArea.delete();
+            return true;
+        }
+
         return false;
     }
 
