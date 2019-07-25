@@ -325,81 +325,42 @@ public class TextArea {
      * Carry out a backspace operation.
      */
     public void backspace() {
-        // TODO Do this per selected column, but at least once.
-
-        // There are two scenarios.
-        // 1- cursor is at start of the line. So:
-        //         - Chop the remaining.
-        //         - delete the current line
-        //         - move cursor up a line and to the end of it
-        //         - reinsert chopped text.
-        // 2- cursor is not at start of the line. So:
-        //         - remove previous column from current line
-        //         - update the cursor column
-
-        // Get the line targeted by the cursor.
-        Line targetLine = this.lines.get(this.cursor.getLineNumber());
-
-        if (this.cursor.getColumnNumber() == 0) {
-            // If this is the first line then we cannot backspace onto another line.
-            if (this.cursor.getLineNumber() == 0) {
+        // If there is a text selection then we should just delete the selection.
+        if (this.cursor.getSelectionOrigin() != null) {
+            this.delete();
+        } else {
+            // We cannot do a backspace if we are already at line 0 / column 0.
+            if (this.cursor.isAt(0,0)) {
                 return;
             }
 
-            // Gather any columns that follow the cursor on the current line.
-            ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
-
-            // Get rid of the current line.
-            this.lines.remove(targetLine);
-
-            // Move the cursor super far to the right so that it will be clamped to the end of the previous line.
-            this.cursor.setColumnNumber(Integer.MAX_VALUE);
-
-            // Move the cursor up to the previous line.
-            this.moveCursor(CursorMovement.UP);
-
-            // Get the line we are now targeting.
-            targetLine = this.lines.get(this.cursor.getLineNumber());
-
-            // Get the column number that we need to set the cursor at after moving the chopped text up.
-            int finalColumnNumber = this.cursor.getColumnNumber();
-
-            // Move the chopped characters to the current line.
-            for (Character chopped : choppedCharacters) {
-                // Add the character to the current line (the one targeted by the cursor)
-                targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
-
-                // The cursor column position will have to be moved to the right to account for the added column.
-                this.moveCursor(CursorMovement.RIGHT);
-            }
-
-            // Move the cursor back to the position that was originally the end of the line that we backspaced to.
-            this.cursor.setColumnNumber(finalColumnNumber);
-
-            // Focus on the cursor.
-            this.focusCursor();
-        } else {
-            // Get rid of the column before the cursor.
-            targetLine.removeCharacter(this.cursor.getColumnNumber() - 1);
-
-            // Update the cursor position to account for the removed column.
+            // Move the cursor to the left once so that the character to be removed is actually the one to the left.
             this.moveCursor(CursorMovement.LEFT);
-        }
 
-        // Update the text area text.
-        this.updateTextAreaText();
-    }
-
-    public void delete() {
-        // If there is no text selection then a delete will remove the character IN FRONT of the cursor.
-        if (this.cursor.getSelectionOrigin() == null) {
-            // TODO This does nothing if cursor is at end of file.
-            // We are just clearing all selected text.
+            // We are just clearing a single column.
             this.clearText(
                     this.cursor.getLineNumber(),
                     this.cursor.getColumnNumber(),
                     this.cursor.getLineNumber(),
-                    this.cursor.getColumnNumber() + 1
+                    this.cursor.getColumnNumber()
+            );
+        }
+    }
+
+    /**
+     * Carry out a delete operation.
+     */
+    public void delete() {
+        // If there is no text selection then a delete will remove the character IN FRONT of the cursor.
+        if (this.cursor.getSelectionOrigin() == null) {
+            // TODO This does nothing if cursor is at end of file.
+
+            // We are just clearing a single column.
+            this.clearText(
+                    this.cursor.getLineNumber(),
+                    this.cursor.getColumnNumber(),
+                    this.cursor.getLineNumber(),
+                    this.cursor.getColumnNumber()
             );
         } else {
             // We are just clearing all selected text.
@@ -409,6 +370,9 @@ public class TextArea {
                     this.cursor.getLineNumber(),
                     this.cursor.getColumnNumber()
             );
+
+            // There is no more selection.
+            this.cursor.setSelectionOrigin(null);
         }
     }
 
@@ -636,9 +600,13 @@ public class TextArea {
     private void clearText(int lineFrom, int columnFrom, int lineTo, int columnTo) {
         // Set the cursor at the correct position.
         this.cursor.setLineNumber(lineTo);
-        this.cursor.setColumnNumber(columnTo + 1);
+        this.cursor.setColumnNumber(columnTo);
 
-        while (!(this.cursor.getLineNumber() == lineFrom && this.cursor.getColumnNumber() == columnFrom)) {
+        // Move the cursor right once, as column removal takes place to the left of the cursor.
+        this.moveCursor(CursorMovement.RIGHT);
+
+        // We will be removing a column to the left of the cursor until we reach the first position in the selection.
+        while (!this.cursor.isAt(lineFrom, columnFrom)) {
             // Get the line targeted by the cursor.
             Line targetLine = this.lines.get(this.cursor.getLineNumber());
 
@@ -681,8 +649,6 @@ public class TextArea {
             } else {
                 // Get rid of the column before the cursor.
                 targetLine.removeCharacter(this.cursor.getColumnNumber() - 1);
-
-                System.out.println(this.cursor.getColumnNumber());
 
                 // Update the cursor position to account for the removed column.
                 this.moveCursor(CursorMovement.LEFT);

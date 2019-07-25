@@ -67,6 +67,16 @@ public class Cursor {
     }
 
     /**
+     * Gets whether the cursor is at the specified line/column position.
+     * @param lineNumber The line number.
+     * @param columnNumber The column number;
+     * @return Whether the cursor is at the specified line/column position.
+     */
+    public boolean isAt(int lineNumber, int columnNumber) {
+        return this.getLineNumber() == lineNumber && this.getColumnNumber() == columnNumber;
+    }
+
+    /**
      * Reset the cursor position and selection.
      */
     public void reset() {
