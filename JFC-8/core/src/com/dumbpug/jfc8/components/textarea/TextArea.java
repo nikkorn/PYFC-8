@@ -442,7 +442,14 @@ public class TextArea {
      * @return Whether the pointer down event was processed by the text area.
      */
     public boolean processPointerUp(int pointerX, int pointerY) {
-        return false;
+        // If we have stopped dragging/clicking our pointer and the selection anchor matches the cursor position then just clear it.
+        if (this.cursor.getSelectionOrigin() != null &&
+                this.cursor.getSelectionOrigin().getLine() == this.cursor.getLineNumber() &&
+                this.cursor.getSelectionOrigin().getColumn() == this.cursor.getColumnNumber()) {
+            this.cursor.setSelectionOrigin(null);
+        }
+
+        return true;
     }
 
     /**
@@ -474,16 +481,8 @@ public class TextArea {
 
                 for (int columnIndex = columnOffset; columnIndex < (columnOffset + columnCount) - this.getLineNumberColumnWidth(); columnIndex++) {
                     // There is nothing to do if the current column index exceeds the actual number of columns in the current line.
-                    if (columnIndex >= line.getColumnCount()) {
+                    if (columnIndex > line.getColumnCount()) {
                         break;
-                    }
-
-                    // Get the character at the current line/column location.
-                    Character character = line.getCharacter(columnIndex);
-
-                    // There is nothing to do if there is no character.
-                    if (character == null) {
-                        continue;
                     }
 
                     // There is nothing to do if the current position is not in the selection range.
