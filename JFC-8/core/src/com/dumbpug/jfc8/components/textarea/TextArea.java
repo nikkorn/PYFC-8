@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dumbpug.jfc8.palette.Colour;
 import com.dumbpug.jfc8.palette.Palette;
 import java.util.ArrayList;
 
@@ -379,6 +378,7 @@ public class TextArea {
             return "";
         }
 
+        // TODO
        return "";
     }
 
@@ -455,14 +455,16 @@ public class TextArea {
         // As we are about to use the shape renderer content we should end our batch render temporarily.
         batch.end();
 
-        // Draw the selection if there is one.
+        // Draw the selection highlighting if there is actually a selection.
         if (this.cursor.getSelectionOrigin() != null) {
             // Get the positions of the cursor and selection origin.
             Position selectionOriginPosition = new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
             Position cursorPosition          = new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
             Range selectionRange             = new Range(selectionOriginPosition, cursorPosition);
 
+            // Iterate over every line/column in the selection and highlight each position.
             for (int lineNumber = selectionRange.getMin().getLine(); lineNumber <= selectionRange.getMax().getLine(); lineNumber++) {
+                // We are finished if the current line does not exist.
                 if (lineNumber >= this.lines.size()) {
                     break;
                 }
@@ -660,6 +662,9 @@ public class TextArea {
 
     /**
      * Fill a single column on a line with a colour.
+     * @param line The line number.
+     * @param column The column number.
+     * @param colour The colour to use.
      * @param shapeRenderer The shape renderer.
      */
     private void fillColumn(int line, int column, Color colour, ShapeRenderer shapeRenderer) {
