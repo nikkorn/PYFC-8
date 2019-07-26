@@ -339,10 +339,8 @@ public class TextArea {
 
             // We are just clearing a single column.
             this.clearText(
-                    this.cursor.getLineNumber(),
-                    this.cursor.getColumnNumber(),
-                    this.cursor.getLineNumber(),
-                    this.cursor.getColumnNumber()
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
         }
     }
@@ -357,18 +355,14 @@ public class TextArea {
 
             // We are just clearing a single column.
             this.clearText(
-                    this.cursor.getLineNumber(),
-                    this.cursor.getColumnNumber(),
-                    this.cursor.getLineNumber(),
-                    this.cursor.getColumnNumber()
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
         } else {
             // We are just clearing all selected text.
             this.clearText(
-                    this.cursor.getSelectionOrigin().getLine(),
-                    this.cursor.getSelectionOrigin().getColumn(),
-                    this.cursor.getLineNumber(),
-                    this.cursor.getColumnNumber()
+                new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn()),
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
 
             // There is no more selection.
@@ -463,12 +457,12 @@ public class TextArea {
 
         // Draw the selection if there is one.
         if (this.cursor.getSelectionOrigin() != null) {
-            int selectionMinLine   = Math.min(this.cursor.getLineNumber(), this.cursor.getSelectionOrigin().getLine());
-            int selectionMaxLine   = Math.max(this.cursor.getLineNumber(), this.cursor.getSelectionOrigin().getLine());
-            int selectionMinColumn = Math.min(this.cursor.getColumnNumber(), this.cursor.getSelectionOrigin().getColumn());
-            int selectionMaxColumn = Math.max(this.cursor.getColumnNumber(), this.cursor.getSelectionOrigin().getColumn());
+            // Get the positions of the cursor and selection origin.
+            Position selectionOriginPosition = new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
+            Position cursorPosition          = new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
+            Range selectionRange             = new Range(selectionOriginPosition, cursorPosition);
 
-            for (int lineNumber = selectionMinLine; lineNumber <= selectionMaxLine; lineNumber++) {
+            for (int lineNumber = selectionRange.getMin().getLine(); lineNumber <= selectionRange.getMax().getLine(); lineNumber++) {
                 if (lineNumber >= this.lines.size()) {
                     break;
                 }
@@ -491,7 +485,8 @@ public class TextArea {
                     }
 
                     // There is nothing to do if the current position is not in the selection range.
-                    if ((lineNumber == selectionMinLine && columnIndex < selectionMinColumn) || (lineNumber == selectionMaxLine && columnIndex > selectionMaxColumn)) {
+                    if ((lineNumber == selectionRange.getMin().getLine() && columnIndex < selectionRange.getMin().getColumn()) ||
+                            (lineNumber == selectionRange.getMax().getLine() && columnIndex > selectionRange.getMax().getColumn())) {
                         continue;
                     }
 
@@ -591,26 +586,23 @@ public class TextArea {
     }
 
     /**
-     * Clear all text between a start and end line/column.
-     * @param lineFrom
-     * @param columnFrom
-     * @param lineTo
-     * @param columnTo
+     * Clear all text between a start and end position.
+     * @param origin The origin position.
+     * @param target The target position.
      */
-    private void clearText(int lineFrom, int columnFrom, int lineTo, int columnTo) {
-        // Set the cursor at the correct position.
-        this.cursor.setLineNumber(Math.max(lineFrom, lineTo));
-        this.cursor.setColumnNumber(Math.max(columnFrom, columnTo));
+    private void clearText(Position origin, Position target) {
+        // Get the range between the start/end position.
+        Range clearRange = new Range(origin, target);
 
-        // Get the number of the line/column we are clearing until.
-        int targetLineNumber   = Math.min(lineFrom, lineTo);
-        int targetColumnNumber = Math.min(columnFrom, columnTo);
+        // Set the cursor at the correct position.
+        this.cursor.setLineNumber(clearRange.getMax().getLine());
+        this.cursor.setColumnNumber(clearRange.getMax().getColumn());
 
         // Move the cursor right once, as column removal takes place to the left of the cursor.
         this.moveCursor(CursorMovement.RIGHT);
 
         // We will be removing a column to the left of the cursor until we reach the first position in the selection.
-        while (!this.cursor.isAt(targetLineNumber, targetColumnNumber)) {
+        while (!this.cursor.isAt(clearRange.getMin().getLine(), clearRange.getMin().getColumn())) {
             // Get the line targeted by the cursor.
             Line targetLine = this.lines.get(this.cursor.getLineNumber());
 
