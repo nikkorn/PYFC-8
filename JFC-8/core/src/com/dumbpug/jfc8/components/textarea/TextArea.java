@@ -17,6 +17,10 @@ public class TextArea {
      */
     private TextAreaConfiguration configuration = new TextAreaConfiguration();
     /**
+     * The input processor for this text area.
+     */
+    private TextAreaInputProcessor inputProcessor = new TextAreaInputProcessor(this);
+    /**
      * The number of rows and columns.
      */
     private int lineCount, columnCount;
@@ -98,6 +102,72 @@ public class TextArea {
     }
 
     /**
+     * Gets the x position of the text area.
+     * @return The x position of the text area.
+     */
+    public float getX() {
+        return x;
+    }
+
+    /**
+     * Gets the y position of the text area.
+     * @return The the y position of the text area.
+     */
+    public float getY() {
+        return y;
+    }
+
+    /**
+     * Gets the width of the control.
+     * @return The width of the control.
+     */
+    public float getWidth() {
+        return width;
+    }
+
+    /**
+     * Gets the height of the control.
+     * @return The height of the control.
+     */
+    public float getHeight() {
+        return height;
+    }
+
+    /**
+     * Sets the text area text and resets the cursor position.
+     * @param text The text to set as the text area value.
+     */
+    public void setText(String text) {
+        // Clear the lines in the text area.
+        this.lines.clear();
+
+        // Add the initial empty line.
+        lines.add(new Line());
+
+        // Reset the cursor position.
+        this.cursor.reset();
+
+        // Insert the text.
+        this.insertText(text);
+    }
+
+    /**
+     * Gets the text area text.
+     * @return The text area text.
+     */
+    public String getText() {
+        return this.text;
+    }
+
+    /**
+     * Gets the text editor input processor.
+     * @return The text editor input processor.
+     */
+    public TextAreaInputProcessor getInputProcessor() {
+        return inputProcessor;
+    }
+
+    /**
      * Try to set the cursor at the specified line and column position.
      * @param line The line number.
      * @param column The column number.
@@ -140,7 +210,7 @@ public class TextArea {
      */
     public void moveCursor(CursorMovement movement) {
         // Attempting to move the cursor in any direction will cause the cursor selection to be thrown away.
-        this.cursor.setSelectionLength(0);
+        this.cursor.setSelectionOrigin(null);
 
         switch (movement) {
             case UP:
@@ -150,10 +220,23 @@ public class TextArea {
                 this.setCursorPosition(this.cursor.getLineNumber() + 1, this.cursor.getColumnNumber());
                 break;
             case LEFT:
-                this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() - 1);
+                // Move to end of previous line if there is one and the cursor is at the start of the current line.
+                if (this.cursor.getColumnNumber() == 0 && this.cursor.getLineNumber() > 0) {
+                    this.setCursorPosition(this.cursor.getLineNumber() - 1, Integer.MAX_VALUE);
+                } else {
+                    this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() - 1);
+                }
                 break;
             case RIGHT:
-                this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() + 1);
+                // Get the current line.
+                Line currentLine = this.lines.get(this.cursor.getLineNumber());
+
+                // Move to start of the next line if there is one and the cursor is at the end of the current line.
+                if (this.cursor.getColumnNumber() == currentLine.getColumnCount() && this.cursor.getLineNumber() < this.lines.size() - 1) {
+                    this.setCursorPosition(this.cursor.getLineNumber() + 1, 0);
+                } else {
+                    this.setCursorPosition(this.cursor.getLineNumber(), this.cursor.getColumnNumber() + 1);
+                }
                 break;
             default:
                 throw new RuntimeException("unknown cursor movement: " + movement);
@@ -180,40 +263,15 @@ public class TextArea {
     }
 
     /**
-     * Sets the text area text and resets the cursor position.
-     * @param text The text to set as the text area value.
-     */
-    public void setText(String text) {
-        // Clear the lines in the text area.
-        this.lines.clear();
-
-        // Add the initial empty line.
-        lines.add(new Line());
-
-        // Reset the cursor position.
-        this.cursor.reset();
-
-        // Insert the text.
-        this.insertText(text);
-    }
-
-    /**
-     * Gets the text area text.
-     * @return The text area text.
-     */
-    public String getText() {
-        return this.text;
-    }
-
-    /**
      * Inserts the text at the cursor position.
      * Any text selection will be cleared before the text is inserted.
      * @param text The text insert at the cursor position.
      */
     public void insertText(String text) {
         // Remove the currently selected text from the text area if there is any.
-        if(this.cursor.getSelectionLength() > 0) {
-            // TODO Remove the currently selected text from the text area.
+        if(this.cursor.getSelectionOrigin() != null) {
+            // Remove the currently selected text from the text area.
+            this.delete();
         }
 
         // Insert the text at the cursor position, one character at a time.
@@ -266,73 +324,132 @@ public class TextArea {
      * Carry out a backspace operation.
      */
     public void backspace() {
-        // TODO Do this per selected column, but at least once.
-
-        // There are two scenarios.
-        // 1- cursor is at start of the line. So:
-        //         - Chop the remaining.
-        //         - delete the current line
-        //         - move cursor up a line and to the end of it
-        //         - reinsert chopped text.
-        // 2- cursor is not at start of the line. So:
-        //         - remove previous column from current line
-        //         - update the cursor column
-
-        // Get the line targeted by the cursor.
-        Line targetLine = this.lines.get(this.cursor.getLineNumber());
-
-        if (this.cursor.getColumnNumber() == 0) {
-            // If this is the first line then we cannot backspace onto another line.
-            if (this.cursor.getLineNumber() == 0) {
+        // If there is a text selection then we should just delete the selection.
+        if (this.cursor.getSelectionOrigin() != null) {
+            this.delete();
+        } else {
+            // We cannot do a backspace if we are already at line 0 / column 0.
+            if (this.cursor.isAt(0,0)) {
                 return;
             }
 
-            // Gather any columns that follow the cursor on the current line.
-            ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
-
-            // Get rid of the current line.
-            this.lines.remove(targetLine);
-
-            // Move the cursor super far to the right so that it will be clamped to the end of the previous line.
-            this.cursor.setColumnNumber(Integer.MAX_VALUE);
-
-            // Move the cursor up to the previous line.
-            this.moveCursor(CursorMovement.UP);
-
-            // Get the line we are now targeting.
-            targetLine = this.lines.get(this.cursor.getLineNumber());
-
-            // Get the column number that we need to set the cursor at after moving the chopped text up.
-            int finalColumnNumber = this.cursor.getColumnNumber();
-
-            // Move the chopped characters to the current line.
-            for (Character chopped : choppedCharacters) {
-                // Add the character to the current line (the one targeted by the cursor)
-                targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
-
-                // The cursor column position will have to be moved to the right to account for the added column.
-                this.moveCursor(CursorMovement.RIGHT);
-            }
-
-            // Move the cursor back to the position that was originally the end of the line that we backspaced to.
-            this.cursor.setColumnNumber(finalColumnNumber);
-
-            // Focus on the cursor.
-            this.focusCursor();
-        } else {
-            // Get rid of the column before the cursor.
-            targetLine.removeCharacter(this.cursor.getColumnNumber() - 1);
-
-            // Update the cursor position to account for the removed column.
+            // Move the cursor to the left once so that the character to be removed is actually the one to the left.
             this.moveCursor(CursorMovement.LEFT);
-        }
 
-        // Update the text area text.
-        this.updateTextAreaText();
+            // We are just clearing a single column.
+            this.clearText(
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+            );
+        }
     }
 
+    /**
+     * Carry out a delete operation.
+     */
     public void delete() {
-        // TODO If not on last document character then move forward 1 and do a backspace.
+        // If there is no text selection then a delete will remove the character IN FRONT of the cursor.
+        if (this.cursor.getSelectionOrigin() == null) {
+            // TODO This does nothing if cursor is at end of file.
+
+            // We are just clearing a single column.
+            this.clearText(
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+            );
+        } else {
+            // We are just clearing all selected text.
+            this.clearText(
+                new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn()),
+                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+            );
+
+            // There is no more selection.
+            this.cursor.setSelectionOrigin(null);
+        }
+    }
+
+    /**
+     * Gets the selected text.
+     */
+    private String getSelectedText() {
+        // There is nothing to do if there is no text selection origin.
+        if (this.cursor.getSelectionOrigin() == null) {
+            return "";
+        }
+
+        // TODO
+       return "";
+    }
+
+    /**
+     * Try to process a pointer down event and return whether it was processed by the text area.
+     * @param pointerX The pointer x position.
+     * @param pointerY The pointer y position.
+     * @return Whether the pointer down event was processed by the text area.
+     */
+    public boolean processPointerDown(int pointerX, int pointerY) {
+        if (!this.isPointerInTextAreaBounds(pointerX, pointerY)) {
+            return false;
+        }
+
+        // Get the relative x/y pointer position in the text area, excluding the line number column.
+        int relativeX  = pointerX - (int) (this.getX() + this.getLineNumberColumnWidth() * columnWidth);
+        int relativeY  = (int) this.height - (int) (pointerY - this.getY());
+
+        // Get the line/column that the pointer is over.
+        int targetLine   = lineOffset + (int) (relativeY / lineHeight);
+        int targetColumn = columnOffset + (int) (relativeX / columnWidth);
+
+        // Set the cursor position to match the pointer location.
+        this.setCursorPosition(targetLine, targetColumn);
+
+        // The pointer going down on a line/column marks the start of a text selection.
+        this.cursor.setSelectionOrigin(new SelectionOrigin(this.cursor.getLineNumber(), this.cursor.getColumnNumber()));
+
+        return true;
+    }
+
+    /**
+     * Try to process a pointer drag event and return whether it was processed by the text area.
+     * @param pointerX The pointer x position.
+     * @param pointerY The pointer y position.
+     * @return Whether the pointer down event was processed by the text area.
+     */
+    public boolean processPointerDrag(int pointerX, int pointerY) {
+        if (!this.isPointerInTextAreaBounds(pointerX, pointerY)) {
+            return false;
+        }
+
+        // Get the relative x/y pointer position in the text area, excluding the line number column.
+        int relativeX  = pointerX - (int) (this.getX() + this.getLineNumberColumnWidth() * columnWidth);
+        int relativeY  = (int) this.height - (int) (pointerY - this.getY());
+
+        // Get the line/column that the pointer is over.
+        int targetLine   = lineOffset + (int) (relativeY / lineHeight);
+        int targetColumn = columnOffset + (int) (relativeX / columnWidth);
+
+        // Set the cursor position to match the pointer location.
+        this.setCursorPosition(targetLine, targetColumn);
+
+        return true;
+    }
+
+    /**
+     * Process a pointer up event and return whether it was processed by the text area.
+     * @param pointerX The pointer x position.
+     * @param pointerY The pointer y position.
+     * @return Whether the pointer down event was processed by the text area.
+     */
+    public boolean processPointerUp(int pointerX, int pointerY) {
+        // If we have stopped dragging/clicking our pointer and the selection anchor matches the cursor position then just clear it.
+        if (this.cursor.getSelectionOrigin() != null &&
+                this.cursor.getSelectionOrigin().getLine() == this.cursor.getLineNumber() &&
+                this.cursor.getSelectionOrigin().getColumn() == this.cursor.getColumnNumber()) {
+            this.cursor.setSelectionOrigin(null);
+        }
+
+        return true;
     }
 
     /**
@@ -345,7 +462,45 @@ public class TextArea {
         // As we are about to use the shape renderer content we should end our batch render temporarily.
         batch.end();
 
-        // TODO Draw the selection.
+        // Draw the selection highlighting if there is actually a selection.
+        if (this.cursor.getSelectionOrigin() != null) {
+            // Get the positions of the cursor and selection origin.
+            Position selectionOriginPosition = new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
+            Position cursorPosition          = new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
+            Range selectionRange             = new Range(selectionOriginPosition, cursorPosition);
+
+            // Iterate over every line/column in the selection and highlight each position.
+            for (int lineNumber = selectionRange.getMin().getLine(); lineNumber <= selectionRange.getMax().getLine(); lineNumber++) {
+                // We are finished if the current line does not exist.
+                if (lineNumber >= this.lines.size()) {
+                    break;
+                }
+
+                // Get the current line.
+                Line line = this.lines.get(lineNumber);
+
+                for (int columnIndex = columnOffset; columnIndex < (columnOffset + columnCount) - this.getLineNumberColumnWidth(); columnIndex++) {
+                    // There is nothing to do if the current column index exceeds the actual number of columns in the current line.
+                    if (columnIndex > line.getColumnCount()) {
+                        break;
+                    }
+
+                    // There is nothing to do if the current position is not in the selection range.
+                    if ((lineNumber == selectionRange.getMin().getLine() && columnIndex < selectionRange.getMin().getColumn()) ||
+                            (lineNumber == selectionRange.getMax().getLine() && columnIndex > selectionRange.getMax().getColumn())) {
+                        continue;
+                    }
+
+                    // Draw the selection column.
+                    this.fillColumn(
+                            lineNumber - lineOffset,
+                            (columnIndex - columnOffset) + this.getLineNumberColumnWidth(),
+                            Palette.getColour(this.configuration.selectionColour),
+                            shapeRenderer
+                    );
+                }
+            }
+        }
 
         // Draw the cursor.
         this.fillColumn(
@@ -432,12 +587,90 @@ public class TextArea {
     }
 
     /**
+     * Clear all text between a start and end position.
+     * @param origin The origin position.
+     * @param target The target position.
+     */
+    private void clearText(Position origin, Position target) {
+        // Get the range between the start/end position.
+        Range clearRange = new Range(origin, target);
+
+        // Set the cursor at the correct position.
+        this.cursor.setLineNumber(clearRange.getMax().getLine());
+        this.cursor.setColumnNumber(clearRange.getMax().getColumn());
+
+        // Move the cursor right once, as column removal takes place to the left of the cursor.
+        this.moveCursor(CursorMovement.RIGHT);
+
+        // We will be removing a column to the left of the cursor until we reach the first position in the selection.
+        while (!this.cursor.isAt(clearRange.getMin().getLine(), clearRange.getMin().getColumn())) {
+            // Get the line targeted by the cursor.
+            Line targetLine = this.lines.get(this.cursor.getLineNumber());
+
+            // Check whether the cursor is at the very start of a line, if so then we are going to the previous line.
+            if (this.cursor.getColumnNumber() == 0) {
+                // If this is the first line then we cannot backspace onto another line.
+                if (this.cursor.getLineNumber() == 0) {
+                    break;
+                }
+
+                // Gather any columns that follow the cursor on the current line.
+                ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
+
+                // Get rid of the current line.
+                this.lines.remove(targetLine);
+
+                // Move the cursor super far to the right so that it will be clamped to the end of the previous line.
+                this.cursor.setColumnNumber(Integer.MAX_VALUE);
+
+                // Move the cursor up to the previous line.
+                this.moveCursor(CursorMovement.UP);
+
+                // Get the line we are now targeting.
+                targetLine = this.lines.get(this.cursor.getLineNumber());
+
+                // Get the column number that we need to set the cursor at after moving the chopped text up.
+                int finalColumnNumber = this.cursor.getColumnNumber();
+
+                // Move the chopped characters to the current line.
+                for (Character chopped : choppedCharacters) {
+                    // Add the character to the current line (the one targeted by the cursor)
+                    targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
+
+                    // The cursor column position will have to be moved to the right to account for the added column.
+                    this.moveCursor(CursorMovement.RIGHT);
+                }
+
+                // Move the cursor back to the position that was originally the end of the line that we backspaced to.
+                this.cursor.setColumnNumber(finalColumnNumber);
+            } else {
+                // Get rid of the column before the cursor.
+                targetLine.removeCharacter(this.cursor.getColumnNumber() - 1);
+
+                // Update the cursor position to account for the removed column.
+                this.moveCursor(CursorMovement.LEFT);
+            }
+        }
+
+        // Focus on the cursor.
+        this.focusCursor();
+
+        // Update the text area text.
+        this.updateTextAreaText();
+    }
+
+    /**
      * Fill a single column on a line with a colour.
+     * @param line The line number.
+     * @param column The column number.
+     * @param colour The colour to use.
      * @param shapeRenderer The shape renderer.
      */
     private void fillColumn(int line, int column, Color colour, ShapeRenderer shapeRenderer) {
         float columnX = x + (column * columnWidth);
         float columnY = (y + height) - ((line + 1) * lineHeight);
+
+        // TODO Return early if column x,y is not in viewable area.
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(colour);
@@ -470,5 +703,28 @@ public class TextArea {
         }
 
         return String.valueOf(lineOffset + lineCount - 1).length() + 1;
+    }
+
+    /**
+     * Gets whether the given x/y pointer position is within the text area bounds.
+     * @param screenX The x position of the pointer.
+     * @param screenY The y position of the pointer.
+     * @return Whether the given x/y pointer position is within the text area bounds.
+     */
+    private boolean isPointerInTextAreaBounds(int screenX, int screenY) {
+        if (screenX < this.getX()) {
+            return false;
+        }
+        if (screenX > (this.getX() + this.getWidth())) {
+            return false;
+        }
+        if (screenY < this.getY()) {
+            return false;
+        }
+        if (screenY > (this.getY() + this.getHeight())) {
+            return false;
+        }
+
+        return true;
     }
 }

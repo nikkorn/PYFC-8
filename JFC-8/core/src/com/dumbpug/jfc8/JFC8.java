@@ -52,7 +52,7 @@ public class JFC8 extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		// Capture the system cursor.
-		Gdx.input.setCursorCatched(true);
+		// Gdx.input.setCursorCatched(true);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class JFC8 extends ApplicationAdapter {
 		}
 
 		// Write the FPS to the console.
-		System.out.println(Gdx.graphics.getFramesPerSecond() + " FPS");
+		// System.out.println(Gdx.graphics.getFramesPerSecond() + " FPS");
 
 		// Update the current application state.
 		this.stateManager.update();

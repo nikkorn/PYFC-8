@@ -7,8 +7,8 @@ public class ScriptEditor {
     /**
      * The script editor text
      */
-    private String text = "var r = 0;\nvar c = 1;\nfunction update() {\ncircle(191,128,Math.random()*300,c,false);\n" +
-            "r++;c++;\nif (c == 14) c = 1;\n};";
+    private String text = "var r = 0;\nvar c = 1;\nfunction update() {\n circle(191,128,Math.random()*300,c,false);\n " +
+            "r++;c++;\n if (c == 14) c = 1;\n};";
 
     /**
      * Gets the text in the script editor.

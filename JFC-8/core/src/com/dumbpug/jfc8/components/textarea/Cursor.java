@@ -12,10 +12,11 @@ public class Cursor {
      * The column at which the cursors is placed.
      */
     private int column = 0;
+
     /**
-     * The number of characters in the selection preceding the cursor.
+     * The origin of any current text selection, or null if no selection exists.
      */
-    private int selectionLength = 0;
+    private SelectionOrigin selectionOrigin = null;
 
     /**
      * Gets the line number at which the cursor is placed.
@@ -50,19 +51,29 @@ public class Cursor {
     }
 
     /**
-     * Gets the number of characters in the selection preceding the cursor.
-     * @return The number of characters in the selection preceding the cursor.
+     * Gets the origin of any current text selection, or null if no selection exists.
+     * @return The origin of any current text selection, or null if no selection exists.
      */
-    public int getSelectionLength() {
-        return selectionLength;
+    public SelectionOrigin getSelectionOrigin() {
+        return selectionOrigin;
     }
 
     /**
-     * Sets the number of characters in the selection preceding the cursor.
-     * @param selectionLength The number of characters in the selection preceding the cursor.
+     * Sets the origin of any current text selection, or null if no selection exists.
+     * @param selectionOrigin The origin of any current text selection, or null if no selection exists.
      */
-    public void setSelectionLength(int selectionLength) {
-        this.selectionLength = selectionLength;
+    public void setSelectionOrigin(SelectionOrigin selectionOrigin) {
+        this.selectionOrigin = selectionOrigin;
+    }
+
+    /**
+     * Gets whether the cursor is at the specified line/column position.
+     * @param lineNumber The line number.
+     * @param columnNumber The column number;
+     * @return Whether the cursor is at the specified line/column position.
+     */
+    public boolean isAt(int lineNumber, int columnNumber) {
+        return this.getLineNumber() == lineNumber && this.getColumnNumber() == columnNumber;
     }
 
     /**
@@ -71,6 +82,6 @@ public class Cursor {
     public void reset() {
         this.line            = 0;
         this.column          = 0;
-        this.selectionLength = 0;
+        this.selectionOrigin = null;
     }
 }

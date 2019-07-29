@@ -17,7 +17,7 @@ public class TextAreaConfiguration {
     /**
      * The colour to use for the text selection.
      */
-    public Colour selectionColour = Colour.GREY;
+    public Colour selectionColour = Colour.FOREST;
     /**
      * Whether to include line numbers to the left of the text area.
      */
@@ -26,4 +26,8 @@ public class TextAreaConfiguration {
      * The colour to use for the line number font.
      */
     public Colour lineNumberFontColour = Colour.WHITE;
+    /**
+     * Whether to match previous line indentation on new lines.
+     */
+    public boolean matchIndentationOnNewLine = true;
 }
