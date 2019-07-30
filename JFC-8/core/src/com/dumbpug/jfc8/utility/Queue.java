@@ -10,7 +10,7 @@ public class Queue<TItem> {
     /**
      * The list of items.
      */
-    private ArrayList<TItem> items = new ArrayList<TItem>();
+    protected ArrayList<TItem> items = new ArrayList<TItem>();
 
     /**
      * Get whether the queue contains an item.

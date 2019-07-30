@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dumbpug.jfc8.Constants;
+import com.dumbpug.jfc8.components.textarea.history.Snapshot;
+import com.dumbpug.jfc8.components.textarea.history.UndoStack;
+import com.dumbpug.jfc8.components.textarea.history.UndoableTextAreaUpdate;
 import com.dumbpug.jfc8.palette.Palette;
 import java.util.ArrayList;
 
@@ -60,6 +64,10 @@ public class TextArea {
      * The text area text.
      */
     private String text = "";
+    /**
+     * The text area operation undo stack.
+     */
+    private UndoStack<UndoableTextAreaUpdate> undoStack = new UndoStack<UndoableTextAreaUpdate>(Constants.SCRIPT_EDITOR_MAX_HISTORY_SNAPSHOTS);
 
     /**
      * Creates a new instance of the TerminalArea class.
@@ -160,6 +168,19 @@ public class TextArea {
     }
 
     /**
+     * Gets the selected text.
+     */
+    private String getSelectedText() {
+        // There is nothing to do if there is no text selection origin.
+        if (this.cursor.getSelectionOrigin() == null) {
+            return "";
+        }
+
+        // TODO
+        return "";
+    }
+
+    /**
      * Gets the text editor input processor.
      * @return The text editor input processor.
      */
@@ -240,25 +261,6 @@ public class TextArea {
                 break;
             default:
                 throw new RuntimeException("unknown cursor movement: " + movement);
-        }
-    }
-
-    /**
-     * Attempt to focus on the cursor.
-     */
-    public void focusCursor() {
-        // Modify line offset so that the cursor stays in area vertically.
-        if (this.cursor.getLineNumber() < lineOffset) {
-            lineOffset = this.cursor.getLineNumber();
-        } else if (this.cursor.getLineNumber() + 1 > lineOffset + lineCount) {
-            lineOffset = (this.cursor.getLineNumber() + 1) - lineCount;
-        }
-
-        // Modify column offset so the cursor remains in the area horizontally, excluding the columns taken up by the line number column.
-        if (this.cursor.getColumnNumber() < columnOffset) {
-            columnOffset = this.cursor.getColumnNumber();
-        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + (columnCount - this.getLineNumberColumnWidth())) {
-            columnOffset = (this.cursor.getColumnNumber() + 1) - (columnCount - this.getLineNumberColumnWidth());
         }
     }
 
@@ -369,17 +371,35 @@ public class TextArea {
         }
     }
 
+    public void undo() {
+
+    }
+
+    public void redo() {
+
+    }
+
     /**
-     * Gets the selected text.
+     * Apply a snapshot representing text area state to this text area.
+     * @param snapshot The snapshot to apply.
      */
-    private String getSelectedText() {
-        // There is nothing to do if there is no text selection origin.
-        if (this.cursor.getSelectionOrigin() == null) {
-            return "";
+    public void applySnapshot(Snapshot snapshot) {
+        // Set the text area text.
+        this.setText(snapshot.getText());
+
+        // Set the cursor position.
+        this.setCursorPosition(snapshot.getCursorPosition().getLine(), snapshot.getCursorPosition().getColumn());
+
+        // Set the cursor selection anchor.
+        if (snapshot.getSelectionAnchorPosition() == null) {
+            this.cursor.setSelectionOrigin(null);
+        } else {
+            this.cursor.setSelectionOrigin(new SelectionOrigin(snapshot.getSelectionAnchorPosition().getLine(), snapshot.getSelectionAnchorPosition().getColumn()));
         }
 
-        // TODO
-       return "";
+        // Set the line/column offset.
+        this.lineOffset  = snapshot.getLineOffset();
+        this.columnWidth = snapshot.getColumnOffset();
     }
 
     /**
@@ -515,6 +535,43 @@ public class TextArea {
 
         // Draw the text, including the line numbers if applicable.
         this.drawText(batch, font);
+    }
+
+    /**
+     * Creates a snapshot of the current text area state.
+     * @return A snapshot of the current text area state.
+     */
+    private Snapshot createSnapshot() {
+        // Grab the current cursor position.
+        Position cursorPosition = new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
+
+        // Grab the selection anchor position, if it exists.
+        Position selectionAnchorPosition = null;
+        if (this.cursor.getSelectionOrigin() != null) {
+            selectionAnchorPosition = new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
+        }
+
+        // Create and return the snapshot.
+        return new Snapshot(this.getText(), cursorPosition, selectionAnchorPosition, this.lineOffset, this.columnOffset);
+    }
+
+    /**
+     * Attempt to focus on the cursor.
+     */
+    private void focusCursor() {
+        // Modify line offset so that the cursor stays in area vertically.
+        if (this.cursor.getLineNumber() < lineOffset) {
+            lineOffset = this.cursor.getLineNumber();
+        } else if (this.cursor.getLineNumber() + 1 > lineOffset + lineCount) {
+            lineOffset = (this.cursor.getLineNumber() + 1) - lineCount;
+        }
+
+        // Modify column offset so the cursor remains in the area horizontally, excluding the columns taken up by the line number column.
+        if (this.cursor.getColumnNumber() < columnOffset) {
+            columnOffset = this.cursor.getColumnNumber();
+        } else if (this.cursor.getColumnNumber() + 1 > columnOffset + (columnCount - this.getLineNumberColumnWidth())) {
+            columnOffset = (this.cursor.getColumnNumber() + 1) - (columnCount - this.getLineNumberColumnWidth());
+        }
     }
 
     /**
