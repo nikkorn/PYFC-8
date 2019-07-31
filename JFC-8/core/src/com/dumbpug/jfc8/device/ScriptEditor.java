@@ -5,9 +5,9 @@ package com.dumbpug.jfc8.device;
  */
 public class ScriptEditor {
     /**
-     * The script editor text
+     * The script editor text.
      */
-    private String text = "var r = 0;\nvar c = 1;\nfunction update() {\n circle(191,128,Math.random()*300,c,false);\n " +
+    private String text = "var r = 0;\nvar c = 1;\nfunction update() {\n var radius = Math.random()*300;\n circle(191,128,radius,c,false);\n " +
             "r++;c++;\n if (c == 14) c = 1;\n};";
 
     /**
