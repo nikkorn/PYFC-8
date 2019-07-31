@@ -246,12 +246,12 @@ public class TerminalState extends State implements InputProcessor {
 
             //  Clear the current input.
             this.terminalArea.setInput("");
-        } else if (Constants.INPUT_VALID_CHARACTERS.indexOf(character) != -1) {
-            // Add the character to the current terminal input.
-            this.terminalArea.insertText(String.valueOf(character));
         } else if (character == '\b') {
             // Take care of the backspace.
             this.terminalArea.backspace();
+        } else if (Constants.INPUT_VALID_CHARACTERS.indexOf(character) != -1) {
+            // Add the character to the current terminal input.
+            this.terminalArea.insertText(String.valueOf(character));
         }
 
         // The event was handled here.
