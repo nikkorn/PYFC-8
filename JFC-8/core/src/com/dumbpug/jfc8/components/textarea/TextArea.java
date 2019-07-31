@@ -96,6 +96,7 @@ public class TextArea {
 
     /**
      * Creates a new instance of the TerminalArea class.
+     * @param text The initial editor text.
      * @param x The x position of the text area.
      * @param y The y position of the text area.
      * @param lineHeight The height of each line.
@@ -104,9 +105,10 @@ public class TextArea {
      * @param columns The width of the area as a total number of columns.
      * @param config The additional text area configuration.
      */
-    public TextArea(float x, float y, float lineHeight, float columnWidth, int lines, int columns, TextAreaConfiguration config) {
+    public TextArea(String text, float x, float y, float lineHeight, float columnWidth, int lines, int columns, TextAreaConfiguration config) {
         this(x, y, lineHeight,columnWidth, lines, columns);
         this.configuration = config;
+        this.clearAndSetText(text);
     }
 
     /**
@@ -142,21 +144,11 @@ public class TextArea {
     }
 
     /**
-     * Sets the text area text and resets the cursor position.
-     * @param text The text to set as the text area value.
+     * Gets the text editor input processor.
+     * @return The text editor input processor.
      */
-    public void setText(String text) {
-        // Clear the lines in the text area.
-        this.lines.clear();
-
-        // Add the initial empty line.
-        lines.add(new Line());
-
-        // Reset the cursor position.
-        this.cursor.reset();
-
-        // Insert the text.
-        this.insertText(text);
+    public TextAreaInputProcessor getInputProcessor() {
+        return inputProcessor;
     }
 
     /**
@@ -181,48 +173,40 @@ public class TextArea {
     }
 
     /**
-     * Gets the text editor input processor.
-     * @return The text editor input processor.
+     * Sets the text area text and resets the cursor position in an undo-able way.
+     * @param text The text to set as the text area value.
      */
-    public TextAreaInputProcessor getInputProcessor() {
-        return inputProcessor;
+    public void setText(String text) {
+        // Get the pre-operation snapshot.
+        Snapshot preOperationSnapshot = this.createSnapshot();
+
+        // Set the text area text.
+        this.clearAndSetText(text);
+
+        // Get the post-operation snapshot.
+        Snapshot postOperationSnapshot = this.createSnapshot();
+
+        // Add the undoable version of the 'set text' operation on the undo stack.
+        this.undoStack.add(new UndoableTextAreaUpdate(this, preOperationSnapshot, postOperationSnapshot));
     }
 
     /**
-     * Try to set the cursor at the specified line and column position.
-     * @param line The line number.
-     * @param column The column number.
+     * Inserts the text at the cursor position in an undo-able way.
+     * Any text selection will be cleared before the text is inserted.
+     * @param text The text insert at the cursor position.
      */
-    public void setCursorPosition(int line, int column) {
-        // The target line.
-        Line targetLine = null;
+    public void insertText(String text) {
+        // Get the pre-operation snapshot.
+        Snapshot preOperationSnapshot = this.createSnapshot();
 
-        // Try to get the line at the line position 'line', bounded by the number of actual rows.
-        if (line < 0) {
-            targetLine = this.lines.get(0);
-        } else if (line >= this.lines.size()) {
-            targetLine = this.lines.get(this.lines.size() - 1);
-        } else {
-            targetLine = this.lines.get(line);
-        }
+        // Insert the text.
+        this.insertTextAtCursorPosition(text);
 
-        // Set the cursor line number.
-        this.cursor.setLineNumber(this.lines.indexOf(targetLine));
+        // Get the post-operation snapshot.
+        Snapshot postOperationSnapshot = this.createSnapshot();
 
-        int targetColumnNumber = column;
-
-        // Try to get a valid column position, bounded by the actual number of columns in the target line.
-        if (targetColumnNumber < 0) {
-            targetColumnNumber = 0;
-        } else if (targetColumnNumber > targetLine.getColumnCount()) {
-            targetColumnNumber = targetLine.getColumnCount();
-        }
-
-        // Set the cursor column number.
-        this.cursor.setColumnNumber(targetColumnNumber);
-
-        // The cursor may have moved out of the visible portion of the text area, get it back in view.
-        this.focusCursor();
+        // Add the undoable version of the 'insert text' operation on the undo stack.
+        this.undoStack.add(new UndoableTextAreaUpdate(this, preOperationSnapshot, postOperationSnapshot));
     }
 
     /**
@@ -265,67 +249,12 @@ public class TextArea {
     }
 
     /**
-     * Inserts the text at the cursor position.
-     * Any text selection will be cleared before the text is inserted.
-     * @param text The text insert at the cursor position.
-     */
-    public void insertText(String text) {
-        // Remove the currently selected text from the text area if there is any.
-        if(this.cursor.getSelectionOrigin() != null) {
-            // Remove the currently selected text from the text area.
-            this.delete();
-        }
-
-        // Insert the text at the cursor position, one character at a time.
-        for (int characterIndex = 0; characterIndex < text.length(); characterIndex++){
-            // Get the next character.
-            char character = text.charAt(characterIndex);
-
-            // Get the line targeted by the cursor.
-            Line targetLine = this.lines.get(this.cursor.getLineNumber());
-
-            // Check whether the current character is a new-line character.
-            if (character == '\n' || character == '\r') {
-                // Gather any columns that follow the cursor on the current line.
-                ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
-
-                // Add a new empty line.
-                this.lines.add(this.cursor.getLineNumber() + 1, new Line());
-
-                // Move the cursor to the start of the new line.
-                this.moveCursor(CursorMovement.DOWN);
-
-                // Update the current target line.
-                targetLine = this.lines.get(this.cursor.getLineNumber());
-
-                // Move the chopped characters to the new line.
-                for (Character chopped : choppedCharacters) {
-                    // Add the character to the current line (the one targeted by the cursor)
-                    targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
-
-                    // The cursor column position will have to be moved to the right to account for the added column.
-                    this.moveCursor(CursorMovement.RIGHT);
-                }
-
-                // We need to reset the cursor column position to the start of the new line.
-                this.setCursorPosition(this.cursor.getLineNumber(),0);
-            } else {
-                // Add the character to the current line (the one targeted by the cursor)
-                targetLine.addCharacter(character, this.cursor.getColumnNumber());
-
-                // The cursor column position will have to be moved to the right to account for the added column.
-                this.moveCursor(CursorMovement.RIGHT);
-            }
-        }
-
-        // Update the text area text.
-        this.updateTextAreaText();
-    }
-
-    /**
-     * Carry out a backspace operation.
+     * Carry out an undo-able backspace operation.
      */
     public void backspace() {
+        // Get the pre-operation snapshot.
+        Snapshot preOperationSnapshot = this.createSnapshot();
+
         // If there is a text selection then we should just delete the selection.
         if (this.cursor.getSelectionOrigin() != null) {
             this.delete();
@@ -340,43 +269,66 @@ public class TextArea {
 
             // We are just clearing a single column.
             this.clearText(
-                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
-                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
         }
+
+        // Get the post-operation snapshot.
+        Snapshot postOperationSnapshot = this.createSnapshot();
+
+        // Add the undoable version of the 'backspace' operation on the undo stack.
+        this.undoStack.add(new UndoableTextAreaUpdate(this, preOperationSnapshot, postOperationSnapshot));
     }
 
     /**
-     * Carry out a delete operation.
+     * Carry out an undo-able delete operation.
      */
     public void delete() {
+        // Get the pre-operation snapshot.
+        Snapshot preOperationSnapshot = this.createSnapshot();
+
         // If there is no text selection then a delete will remove the character IN FRONT of the cursor.
         if (this.cursor.getSelectionOrigin() == null) {
-            // TODO This does nothing if cursor is at end of file.
-
             // We are just clearing a single column.
             this.clearText(
-                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
-                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
         } else {
             // We are just clearing all selected text.
             this.clearText(
-                new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn()),
-                new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+                    new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn()),
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
 
             // There is no more selection.
             this.cursor.setSelectionOrigin(null);
         }
+
+        // Get the post-operation snapshot.
+        Snapshot postOperationSnapshot = this.createSnapshot();
+
+        // Add the undoable version of the 'delete' operation on the undo stack.
+        this.undoStack.add(new UndoableTextAreaUpdate(this, preOperationSnapshot, postOperationSnapshot));
     }
 
+    /**
+     * Attempt to undo the last undo-able operation if there is one.
+     */
     public void undo() {
-
+        if (this.undoStack.canUndo()) {
+            this.undoStack.undo();
+        }
     }
 
+    /**
+     * Attempt to redo the last undo-able operation if there is one.
+     */
     public void redo() {
-
+        if (this.undoStack.canRedo()) {
+            this.undoStack.redo();
+        }
     }
 
     /**
@@ -384,8 +336,8 @@ public class TextArea {
      * @param snapshot The snapshot to apply.
      */
     public void applySnapshot(Snapshot snapshot) {
-        // Set the text area text.
-        this.setText(snapshot.getText());
+        // Set the text area text in a non-undoable way.
+        this.clearAndSetText(snapshot.getText());
 
         // Set the cursor position.
         this.setCursorPosition(snapshot.getCursorPosition().getLine(), snapshot.getCursorPosition().getColumn());
@@ -398,8 +350,8 @@ public class TextArea {
         }
 
         // Set the line/column offset.
-        this.lineOffset  = snapshot.getLineOffset();
-        this.columnWidth = snapshot.getColumnOffset();
+        this.lineOffset   = snapshot.getLineOffset();
+        this.columnOffset = snapshot.getColumnOffset();
     }
 
     /**
@@ -535,6 +487,119 @@ public class TextArea {
 
         // Draw the text, including the line numbers if applicable.
         this.drawText(batch, font);
+    }
+
+    /**
+     * Try to set the cursor at the specified line and column position.
+     * @param line The line number.
+     * @param column The column number.
+     */
+    private void setCursorPosition(int line, int column) {
+        // The target line.
+        Line targetLine = null;
+
+        // Try to get the line at the line position 'line', bounded by the number of actual rows.
+        if (line < 0) {
+            targetLine = this.lines.get(0);
+        } else if (line >= this.lines.size()) {
+            targetLine = this.lines.get(this.lines.size() - 1);
+        } else {
+            targetLine = this.lines.get(line);
+        }
+
+        // Set the cursor line number.
+        this.cursor.setLineNumber(this.lines.indexOf(targetLine));
+
+        int targetColumnNumber = column;
+
+        // Try to get a valid column position, bounded by the actual number of columns in the target line.
+        if (targetColumnNumber < 0) {
+            targetColumnNumber = 0;
+        } else if (targetColumnNumber > targetLine.getColumnCount()) {
+            targetColumnNumber = targetLine.getColumnCount();
+        }
+
+        // Set the cursor column number.
+        this.cursor.setColumnNumber(targetColumnNumber);
+
+        // The cursor may have moved out of the visible portion of the text area, get it back in view.
+        this.focusCursor();
+    }
+
+    /**
+     * Inserts the text at the cursor position.
+     * Any text selection will be cleared before the text is inserted.
+     * @param text The text insert at the cursor position.
+     */
+    private void insertTextAtCursorPosition(String text) {
+        // Remove the currently selected text from the text area if there is any.
+        if(this.cursor.getSelectionOrigin() != null) {
+            // Remove the currently selected text from the text area.
+            this.delete();
+        }
+
+        // Insert the text at the cursor position, one character at a time.
+        for (int characterIndex = 0; characterIndex < text.length(); characterIndex++){
+            // Get the next character.
+            char character = text.charAt(characterIndex);
+
+            // Get the line targeted by the cursor.
+            Line targetLine = this.lines.get(this.cursor.getLineNumber());
+
+            // Check whether the current character is a new-line character.
+            if (character == '\n' || character == '\r') {
+                // Gather any columns that follow the cursor on the current line.
+                ArrayList<Character> choppedCharacters = targetLine.chop(this.cursor.getColumnNumber());
+
+                // Add a new empty line.
+                this.lines.add(this.cursor.getLineNumber() + 1, new Line());
+
+                // Move the cursor to the start of the new line.
+                this.moveCursor(CursorMovement.DOWN);
+
+                // Update the current target line.
+                targetLine = this.lines.get(this.cursor.getLineNumber());
+
+                // Move the chopped characters to the new line.
+                for (Character chopped : choppedCharacters) {
+                    // Add the character to the current line (the one targeted by the cursor)
+                    targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
+
+                    // The cursor column position will have to be moved to the right to account for the added column.
+                    this.moveCursor(CursorMovement.RIGHT);
+                }
+
+                // We need to reset the cursor column position to the start of the new line.
+                this.setCursorPosition(this.cursor.getLineNumber(),0);
+            } else {
+                // Add the character to the current line (the one targeted by the cursor)
+                targetLine.addCharacter(character, this.cursor.getColumnNumber());
+
+                // The cursor column position will have to be moved to the right to account for the added column.
+                this.moveCursor(CursorMovement.RIGHT);
+            }
+        }
+
+        // Update the text area text.
+        this.updateTextAreaText();
+    }
+
+    /**
+     * Clears and sets the text area text and resets the cursor position.
+     * @param text The text to set as the text area value.
+     */
+    private void clearAndSetText(String text) {
+        // Clear the lines in the text area.
+        this.lines.clear();
+
+        // Add the initial empty line.
+        lines.add(new Line());
+
+        // Reset the cursor position.
+        this.cursor.reset();
+
+        // Insert the text.
+        this.insertTextAtCursorPosition(text);
     }
 
     /**

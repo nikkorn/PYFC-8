@@ -67,6 +67,7 @@ public class ScriptEditorState extends State {
 
         // Create the editor text area.
         editorTextArea = new TextArea(
+                this.device.getScriptEditor().getText(),
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
@@ -106,6 +107,14 @@ public class ScriptEditorState extends State {
 
     @Override
     public void update() {
+        // TODO Remove! Just testing!
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+            this.editorTextArea.undo();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
+            this.editorTextArea.redo();
+        }
+
         // Check whether the user is attempting to move state.
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             this.changeState("TERMINAL");
