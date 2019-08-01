@@ -1,6 +1,8 @@
 package com.dumbpug.jfc8.scripteditor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.dumbpug.jfc8.components.interactable.InteractableArea;
 import com.dumbpug.jfc8.components.textarea.TextArea;
 import com.dumbpug.jfc8.device.Device;
 
@@ -16,15 +18,21 @@ public class ScriptEditorStateInputProcessor implements InputProcessor {
      * The editor text area.
      */
     private TextArea editorTextArea;
+    /**
+     * The toolbar area.
+     */
+    private InteractableArea toolbarArea;
 
     /**
      * Creates a new instance of the ScriptEditorStateInputProcessor class.
      * @param device The console device.
      * @param editorTextArea The editor text area.
+     * @param toolbarArea The toolbar area.
      */
-    public ScriptEditorStateInputProcessor(Device device, TextArea editorTextArea) {
+    public ScriptEditorStateInputProcessor(Device device, TextArea editorTextArea, InteractableArea toolbarArea) {
         this.device         = device;
         this.editorTextArea = editorTextArea;
+        this.toolbarArea    = toolbarArea;
     }
 
     @Override
@@ -46,7 +54,7 @@ public class ScriptEditorStateInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        return this.toolbarArea.onClick(screenX, Gdx.graphics.getHeight() - screenY);
     }
 
     @Override

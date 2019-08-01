@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.jfc8.Constants;
+import com.dumbpug.jfc8.components.interactable.IInteractionHandler;
+import com.dumbpug.jfc8.components.interactable.InteractableArea;
+import com.dumbpug.jfc8.components.interactable.InteractableElement;
 import com.dumbpug.jfc8.components.textarea.TextArea;
 import com.dumbpug.jfc8.components.textarea.TextAreaConfiguration;
 import com.dumbpug.jfc8.device.Device;
@@ -77,15 +80,36 @@ public class ScriptEditorState extends State {
                 editorTextAreaConfig
         );
 
-        // Create the input multiplexer for the state.
-        stateInputProcessor = new InputMultiplexer();
-        stateInputProcessor.addProcessor(new ScriptEditorStateInputProcessor(device, editorTextArea));
-        stateInputProcessor.addProcessor(editorTextArea.getInputProcessor());
-
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/script_editor/background.png")));
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         background.setPosition(0, 0);
+
+        // Create the toolbar area.
+        InteractableArea toolbarArea = new InteractableArea(0, 476, Gdx.graphics.getWidth(), 36);
+
+        // Create the interactable element for the undo button.
+        toolbarArea.addInteractable(new InteractableElement(48, 484, 32, 20, new IInteractionHandler() {
+            @Override
+            public boolean onClick() {
+                editorTextArea.undo();
+                return true;
+            }
+        }));
+
+        // Create the interactable element for the redo button.
+        toolbarArea.addInteractable(new InteractableElement(88, 484, 32, 20, new IInteractionHandler() {
+            @Override
+            public boolean onClick() {
+                editorTextArea.redo();
+                return true;
+            }
+        }));
+
+        // Create the input multiplexer for the state.
+        stateInputProcessor = new InputMultiplexer();
+        stateInputProcessor.addProcessor(new ScriptEditorStateInputProcessor(device, editorTextArea, toolbarArea));
+        stateInputProcessor.addProcessor(editorTextArea.getInputProcessor());
     }
 
     @Override
