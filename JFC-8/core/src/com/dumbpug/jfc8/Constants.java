@@ -36,6 +36,7 @@ public class Constants {
     public static final int SCRIPT_EDITOR_LINE_MARGIN_SIZE          = 4;
     public static final int SCRIPT_EDITOR_COLUMN_MARGIN_SIZE        = 0;
     public static final int SCRIPT_EDITOR_MAX_CHARACTERS            = 40000;
+    public static final int SCRIPT_EDITOR_MAX_HISTORY_SNAPSHOTS     = 25;
 
     //===========================================================
     // FILE SYSTEM
