@@ -101,6 +101,6 @@ public class UndoStack<TUndoable extends IUndoable> {
         redoable.redo();
 
         // Push the redo-able onto the undo-able stack.
-        this.redoStack.push(redoable);
+        this.undoStack.push(redoable);
     }
 }

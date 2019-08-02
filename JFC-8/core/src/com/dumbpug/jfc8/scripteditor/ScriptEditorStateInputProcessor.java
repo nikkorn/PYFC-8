@@ -54,7 +54,13 @@ public class ScriptEditorStateInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return this.toolbarArea.onClick(screenX, Gdx.graphics.getHeight() - screenY);
+        if (this.toolbarArea.onClick(screenX, Gdx.graphics.getHeight() - screenY)) {
+            // Update the device's script editor to reflect any change made by using the toolbar.
+            this.device.getScriptEditor().setText(this.editorTextArea.getText());
+            return true;
+        }
+
+        return false;
     }
 
     @Override

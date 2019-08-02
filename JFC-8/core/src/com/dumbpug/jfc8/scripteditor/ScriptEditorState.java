@@ -131,14 +131,6 @@ public class ScriptEditorState extends State {
 
     @Override
     public void update() {
-        // TODO Remove! Just testing!
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
-            this.editorTextArea.undo();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
-            this.editorTextArea.redo();
-        }
-
         // Check whether the user is attempting to move state.
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             this.changeState("TERMINAL");
