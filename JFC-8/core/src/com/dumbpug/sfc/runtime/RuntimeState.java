@@ -60,6 +60,7 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
             this.runtimeScriptExecutor = new RuntimeScriptExecutor(this.device.getScriptEditor().getText(), new ScriptAdapter(this.displayPixmap));
         } catch (ScriptException e) {
             // TODO Write script exception details to terminal output to be processed by terminal state.
+            System.out.println("ENTRY: " + e);
 
             // Go to the terminal state so that the user can see the exception.
             this.changeState("TERMINAL");
@@ -86,6 +87,7 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
                 this.runtimeScriptExecutor.invokeScriptUpdate();
             } catch (ScriptException e) {
                 // TODO Write script exception details to terminal output to be processed by terminal state.
+                System.out.println("UPDATE: " + e);
 
                 // Go to the terminal state so that the user can see the exception.
                 this.changeState("TERMINAL");
