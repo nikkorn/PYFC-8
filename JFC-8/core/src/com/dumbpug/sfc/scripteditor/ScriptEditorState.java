@@ -164,8 +164,8 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
                 Gdx.graphics.getHeight() - 6 * Constants.DISPLAY_PIXEL_SIZE
         );
 
-        // Draw the cursor.
-        Sprite cursor = ImageResources.getCursorSprite();
+        // Draw the default cursor.
+        Sprite cursor = ImageResources.getDefaultCursorSprite();
         cursor.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - cursor.getHeight());
         cursor.draw(batch);
     }

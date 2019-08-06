@@ -6,25 +6,36 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.dumbpug.sfc.Constants;
 
 /**
- * Holder of image resources
+ * Holder of image resources.
  */
 public class ImageResources {
     //============================================
     // General resources.
     //============================================
-    private static Sprite cursor;
+    private static Sprite default_cursor;
+    private static Sprite pencil_cursor;
 
     static {
-        // Create the cursor sprite.
-        cursor = new Sprite(new Texture(Gdx.files.internal("images/general/cursor.png")));
-        cursor.setSize(Constants.DISPLAY_CURSOR_SIZE * Constants.DISPLAY_PIXEL_SIZE, Constants.DISPLAY_CURSOR_SIZE * Constants.DISPLAY_PIXEL_SIZE);
+        // Create the cursor sprites.
+        default_cursor = new Sprite(new Texture(Gdx.files.internal("images/general/cursors/default.png")));
+        default_cursor.setSize(Constants.DISPLAY_CURSOR_SIZE * Constants.DISPLAY_PIXEL_SIZE, Constants.DISPLAY_CURSOR_SIZE * Constants.DISPLAY_PIXEL_SIZE);
+        pencil_cursor = new Sprite(new Texture(Gdx.files.internal("images/general/cursors/pencil.png")));
+        pencil_cursor.setSize(Constants.DISPLAY_CURSOR_SIZE * Constants.DISPLAY_PIXEL_SIZE, Constants.DISPLAY_CURSOR_SIZE * Constants.DISPLAY_PIXEL_SIZE);
     }
 
     /**
-     * Get the cursor sprite.
-     * @return The cursor sprite.
+     * Get the default cursor sprite.
+     * @return The default cursor sprite.
      */
-    public static Sprite getCursorSprite() {
-        return ImageResources.cursor;
+    public static Sprite getDefaultCursorSprite() {
+        return ImageResources.default_cursor;
+    }
+
+    /**
+     * Get the pencil cursor sprite.
+     * @return The pencil cursor sprite.
+     */
+    public static Sprite getPencilCursorSprite() {
+        return ImageResources.pencil_cursor;
     }
 }
