@@ -9,10 +9,10 @@ import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.display.Screenshot;
 import com.dumbpug.sfc.runtime.RuntimeState;
 import com.dumbpug.sfc.scripteditor.ScriptEditorState;
+import com.dumbpug.sfc.spriteeditor.SpriteEditorState;
 import com.dumbpug.sfc.state.StateManager;
 import com.dumbpug.sfc.state.states.Splash;
 import com.dumbpug.sfc.terminal.TerminalState;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +44,7 @@ public class SFC extends ApplicationAdapter {
 		stateManager.addState(new Splash());
 		stateManager.addState(new TerminalState(device));
 		stateManager.addState(new ScriptEditorState(device));
+		stateManager.addState(new SpriteEditorState(device));
 		stateManager.addState(new RuntimeState(device));
 
 		// Set the initial application state.

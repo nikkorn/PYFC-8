@@ -80,6 +80,9 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             this.changeState("SCRIPT_EDITOR");
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            this.changeState("SPRITE_EDITOR");
+        }
 
         // Attempt to invoke the script 'update' function.
         if (this.runtimeScriptExecutor != null) {

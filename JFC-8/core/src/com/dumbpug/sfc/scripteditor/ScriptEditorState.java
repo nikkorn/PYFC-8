@@ -53,7 +53,7 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
     private Sprite background;
 
     /**
-     * Create a new instance of the ScriptEditorState class.
+     * Create a new instance of the SpriteEditorState class.
      * @param device The console device.
      */
     public ScriptEditorState(Device device) {
@@ -137,6 +137,9 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
             this.changeState("TERMINAL");
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            this.changeState("SPRITE_EDITOR");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             this.changeState("RUNTIME");
         }
     }

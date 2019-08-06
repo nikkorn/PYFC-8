@@ -124,6 +124,8 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
         terminalArea.print("F2             ", Colour.YELLOW);
         terminalArea.printLine("go to script editor", Colour.GREY);
         terminalArea.print("F3             ", Colour.YELLOW);
+        terminalArea.printLine("go to sprite editor", Colour.GREY);
+        terminalArea.print("F4             ", Colour.YELLOW);
         terminalArea.printLine("run", Colour.GREY);
         terminalArea.print("F9             ", Colour.YELLOW);
         terminalArea.printLine("take screenshot", Colour.GREY);
@@ -192,6 +194,9 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
             this.changeState("SCRIPT_EDITOR");
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            this.changeState("SPRITE_EDITOR");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             this.changeState("RUNTIME");
         }
     }
