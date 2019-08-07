@@ -7,11 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
-import com.dumbpug.sfc.runtime.RuntimeScriptExecutor;
-import com.dumbpug.sfc.runtime.ScriptAdapter;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.state.State;
-
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
