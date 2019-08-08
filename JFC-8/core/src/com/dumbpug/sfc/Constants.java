@@ -44,6 +44,11 @@ public class Constants {
     public static final int SCRIPT_EDITOR_MAX_HISTORY_SNAPSHOTS     = 25;
 
     //===========================================================
+    // SPRITE EDITOR
+    //===========================================================
+    public static final int SPRITE_EDITOR_PAINT_AREA_SIZE	        = 48;
+
+    //===========================================================
     // FILE SYSTEM
     //===========================================================
     public static final String FILE_SYSTEM_ROOT	                    = "./filesystem/";

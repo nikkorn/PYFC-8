@@ -1,5 +1,7 @@
 package com.dumbpug.sfc.components.interactable;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,6 +67,14 @@ public class InteractableArea extends Interactable {
 
             // Call onClick on the top-most interactable and return the result.
             return candidates.get(0).onClick(x, y);
+        }
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        // Draw all child interactables.
+        for (Interactable child : this.children) {
+            child.draw(batch);
         }
     }
 }

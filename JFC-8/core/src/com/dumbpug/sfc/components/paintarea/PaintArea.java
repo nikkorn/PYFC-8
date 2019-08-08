@@ -1,9 +1,7 @@
 package com.dumbpug.sfc.components.paintarea;
 
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.palette.Colour;
-import com.dumbpug.sfc.palette.Palette;
 
 /**
  * A control that represents a paintable area.
@@ -14,13 +12,17 @@ public class PaintArea {
      */
     private IPaintableTarget paintableTarget;
     /**
+     * The pixels collection.
+     */
+    private Pixels pixels;
+    /**
      * The x/y position of the paint area.
      */
     private float x, y;
     /**
-     * The width/height of the paint area.
+     * The size (width/height) of the paint area.
      */
-    private float width, height;
+    private float size;
     /**
      * The current input mode.
      */
@@ -29,30 +31,20 @@ public class PaintArea {
      * The current colour.
      */
     private Colour colour = Colour.NOT_SET;
-    /**
-     * The display pixmap.
-     */
-    private Pixmap displayPixmap;
 
     /**
      * Creates a new instance of the PaintArea class.
      * @param target The paintable target.
      * @param x The x position of the area.
      * @param y The y position of the area.
-     * @param width The width of the area.
-     * @param height The height of the area.
+     * @param size The size of the area.
      */
-    public PaintArea(IPaintableTarget target, float x, float y, float width, float height) {
+    public PaintArea(IPaintableTarget target, float x, float y, float size) {
         this.paintableTarget = target;
         this.x               = x;
         this.y               = y;
-        this.width           = width;
-        this.height          = height;
-
-        // Create the display pixmap.
-        this.displayPixmap = new Pixmap( 128, 128, Pixmap.Format.RGBA8888);
-        this.displayPixmap.setColor(Palette.getColour(Colour.BLACK));
-        this.displayPixmap.fill();
+        this.size            = size;
+        this.pixels          = new Pixels(target);
     }
 
     /**
@@ -72,19 +64,11 @@ public class PaintArea {
     }
 
     /**
-     * Gets the width of the control.
-     * @return The width of the control.
+     * Gets the size of the control.
+     * @return The size of the control.
      */
-    public float getWidth() {
-        return width;
-    }
-
-    /**
-     * Gets the height of the control.
-     * @return The height of the control.
-     */
-    public float getHeight() {
-        return height;
+    public float getSize() {
+        return size;
     }
 
     /**
@@ -102,6 +86,16 @@ public class PaintArea {
     public void setColour(Colour colour) {
         this.colour = colour;
     }
+
+    /**
+     * Update the paint area to reflect changes made to the paintable target.
+     */
+    public void update() {
+        // Update the pixels collection.
+        this.pixels.update(this.paintableTarget);
+
+        // TODO Clear any selection.
+    };
 
     /**
      * Try to process a pointer hover event and return whether it was processed by the paint area.
@@ -168,13 +162,13 @@ public class PaintArea {
         if (screenX < this.getX()) {
             return false;
         }
-        if (screenX > (this.getX() + this.getWidth())) {
+        if (screenX > (this.getX() + this.getSize())) {
             return false;
         }
         if (screenY < this.getY()) {
             return false;
         }
-        if (screenY > (this.getY() + this.getHeight())) {
+        if (screenY > (this.getY() + this.getSize())) {
             return false;
         }
 

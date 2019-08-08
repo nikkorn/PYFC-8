@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
+import com.dumbpug.sfc.components.paintarea.InputMode;
+import com.dumbpug.sfc.components.paintarea.PaintArea;
+import com.dumbpug.sfc.components.paintarea.ViewMode;
+import com.dumbpug.sfc.components.spritesheetarea.SpriteSheetArea;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.font.FontProvider;
 import com.dumbpug.sfc.palette.Colour;
@@ -23,6 +27,14 @@ public class SpriteEditorState extends State {
      */
     private Device device;
     /**
+     * The sprtie sheet area.
+     */
+    private SpriteSheetArea spriteSheetArea;
+    /**
+     * The paintable area.
+     */
+    private PaintArea paintArea;
+    /**
      * The editor font.
      */
     private BitmapFont editorFont;
@@ -30,6 +42,14 @@ public class SpriteEditorState extends State {
      * The background sprite.
      */
     private Sprite background;
+    /**
+     * The current colour.
+     */
+    private Colour colour = Colour.WHITE;
+    /**
+     * The current input mode.
+     */
+    private InputMode inputMode = InputMode.PAINT_SMALL;
 
     /**
      * Create a new instance of the SpriteEditorState class.
@@ -42,6 +62,23 @@ public class SpriteEditorState extends State {
         // Create the editor font.
         editorFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
         editorFont.setColor(Palette.getColour(Colour.WHITE));
+
+        // Create the sprite sheet area.
+        this.spriteSheetArea = new SpriteSheetArea(
+                null,
+                0,
+                0,
+                100,
+                100
+        );
+
+        // Create the paintable area, passing in a reference to the active sprite sheet selection.
+        this.paintArea = new PaintArea(
+                this.spriteSheetArea.getPaintableTarget(),
+                35 * Constants.DISPLAY_PIXEL_SIZE,
+                92 * Constants.DISPLAY_PIXEL_SIZE,
+                128 * Constants.DISPLAY_PIXEL_SIZE
+        );
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/sprite_editor/background.png")));

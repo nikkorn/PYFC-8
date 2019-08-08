@@ -17,7 +17,6 @@ import com.dumbpug.sfc.components.textarea.TextArea;
 import com.dumbpug.sfc.components.textarea.TextAreaConfiguration;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
-import com.dumbpug.sfc.scripteditor.ScriptEditorStateInputProcessor;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.font.FontProvider;
 import com.dumbpug.sfc.resources.ImageResources;

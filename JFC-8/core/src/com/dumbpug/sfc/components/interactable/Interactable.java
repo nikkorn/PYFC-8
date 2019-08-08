@@ -1,5 +1,7 @@
 package com.dumbpug.sfc.components.interactable;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 /**
  * Represents an interatable thing.
  */
@@ -80,6 +82,12 @@ public abstract class Interactable {
         if (y > this.y + this.height) return false;
         return true;
     }
+
+    /**
+     * Attempt to draw the interactable element.
+     * @param batch The sprite batch.
+     */
+    public void draw(SpriteBatch batch) {}
 
     /**
      * Attempt to process a click event on the element.
