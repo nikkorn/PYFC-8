@@ -5,16 +5,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dumbpug.sfc.components.textarea.Cursor;
-import com.dumbpug.sfc.components.textarea.CursorMovement;
-import com.dumbpug.sfc.components.textarea.Position;
-import com.dumbpug.sfc.components.textarea.Range;
 import com.dumbpug.sfc.components.textarea.history.Snapshot;
 import com.dumbpug.sfc.components.textarea.history.UndoStack;
 import com.dumbpug.sfc.components.textarea.history.UndoableTextAreaUpdate;
 import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.Constants;
-
 import java.util.ArrayList;
 
 /**
@@ -56,7 +51,7 @@ public class TextArea {
     /**
      * The area text cursor.
      */
-    private com.dumbpug.sfc.components.textarea.Cursor cursor = new Cursor();
+    private Cursor cursor = new Cursor();
     /**
      * The line offset between the first line and the first visible line in the text area.
      */
@@ -270,12 +265,12 @@ public class TextArea {
             }
 
             // Move the cursor to the left once so that the character to be removed is actually the one to the left.
-            this.moveCursor(com.dumbpug.sfc.components.textarea.CursorMovement.LEFT);
+            this.moveCursor(CursorMovement.LEFT);
 
             // We are just clearing a single column.
             this.clearText(
-                    new com.dumbpug.sfc.components.textarea.Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
-                    new com.dumbpug.sfc.components.textarea.Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
         }
 
@@ -297,14 +292,14 @@ public class TextArea {
         if (this.cursor.getSelectionOrigin() == null) {
             // We are just clearing a single column.
             this.clearText(
-                    new com.dumbpug.sfc.components.textarea.Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
-                    new com.dumbpug.sfc.components.textarea.Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber()),
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
         } else {
             // We are just clearing all selected text.
             this.clearText(
-                    new com.dumbpug.sfc.components.textarea.Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn()),
-                    new com.dumbpug.sfc.components.textarea.Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
+                    new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn()),
+                    new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber())
             );
 
             // There is no more selection.
@@ -442,9 +437,9 @@ public class TextArea {
         // Draw the selection highlighting if there is actually a selection.
         if (this.cursor.getSelectionOrigin() != null) {
             // Get the positions of the cursor and selection origin.
-            com.dumbpug.sfc.components.textarea.Position selectionOriginPosition = new com.dumbpug.sfc.components.textarea.Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
-            com.dumbpug.sfc.components.textarea.Position cursorPosition          = new com.dumbpug.sfc.components.textarea.Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
-            com.dumbpug.sfc.components.textarea.Range selectionRange             = new com.dumbpug.sfc.components.textarea.Range(selectionOriginPosition, cursorPosition);
+            Position selectionOriginPosition = new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
+            Position cursorPosition          = new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
+            Range selectionRange             = new Range(selectionOriginPosition, cursorPosition);
 
             // Iterate over every line/column in the selection and highlight each position.
             for (int lineNumber = selectionRange.getMin().getLine(); lineNumber <= selectionRange.getMax().getLine(); lineNumber++) {
@@ -560,7 +555,7 @@ public class TextArea {
                 this.lines.add(this.cursor.getLineNumber() + 1, new Line());
 
                 // Move the cursor to the start of the new line.
-                this.moveCursor(com.dumbpug.sfc.components.textarea.CursorMovement.DOWN);
+                this.moveCursor(CursorMovement.DOWN);
 
                 // Update the current target line.
                 targetLine = this.lines.get(this.cursor.getLineNumber());
@@ -571,7 +566,7 @@ public class TextArea {
                     targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
 
                     // The cursor column position will have to be moved to the right to account for the added column.
-                    this.moveCursor(com.dumbpug.sfc.components.textarea.CursorMovement.RIGHT);
+                    this.moveCursor(CursorMovement.RIGHT);
                 }
 
                 // We need to reset the cursor column position to the start of the new line.
@@ -581,7 +576,7 @@ public class TextArea {
                 targetLine.addCharacter(character, this.cursor.getColumnNumber());
 
                 // The cursor column position will have to be moved to the right to account for the added column.
-                this.moveCursor(com.dumbpug.sfc.components.textarea.CursorMovement.RIGHT);
+                this.moveCursor(CursorMovement.RIGHT);
             }
         }
 
@@ -613,12 +608,12 @@ public class TextArea {
      */
     private Snapshot createSnapshot() {
         // Grab the current cursor position.
-        com.dumbpug.sfc.components.textarea.Position cursorPosition = new com.dumbpug.sfc.components.textarea.Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
+        Position cursorPosition = new Position(this.cursor.getLineNumber(), this.cursor.getColumnNumber());
 
         // Grab the selection anchor position, if it exists.
-        com.dumbpug.sfc.components.textarea.Position selectionAnchorPosition = null;
+        Position selectionAnchorPosition = null;
         if (this.cursor.getSelectionOrigin() != null) {
-            selectionAnchorPosition = new com.dumbpug.sfc.components.textarea.Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
+            selectionAnchorPosition = new Position(this.cursor.getSelectionOrigin().getLine(), this.cursor.getSelectionOrigin().getColumn());
         }
 
         // Create and return the snapshot.
@@ -718,16 +713,16 @@ public class TextArea {
      * @param origin The origin position.
      * @param target The target position.
      */
-    private void clearText(com.dumbpug.sfc.components.textarea.Position origin, Position target) {
+    private void clearText(Position origin, Position target) {
         // Get the range between the start/end position.
-        com.dumbpug.sfc.components.textarea.Range clearRange = new Range(origin, target);
+        Range clearRange = new Range(origin, target);
 
         // Set the cursor at the correct position.
         this.cursor.setLineNumber(clearRange.getMax().getLine());
         this.cursor.setColumnNumber(clearRange.getMax().getColumn());
 
         // Move the cursor right once, as column removal takes place to the left of the cursor.
-        this.moveCursor(com.dumbpug.sfc.components.textarea.CursorMovement.RIGHT);
+        this.moveCursor(CursorMovement.RIGHT);
 
         // We will be removing a column to the left of the cursor until we reach the first position in the selection.
         while (!this.cursor.isAt(clearRange.getMin().getLine(), clearRange.getMin().getColumn())) {
@@ -751,7 +746,7 @@ public class TextArea {
                 this.cursor.setColumnNumber(Integer.MAX_VALUE);
 
                 // Move the cursor up to the previous line.
-                this.moveCursor(com.dumbpug.sfc.components.textarea.CursorMovement.UP);
+                this.moveCursor(CursorMovement.UP);
 
                 // Get the line we are now targeting.
                 targetLine = this.lines.get(this.cursor.getLineNumber());
@@ -765,7 +760,7 @@ public class TextArea {
                     targetLine.addCharacter(chopped, this.cursor.getColumnNumber());
 
                     // The cursor column position will have to be moved to the right to account for the added column.
-                    this.moveCursor(com.dumbpug.sfc.components.textarea.CursorMovement.RIGHT);
+                    this.moveCursor(CursorMovement.RIGHT);
                 }
 
                 // Move the cursor back to the position that was originally the end of the line that we backspaced to.

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.components.paintarea.InputMode;
 import com.dumbpug.sfc.components.paintarea.PaintArea;
-import com.dumbpug.sfc.components.paintarea.ViewMode;
 import com.dumbpug.sfc.components.spritesheetarea.SpriteSheetArea;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.font.FontProvider;
@@ -27,7 +26,7 @@ public class SpriteEditorState extends State {
      */
     private Device device;
     /**
-     * The sprtie sheet area.
+     * The sprite sheet area.
      */
     private SpriteSheetArea spriteSheetArea;
     /**
@@ -65,7 +64,7 @@ public class SpriteEditorState extends State {
 
         // Create the sprite sheet area.
         this.spriteSheetArea = new SpriteSheetArea(
-                null,
+                device.getSpriteData(),
                 0,
                 0,
                 100,
@@ -112,6 +111,12 @@ public class SpriteEditorState extends State {
     public void render(SpriteBatch batch) {
         // Draw the state background.
         this.background.draw(batch);
+
+        // Draw the sprite sheet area.
+        this.spriteSheetArea.draw(batch);
+
+        // Draw the paint area.
+        this.paintArea.draw(batch);
 
         // Draw the default cursor.
         Sprite cursor = ImageResources.getDefaultCursorSprite();

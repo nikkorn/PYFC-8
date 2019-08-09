@@ -1,20 +1,25 @@
 package com.dumbpug.sfc.components.spritesheetarea;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dumbpug.sfc.components.interactable.InteractableArea;
 import com.dumbpug.sfc.components.paintarea.IPaintableTarget;
 import com.dumbpug.sfc.components.paintarea.ViewMode;
+import com.dumbpug.sfc.components.textarea.Line;
+import com.dumbpug.sfc.device.SpriteData;
 import com.dumbpug.sfc.palette.Colour;
+import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.utility.Position;
-import java.util.ArrayList;
 
 /**
  * An area in which one of multiple sprite sheets can have selections made on it.
  */
 public class SpriteSheetArea extends InteractableArea {
     /**
-     * The sprite sheets in the area.
+     * The sprite data.
      */
-    private ArrayList<SpriteSheet> sheets = new ArrayList<SpriteSheet>();
+    private SpriteData spriteData;
     /**
      * The paintable target defined by the current sheet and selection.
      */
@@ -35,13 +40,18 @@ public class SpriteSheetArea extends InteractableArea {
      * The current selection view mode.
      */
     private ViewMode viewMode = ViewMode.SMALL;
-    /**
-     * The current sprite sheet index.
-     */
-    private int currentSheetIndex = 0;
 
-    public SpriteSheetArea(ArrayList<SpriteSheet> sheets, float x, float y, float width, float height) {
+    /**
+     * Creates a new instance of the SpriteSheetArea class.
+     * @param spriteData The sprite sheet data.
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    public SpriteSheetArea(SpriteData spriteData, float x, float y, float width, float height) {
         super(x, y, width, height);
+        this.spriteData = spriteData;
 
         // Create the paintable target which will always be represented by the current sheet and selection.
         this.paintableTarget = new IPaintableTarget() {
@@ -75,20 +85,18 @@ public class SpriteSheetArea extends InteractableArea {
     }
 
     /**
-     * Set the active sheet to be the one with the specified index.
-     * @param sheetIndex The sheet index.
-     */
-    public void setActiveSheet(int sheetIndex) {
-        for (SpriteSheet sheet : this.sheets) {
-            sheet.setEnabled(this.sheets.indexOf(sheet) == sheetIndex);
-        }
-    }
-
-    /**
      * Gets the current paintable target.
      * @return The current paintable target.
      */
     public IPaintableTarget getPaintableTarget() {
         return paintableTarget;
+    }
+
+    /**
+     * Draw the sprite sheet area.
+     * @param batch The sprite batch.
+     */
+    public void draw(SpriteBatch batch) {
+        // TODO
     }
 }
