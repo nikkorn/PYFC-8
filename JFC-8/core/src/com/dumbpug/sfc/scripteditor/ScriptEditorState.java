@@ -70,7 +70,7 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
 
         // Create the editor text area.
         editorTextArea = new TextArea(
-                this.device.getScriptEditor().getText(),
+                this.device.getScriptData().getText(),
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 Constants.SCRIPT_EDITOR_MARGIN_SIZE * Constants.DISPLAY_PIXEL_SIZE,
                 (Constants.SCRIPT_EDITOR_FONT_SIZE + Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
@@ -118,8 +118,8 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
         Gdx.input.setInputProcessor(this.stateInputProcessor);
 
         // If the device's script editor text differs from the editor text area text then update it now.
-        if (!this.editorTextArea.getText().equals(this.device.getScriptEditor().getText())) {
-            this.editorTextArea.setText(this.device.getScriptEditor().getText());
+        if (!this.editorTextArea.getText().equals(this.device.getScriptData().getText())) {
+            this.editorTextArea.setText(this.device.getScriptData().getText());
         }
     }
 

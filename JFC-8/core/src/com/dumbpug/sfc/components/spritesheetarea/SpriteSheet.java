@@ -5,7 +5,7 @@ import com.dumbpug.sfc.components.interactable.InteractableElement;
 
 public class SpriteSheet extends InteractableElement {
     /**
-     * Creates a new instance of the SpriteSheet class.
+     * Creates a new instance of the SpriteData class.
      * @param x                  The x of the interactable.
      * @param y                  The y of the interactable.
      * @param width              The width/height of the interactable.

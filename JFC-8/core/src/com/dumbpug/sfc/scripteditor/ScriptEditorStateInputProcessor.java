@@ -43,7 +43,7 @@ public class ScriptEditorStateInputProcessor implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         // Update the device's script editor to reflect any change.
-        this.device.getScriptEditor().setText(this.editorTextArea.getText());
+        this.device.getScriptData().setText(this.editorTextArea.getText());
         return true;
     }
 
@@ -56,7 +56,7 @@ public class ScriptEditorStateInputProcessor implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (this.toolbarArea.onClick(screenX, Gdx.graphics.getHeight() - screenY)) {
             // Update the device's script editor to reflect any change made by using the toolbar.
-            this.device.getScriptEditor().setText(this.editorTextArea.getText());
+            this.device.getScriptData().setText(this.editorTextArea.getText());
             return true;
         }
 

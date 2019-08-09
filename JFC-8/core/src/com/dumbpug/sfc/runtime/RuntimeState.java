@@ -54,7 +54,7 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
 
         // Attempt to create the runtime script executor.
         try {
-            this.runtimeScriptExecutor = new RuntimeScriptExecutor(this.device.getScriptEditor().getText(), new ScriptAdapter(this.displayPixmap));
+            this.runtimeScriptExecutor = new RuntimeScriptExecutor(this.device.getScriptData().getText(), new ScriptAdapter(this.displayPixmap));
         } catch (ScriptException e) {
             // TODO Write script exception details to terminal output to be processed by terminal state.
             System.out.println("ENTRY: " + e);

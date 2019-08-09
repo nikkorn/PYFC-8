@@ -9,6 +9,12 @@ public class Constants {
     public static final String APPLICATION_VERSION                  = "0.0.1";
 
     //===========================================================
+    // DEVICE
+    //===========================================================
+    public static final int SPRITE_SHEET_PIXELS_WIDTH 	            = 224;
+    public static final int SPRITE_SHEET_PIXELS_HEIGHT	            = 256;
+
+    //===========================================================
     // INPUT
     //===========================================================
     public static final String INPUT_VALID_CHARACTERS               = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz<>:;.,'[]{}=+-_/?!\"£$%^&*())#~\\|\n\r\t\b ";

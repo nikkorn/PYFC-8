@@ -1,7 +1,5 @@
 package com.dumbpug.sfc.device;
 
-import com.dumbpug.sfc.device.Cartridge;
-import com.dumbpug.sfc.device.ScriptEditor;
 import com.dumbpug.sfc.device.filesystem.FileSystem;
 
 /**
@@ -17,9 +15,13 @@ public class Device {
      */
     private com.dumbpug.sfc.device.filesystem.FileSystem fileSystem = new com.dumbpug.sfc.device.filesystem.FileSystem();
     /**
-     * The representation of the script editor in the context of the console device.
+     * The script data in the context of the console device.
      */
-    private com.dumbpug.sfc.device.ScriptEditor scriptEditor = new com.dumbpug.sfc.device.ScriptEditor();
+    private ScriptData scriptData = new ScriptData();
+    /**
+     * The sprite data in the context of the console device.
+     */
+    private SpriteData spriteData = new SpriteData();
 
     /**
      * Gets the currently loaded cartridge.
@@ -53,10 +55,18 @@ public class Device {
     }
 
     /**
-     * Gets the representation of the script editor in the context of the console device.
-     * @return The representation of the script editor in the context of the console device.
+     * Gets the script data in the context of the console device.
+     * @return The script data in the context of the console device.
      */
-    public ScriptEditor getScriptEditor() {
-        return this.scriptEditor;
+    public ScriptData getScriptData() {
+        return this.scriptData;
+    }
+
+    /**
+     * Gets the sprite data in the context of the console device.
+     * @return The sprite data in the context of the console device.
+     */
+    public SpriteData getSpriteData() {
+        return this.spriteData;
     }
 }

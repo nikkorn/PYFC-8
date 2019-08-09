@@ -1,9 +1,9 @@
 package com.dumbpug.sfc.device;
 
 /**
- * Represents the script editor in the context of the console device.
+ * Represents the script data in the context of the console device.
  */
-public class ScriptEditor {
+public class ScriptData {
     /**
      * The script editor text.
      */
