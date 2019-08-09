@@ -3,7 +3,6 @@ package com.dumbpug.sfc.spriteeditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
@@ -11,9 +10,7 @@ import com.dumbpug.sfc.components.paintarea.InputMode;
 import com.dumbpug.sfc.components.paintarea.PaintArea;
 import com.dumbpug.sfc.components.spritesheetarea.SpriteSheetArea;
 import com.dumbpug.sfc.device.Device;
-import com.dumbpug.sfc.font.FontProvider;
 import com.dumbpug.sfc.palette.Colour;
-import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.resources.ImageResources;
 import com.dumbpug.sfc.state.State;
 
@@ -34,10 +31,6 @@ public class SpriteEditorState extends State {
      */
     private PaintArea paintArea;
     /**
-     * The editor font.
-     */
-    private BitmapFont editorFont;
-    /**
      * The background sprite.
      */
     private Sprite background;
@@ -57,10 +50,6 @@ public class SpriteEditorState extends State {
     public SpriteEditorState(Device device) {
         // Get a reference to the console device.
         this.device = device;
-
-        // Create the editor font.
-        editorFont = FontProvider.getFont(Constants.SCRIPT_EDITOR_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
-        editorFont.setColor(Palette.getColour(Colour.WHITE));
 
         // Create the sprite sheet area.
         this.spriteSheetArea = new SpriteSheetArea(
@@ -87,6 +76,7 @@ public class SpriteEditorState extends State {
 
     @Override
     public void onEntry(State state) {
+        // TODO Update the spritesheet area so that the pixels displayed match the device sprite data.
     }
 
     @Override

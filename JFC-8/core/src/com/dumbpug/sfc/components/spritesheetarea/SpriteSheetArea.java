@@ -1,15 +1,12 @@
 package com.dumbpug.sfc.components.spritesheetarea;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.components.interactable.InteractableArea;
 import com.dumbpug.sfc.components.paintarea.IPaintableTarget;
 import com.dumbpug.sfc.components.paintarea.ViewMode;
-import com.dumbpug.sfc.components.textarea.Line;
 import com.dumbpug.sfc.device.SpriteData;
 import com.dumbpug.sfc.palette.Colour;
-import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.utility.Position;
 
 /**
@@ -35,7 +32,7 @@ public class SpriteSheetArea extends InteractableArea {
     /**
      * The current position of the panel selection where 0/0 is top-left.
      */
-    private Position selectionPosition = new Position(0, 0);
+    private Position<Integer> selectionPosition = new Position<Integer>(0, 0);
     /**
      * The current selection view mode.
      */
@@ -49,7 +46,7 @@ public class SpriteSheetArea extends InteractableArea {
      * @param width
      * @param height
      */
-    public SpriteSheetArea(SpriteData spriteData, float x, float y, float width, float height) {
+    public SpriteSheetArea(final SpriteData spriteData, float x, float y, float width, float height) {
         super(x, y, width, height);
         this.spriteData = spriteData;
 
@@ -71,17 +68,20 @@ public class SpriteSheetArea extends InteractableArea {
 
             @Override
             public void setPixel(int x, int y, Colour colour) {
-                // TODO
+                int targetX = (selectionPosition.getX() * Constants.SPRITE_EDITOR_SHEET_UNIT) + x;
+                int targetY = (selectionPosition.getY() * Constants.SPRITE_EDITOR_SHEET_UNIT) + y;
+                spriteData.setPixel(targetX, targetY, colour);
             }
 
             @Override
             public Colour getPixel(int x, int y) {
-                // TODO
-                return Colour.BLACK;
+                int targetX = (selectionPosition.getX() * Constants.SPRITE_EDITOR_SHEET_UNIT) + x;
+                int targetY = (selectionPosition.getY() * Constants.SPRITE_EDITOR_SHEET_UNIT) + y;
+                return spriteData.getPixel(targetX, targetY);
             }
         };
 
-        // TODO Add the sprite sheets as interactable elements within this area. Make them here???
+        // TODO Add the sprite sheet as interactable elements within this area. Make them here???
     }
 
     /**

@@ -3,38 +3,31 @@ package com.dumbpug.sfc.utility;
 /**
  * An x/y position.
  */
-public class Position {
+public class Position<TType extends Number> {
     /**
      * The x position.
      */
-    private float x;
+    private TType x;
     /**
      * The y position.
      */
-    private float y;
+    private TType y;
 
     /**
      * Creates a new instance of the Position class.
      * @param x The x position.
      * @param y The y position.
      */
-    public Position(float x, float y) {
+    public Position(TType x, TType y) {
         this.x = x;
         this.y = y;
-    }
-
-    /**
-     * Creates a new instance of the Position class.
-     */
-    public Position() {
-        this(0, 0);
     }
 
     /**
      * Get the x position.
      * @return The x position.
      */
-    public float getX() {
+    public TType getX() {
         return x;
     }
 
@@ -42,7 +35,7 @@ public class Position {
      * Set the x position.
      * @param x The x position.
      */
-    public void setX(float x) {
+    public void setX(TType x) {
         this.x = x;
     }
 
@@ -50,7 +43,7 @@ public class Position {
      * Get the y position.
      * @return The y position.
      */
-    public float getY() {
+    public TType getY() {
         return y;
     }
 
@@ -58,7 +51,7 @@ public class Position {
      * Set the y position.
      * @param y The y position.
      */
-    public void setY(float y) {
+    public void setY(TType y) {
         this.y = y;
     }
 
