@@ -60,7 +60,7 @@ public class Position<TType extends Number> {
      * The state of the copy will not be changed if the original is modified.
      * @return A copy of this position.
      */
-    public Position copy() {
-        return new Position(this.getX(), this.getY());
+    public Position<TType> copy() {
+        return new Position<TType>(this.getX(), this.getY());
     }
 }

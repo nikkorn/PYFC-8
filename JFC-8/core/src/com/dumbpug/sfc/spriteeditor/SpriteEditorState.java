@@ -54,17 +54,17 @@ public class SpriteEditorState extends State {
         // Create the sprite sheet area.
         this.spriteSheetArea = new SpriteSheetArea(
                 device.getSpriteData(),
-                0,
-                0,
-                100,
-                100
+                160 * Constants.DISPLAY_PIXEL_SIZE,
+                0 * Constants.DISPLAY_PIXEL_SIZE,
+                224 * Constants.DISPLAY_PIXEL_SIZE,
+                256 * Constants.DISPLAY_PIXEL_SIZE
         );
 
         // Create the paintable area, passing in a reference to the active sprite sheet selection.
         this.paintArea = new PaintArea(
                 this.spriteSheetArea.getPaintableTarget(),
-                35 * Constants.DISPLAY_PIXEL_SIZE,
-                92 * Constants.DISPLAY_PIXEL_SIZE,
+                14 * Constants.DISPLAY_PIXEL_SIZE,
+                124 * Constants.DISPLAY_PIXEL_SIZE,
                 128 * Constants.DISPLAY_PIXEL_SIZE
         );
 

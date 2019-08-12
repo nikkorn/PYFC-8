@@ -1,7 +1,6 @@
 package com.dumbpug.sfc.components.interactable;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

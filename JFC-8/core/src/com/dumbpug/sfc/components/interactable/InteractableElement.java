@@ -1,7 +1,5 @@
 package com.dumbpug.sfc.components.interactable;
 
-import com.dumbpug.sfc.components.interactable.IInteractionHandler;
-
 /**
  * Represents an interactable element that can be placed within an interactive area.
  */
@@ -9,7 +7,7 @@ public class InteractableElement extends Interactable {
     /**
      * The interaction handler for the interactable element.
      */
-    private com.dumbpug.sfc.components.interactable.IInteractionHandler interactionHandler;
+    private IInteractionHandler interactionHandler;
 
     /**
      * Creates a new instance of the InteractableElement class.
@@ -31,6 +29,7 @@ public class InteractableElement extends Interactable {
             return false;
         }
 
-        return this.interactionHandler.onClick();
+        // Invoke the interaction click handler, passing an x/y position relative to the element.
+        return this.interactionHandler.onClick(x - this.x, y - this.y);
     }
 }

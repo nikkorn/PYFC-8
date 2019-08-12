@@ -2,7 +2,8 @@ package com.dumbpug.sfc.components.spritesheetarea;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
-import com.dumbpug.sfc.components.interactable.InteractableArea;
+import com.dumbpug.sfc.components.interactable.IInteractionHandler;
+import com.dumbpug.sfc.components.interactable.InteractableElement;
 import com.dumbpug.sfc.components.paintarea.IPaintableTarget;
 import com.dumbpug.sfc.components.paintarea.ViewMode;
 import com.dumbpug.sfc.device.SpriteData;
@@ -12,7 +13,7 @@ import com.dumbpug.sfc.utility.Position;
 /**
  * An area in which one of multiple sprite sheets can have selections made on it.
  */
-public class SpriteSheetArea extends InteractableArea {
+public class SpriteSheetArea extends InteractableElement {
     /**
      * The sprite data.
      */
@@ -47,7 +48,11 @@ public class SpriteSheetArea extends InteractableArea {
      * @param height
      */
     public SpriteSheetArea(final SpriteData spriteData, float x, float y, float width, float height) {
-        super(x, y, width, height);
+        super(x, y, width, height, new IInteractionHandler() {
+            @Override
+            public boolean onClick(float x, float y) { return onClick(x, y); }
+        });
+
         this.spriteData = spriteData;
 
         // Create the paintable target which will always be represented by the current sheet and selection.
@@ -90,6 +95,14 @@ public class SpriteSheetArea extends InteractableArea {
      */
     public IPaintableTarget getPaintableTarget() {
         return paintableTarget;
+    }
+
+    /**
+     * Attempt to handle a click in the interactable element.
+     * @return Whether the click was handled.
+     */
+    public boolean onClick() {
+        return false;
     }
 
     /**

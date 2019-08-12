@@ -91,7 +91,7 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
         // Create the interactable element for the undo button.
         toolbarArea.addInteractable(new InteractableElement(48, 484, 32, 20, new IInteractionHandler() {
             @Override
-            public boolean onClick() {
+            public boolean onClick(float x, float y) {
                 editorTextArea.undo();
                 return true;
             }
@@ -100,7 +100,7 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
         // Create the interactable element for the redo button.
         toolbarArea.addInteractable(new InteractableElement(88, 484, 32, 20, new IInteractionHandler() {
             @Override
-            public boolean onClick() {
+            public boolean onClick(float x, float y) {
                 editorTextArea.redo();
                 return true;
             }

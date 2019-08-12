@@ -9,7 +9,7 @@ public abstract class Interactable {
     /**
      * The x/y of the interactable.
      */
-    private float x,y;
+    protected float x,y;
     /**
      * The width/height of the interactable.
      */
