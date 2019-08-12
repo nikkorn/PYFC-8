@@ -6,11 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
-import com.dumbpug.sfc.components.paintarea.InputMode;
+import com.dumbpug.sfc.components.interactable.InteractableArea;
 import com.dumbpug.sfc.components.paintarea.PaintArea;
 import com.dumbpug.sfc.components.spritesheetarea.SpriteSheetArea;
 import com.dumbpug.sfc.device.Device;
-import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.resources.ImageResources;
 import com.dumbpug.sfc.state.State;
 
@@ -31,17 +30,17 @@ public class SpriteEditorState extends State {
      */
     private PaintArea paintArea;
     /**
+     * The paint area toolbar.
+     */
+    private SpriteEditorToolbar editorToolbar;
+    /**
+     * The interactable area that covers the entire sprite editor.
+     */
+    private InteractableArea editorInteractableArea;
+    /**
      * The background sprite.
      */
     private Sprite background;
-    /**
-     * The current colour.
-     */
-    private Colour colour = Colour.WHITE;
-    /**
-     * The current input mode.
-     */
-    private InputMode inputMode = InputMode.PAINT_SMALL;
 
     /**
      * Create a new instance of the SpriteEditorState class.
@@ -67,6 +66,17 @@ public class SpriteEditorState extends State {
                 124 * Constants.DISPLAY_PIXEL_SIZE,
                 128 * Constants.DISPLAY_PIXEL_SIZE
         );
+
+        // Create the paint editor toolbar.
+        this.editorToolbar = new SpriteEditorToolbar(
+                6 * Constants.DISPLAY_PIXEL_SIZE,
+                47 * Constants.DISPLAY_PIXEL_SIZE,
+                144 * Constants.DISPLAY_PIXEL_SIZE,
+                42 * Constants.DISPLAY_PIXEL_SIZE
+        );
+
+        // Create the interactable eare that covers the entire editor.
+        this.editorInteractableArea = this.createSpriteEditorInteractableArea();
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/sprite_editor/background.png")));
@@ -105,6 +115,9 @@ public class SpriteEditorState extends State {
         // Draw the sprite sheet area.
         this.spriteSheetArea.draw(batch);
 
+        // Draw the editor toolbar area.
+        this.editorToolbar.draw(batch);
+
         // Draw the paint area.
         this.paintArea.draw(batch);
 
@@ -117,5 +130,22 @@ public class SpriteEditorState extends State {
     @Override
     public String getStateName() {
         return "SPRITE_EDITOR";
+    }
+
+    /**
+     * Create the interactable area that covers the sprite editor.
+     * @return The interactable area that covers the sprite editor.
+     */
+    private InteractableArea createSpriteEditorInteractableArea() {
+        // Create the interactable area that covers the entire editor.
+        InteractableArea editorArea = new InteractableArea(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Add the sprite sheet area interactable element.
+        editorArea.addInteractable(this.spriteSheetArea);
+
+        // Add the editor toolbar area.
+        editorArea.addInteractable(this.editorToolbar);
+
+        return editorArea;
     }
 }
