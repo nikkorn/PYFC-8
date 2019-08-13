@@ -8,5 +8,5 @@ public interface IInteractionHandler {
      * @param y The y position of the click relative to the element position.
      * @return Whether the click was actually processed.
      */
-    boolean onClick(float x, float y);
+    boolean onElementClick(float x, float y);
 }

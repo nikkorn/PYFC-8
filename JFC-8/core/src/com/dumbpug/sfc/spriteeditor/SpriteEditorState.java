@@ -34,9 +34,9 @@ public class SpriteEditorState extends State {
      */
     private SpriteEditorToolbar editorToolbar;
     /**
-     * The interactable area that covers the entire sprite editor.
+     * The input processor for this state.
      */
-    private InteractableArea editorInteractableArea;
+    private SpriteEditorStateInputProcessor stateInputProcessor;
     /**
      * The background sprite.
      */
@@ -75,8 +75,8 @@ public class SpriteEditorState extends State {
                 42 * Constants.DISPLAY_PIXEL_SIZE
         );
 
-        // Create the interactable eare that covers the entire editor.
-        this.editorInteractableArea = this.createSpriteEditorInteractableArea();
+        // Create the input processor for this state.
+        this.stateInputProcessor = new SpriteEditorStateInputProcessor(device, this.createSpriteEditorInteractableArea());
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/sprite_editor/background.png")));
@@ -86,7 +86,11 @@ public class SpriteEditorState extends State {
 
     @Override
     public void onEntry(State state) {
-        // TODO Update the spritesheet area so that the pixels displayed match the device sprite data.
+        // Set the application input processor to be the one associated with this state.
+        Gdx.input.setInputProcessor(this.stateInputProcessor);
+
+        // Refresh the sprite sheet area so that the pixels displayed match the device sprite data.
+        this.spriteSheetArea.refresh();
     }
 
     @Override

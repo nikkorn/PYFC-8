@@ -3,6 +3,7 @@ package com.dumbpug.sfc.device;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Represents the sprite data in the context of the console device.
@@ -19,7 +20,7 @@ public class SpriteData {
     public SpriteData() {
         // Initialise ever pixel to be the colour black.
         for (Colour[] row : this.pixels) {
-            Arrays.fill(row, Colour.RED);
+            Arrays.fill(row, Colour.values()[new Random().nextInt(4) + 10]);
         }
     }
 

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
-import com.dumbpug.sfc.components.interactable.IInteractionHandler;
 import com.dumbpug.sfc.components.interactable.InteractableElement;
 import com.dumbpug.sfc.components.paintarea.IPaintableTarget;
 import com.dumbpug.sfc.components.paintarea.ViewMode;
@@ -51,10 +50,7 @@ public class SpriteSheetArea extends InteractableElement {
      * @param height
      */
     public SpriteSheetArea(final SpriteData spriteData, float x, float y, float width, float height) {
-        super(x, y, width, height, new IInteractionHandler() {
-            @Override
-            public boolean onClick(float x, float y) { return onClick(x, y); }
-        });
+        super(x, y, width, height);
 
         this.spriteData = spriteData;
 
@@ -98,8 +94,8 @@ public class SpriteSheetArea extends InteractableElement {
         // Create a drawable texture based on the contents of the display pixmap.
         this.displayPixmapTexture = new Texture(this.spriteSheetPixmap, Pixmap.Format.RGB888, false);
 
-        // Update the sheet pixmap to reflect the device sprite data.
-        updateSheetPixmap();
+        // Refresh the sheet pixmap to reflect the device sprite data.
+        refresh();
     }
 
     /**
@@ -111,26 +107,21 @@ public class SpriteSheetArea extends InteractableElement {
     }
 
     /**
-     * Attempt to handle a click in the interactable element.
-     * @return Whether the click was handled.
+     * Attempt to process a click event on the element.
+     * @param x The x position of the click relative to the element position.
+     * @param y The y position of the click relative to the element position.
+     * @return Whether the click was actually processed.
      */
-    public boolean onClick() {
+    @Override
+    public boolean onElementClick(float x, float y) {
+        System.out.println("SpriteSheetAreaClick: X: " + x + " Y: " + y);
         return false;
     }
 
     /**
-     * Draw the sprite sheet area.
-     * @param batch The sprite batch.
+     * Refresh the sprite sheet pixmap to match the device sprite data.
      */
-    public void draw(SpriteBatch batch) {
-        // Draw the sprite sheet pixmap texture.
-        batch.draw(this.displayPixmapTexture, x, y, width, height);
-    }
-
-    /**
-     * Update the sprite sheet pixmap to match the device sprite data.
-     */
-    private void updateSheetPixmap() {
+    public void refresh() {
         for (int x = 0; x < Constants.SPRITE_SHEET_PIXELS_WIDTH; x++) {
             for (int y = 0; y < Constants.SPRITE_SHEET_PIXELS_HEIGHT; y++) {
                 this.spriteSheetPixmap.setColor(Palette.getColour(spriteData.getPixel(x, y)));
@@ -143,6 +134,15 @@ public class SpriteSheetArea extends InteractableElement {
 
         // Create a drawable texture based on the contents of the display pixmap.
         this.displayPixmapTexture = new Texture(this.spriteSheetPixmap, Pixmap.Format.RGB888, false);
+    }
+
+    /**
+     * Draw the sprite sheet area.
+     * @param batch The sprite batch.
+     */
+    public void draw(SpriteBatch batch) {
+        // Draw the sprite sheet pixmap texture.
+        batch.draw(this.displayPixmapTexture, x, y, width, height);
     }
 
     /**
