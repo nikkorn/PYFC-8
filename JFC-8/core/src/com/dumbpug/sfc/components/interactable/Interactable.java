@@ -9,11 +9,11 @@ public abstract class Interactable {
     /**
      * The x/y of the interactable.
      */
-    protected float x,y;
+    protected float x, y;
     /**
      * The width/height of the interactable.
      */
-    private float width,height;
+    protected float width, height;
     /**
      * The layer height of the element.
      */

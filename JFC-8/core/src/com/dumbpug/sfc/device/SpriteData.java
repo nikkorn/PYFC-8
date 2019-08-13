@@ -19,7 +19,7 @@ public class SpriteData {
     public SpriteData() {
         // Initialise ever pixel to be the colour black.
         for (Colour[] row : this.pixels) {
-            Arrays.fill(row, Colour.BLACK);
+            Arrays.fill(row, Colour.RED);
         }
     }
 
