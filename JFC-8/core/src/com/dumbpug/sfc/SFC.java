@@ -54,7 +54,7 @@ public class SFC extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		// Capture the system cursor.
-		Gdx.input.setCursorCatched(true);
+		// Gdx.input.setCursorCatched(true);
 	}
 
 	@Override

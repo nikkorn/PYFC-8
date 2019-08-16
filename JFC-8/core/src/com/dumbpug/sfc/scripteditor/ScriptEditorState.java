@@ -19,7 +19,7 @@ import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.font.FontProvider;
-import com.dumbpug.sfc.resources.ImageResources;
+import com.dumbpug.sfc.resources.GeneralResources;
 import com.dumbpug.sfc.state.State;
 
 /**
@@ -167,7 +167,7 @@ public class ScriptEditorState extends com.dumbpug.sfc.state.State {
         );
 
         // Draw the default cursor.
-        Sprite cursor = ImageResources.getDefaultCursorSprite();
+        Sprite cursor = GeneralResources.getDefaultCursorSprite();
         cursor.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - cursor.getHeight());
         cursor.draw(batch);
     }

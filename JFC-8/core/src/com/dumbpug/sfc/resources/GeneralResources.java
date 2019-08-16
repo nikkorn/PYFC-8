@@ -6,12 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.dumbpug.sfc.Constants;
 
 /**
- * Holder of image resources.
+ * Holder of general resources.
  */
-public class ImageResources {
-    //============================================
-    // General resources.
-    //============================================
+public class GeneralResources {
     private static Sprite default_cursor;
     private static Sprite pencil_cursor;
 
@@ -28,7 +25,7 @@ public class ImageResources {
      * @return The default cursor sprite.
      */
     public static Sprite getDefaultCursorSprite() {
-        return ImageResources.default_cursor;
+        return GeneralResources.default_cursor;
     }
 
     /**
@@ -36,6 +33,6 @@ public class ImageResources {
      * @return The pencil cursor sprite.
      */
     public static Sprite getPencilCursorSprite() {
-        return ImageResources.pencil_cursor;
+        return GeneralResources.pencil_cursor;
     }
 }

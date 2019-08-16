@@ -2,14 +2,15 @@ package com.dumbpug.sfc.components.spritesheetarea;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.components.interactable.InteractableElement;
 import com.dumbpug.sfc.components.paintarea.IPaintableTarget;
-import com.dumbpug.sfc.components.paintarea.ViewMode;
 import com.dumbpug.sfc.device.SpriteData;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
+import com.dumbpug.sfc.resources.SpriteEditorResources;
 import com.dumbpug.sfc.utility.Position;
 
 /**
@@ -60,11 +61,11 @@ public class SpriteSheetArea extends InteractableElement {
             public int getSize() {
                 switch (viewMode) {
                     case SMALL:
-                        return 16;
+                        return Constants.SPRITE_EDITOR_SELECTION_SMALL_PIXELS;
                     case MEDIUM:
-                        return 32;
+                        return Constants.SPRITE_EDITOR_SELECTION_MEDIUM_PIXELS;
                     case LARGE:
-                        return 64;
+                        return Constants.SPRITE_EDITOR_SELECTION_LARGE_PIXELS;
                     default:
                         throw new RuntimeException("unexpected view mode type");
                 }
@@ -107,6 +108,14 @@ public class SpriteSheetArea extends InteractableElement {
     }
 
     /**
+     * Sets the view mode.
+     * @param viewMode The view mode.
+     */
+    public void setViewMode(ViewMode viewMode) {
+        this.viewMode = viewMode;
+    }
+
+    /**
      * Attempt to process a click event on the element.
      * @param x The x position of the click relative to the element position.
      * @param y The y position of the click relative to the element position.
@@ -114,8 +123,18 @@ public class SpriteSheetArea extends InteractableElement {
      */
     @Override
     public boolean onElementClick(float x, float y) {
-        System.out.println("SpriteSheetAreaClick: X: " + x + " Y: " + y);
-        return false;
+        // Find the panel position based on the x/y click location.
+        int positionX = (int)(x / Constants.DISPLAY_PIXEL_SIZE) / Constants.SPRITE_EDITOR_SHEET_UNIT;
+        int positionY = (int)((this.height - y) / Constants.DISPLAY_PIXEL_SIZE) / Constants.SPRITE_EDITOR_SHEET_UNIT;
+
+        // Update the selection position.
+        this.selectionPosition.setX(positionX);
+        this.selectionPosition.setY(positionY);
+
+        // TODO Clamp the selection position to ensure the selection box stays within the bounds of the sprite sheet panel.
+
+        // We handled the click.
+        return true;
     }
 
     /**
@@ -143,6 +162,29 @@ public class SpriteSheetArea extends InteractableElement {
     public void draw(SpriteBatch batch) {
         // Draw the sprite sheet pixmap texture.
         batch.draw(this.displayPixmapTexture, x, y, width, height);
+
+        // Draw the selection box.
+        Sprite selectionBox = null;
+        int positionYOffset = 0;
+        switch (this.viewMode) {
+            case SMALL:
+                selectionBox    = SpriteEditorResources.getSelectionBoxSmall();
+                positionYOffset = 1;
+                break;
+            case MEDIUM:
+                selectionBox    = SpriteEditorResources.getSelectionBoxMedium();
+                positionYOffset = 2;
+                break;
+            case LARGE:
+                selectionBox    = SpriteEditorResources.getSelectionBoxLarge();
+                positionYOffset = 4;
+                break;
+        }
+
+        float selectionX = this.x + ((this.selectionPosition.getX() * Constants.SPRITE_EDITOR_SHEET_UNIT) * Constants.DISPLAY_PIXEL_SIZE);
+        float selectionY = (this.y + this.height) - (((this.selectionPosition.getY() + positionYOffset) * Constants.SPRITE_EDITOR_SHEET_UNIT) * Constants.DISPLAY_PIXEL_SIZE);
+        selectionBox.setPosition(selectionX, selectionY);
+        selectionBox.draw(batch);
     }
 
     /**

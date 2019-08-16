@@ -10,7 +10,7 @@ import com.dumbpug.sfc.components.interactable.InteractableArea;
 import com.dumbpug.sfc.components.paintarea.PaintArea;
 import com.dumbpug.sfc.components.spritesheetarea.SpriteSheetArea;
 import com.dumbpug.sfc.device.Device;
-import com.dumbpug.sfc.resources.ImageResources;
+import com.dumbpug.sfc.resources.GeneralResources;
 import com.dumbpug.sfc.state.State;
 
 /**
@@ -126,7 +126,7 @@ public class SpriteEditorState extends State {
         this.paintArea.draw(batch);
 
         // Draw the default cursor.
-        Sprite cursor = ImageResources.getDefaultCursorSprite();
+        Sprite cursor = GeneralResources.getDefaultCursorSprite();
         cursor.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() - cursor.getHeight());
         cursor.draw(batch);
     }

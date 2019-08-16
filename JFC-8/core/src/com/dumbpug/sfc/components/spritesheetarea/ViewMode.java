@@ -1,4 +1,4 @@
-package com.dumbpug.sfc.components.paintarea;
+package com.dumbpug.sfc.components.spritesheetarea;
 
 /**
  * Enumeration of view modes.
