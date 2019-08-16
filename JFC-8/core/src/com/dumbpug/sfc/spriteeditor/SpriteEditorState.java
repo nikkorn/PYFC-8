@@ -6,9 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
+import com.dumbpug.sfc.components.interactable.IInteractionHandler;
 import com.dumbpug.sfc.components.interactable.InteractableArea;
+import com.dumbpug.sfc.components.interactable.InteractableElement;
 import com.dumbpug.sfc.components.paintarea.PaintArea;
 import com.dumbpug.sfc.components.spritesheetarea.SpriteSheetArea;
+import com.dumbpug.sfc.components.spritesheetarea.ViewMode;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.resources.GeneralResources;
 import com.dumbpug.sfc.state.State;
@@ -149,6 +152,47 @@ public class SpriteEditorState extends State {
 
         // Add the editor toolbar area.
         editorArea.addInteractable(this.editorToolbar);
+
+        // Create the sprite sheet view view mode button elements.
+        editorArea.addInteractable(new InteractableElement(
+                142 * Constants.DISPLAY_PIXEL_SIZE,
+                30 * Constants.DISPLAY_PIXEL_SIZE,
+                17 * Constants.DISPLAY_PIXEL_SIZE,
+                13 * Constants.DISPLAY_PIXEL_SIZE,
+                new IInteractionHandler() {
+                    @Override
+                    public boolean onElementClick(float x, float y) {
+                        spriteSheetArea.setViewMode(ViewMode.SMALL);
+                        return true;
+                    }
+                })
+        );
+        editorArea.addInteractable(new InteractableElement(
+                142 * Constants.DISPLAY_PIXEL_SIZE,
+                16 * Constants.DISPLAY_PIXEL_SIZE,
+                17 * Constants.DISPLAY_PIXEL_SIZE,
+                13 * Constants.DISPLAY_PIXEL_SIZE,
+                new IInteractionHandler() {
+                    @Override
+                    public boolean onElementClick(float x, float y) {
+                        spriteSheetArea.setViewMode(ViewMode.MEDIUM);
+                        return true;
+                    }
+                })
+        );
+        editorArea.addInteractable(new InteractableElement(
+                142 * Constants.DISPLAY_PIXEL_SIZE,
+                2 * Constants.DISPLAY_PIXEL_SIZE,
+                17 * Constants.DISPLAY_PIXEL_SIZE,
+                13 * Constants.DISPLAY_PIXEL_SIZE,
+                new IInteractionHandler() {
+                    @Override
+                    public boolean onElementClick(float x, float y) {
+                        spriteSheetArea.setViewMode(ViewMode.LARGE);
+                        return true;
+                    }
+                })
+        );
 
         return editorArea;
     }

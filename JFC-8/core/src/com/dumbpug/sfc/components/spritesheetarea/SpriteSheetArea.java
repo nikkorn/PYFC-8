@@ -113,6 +113,9 @@ public class SpriteSheetArea extends InteractableElement {
      */
     public void setViewMode(ViewMode viewMode) {
         this.viewMode = viewMode;
+
+        // Clamp the selection position to ensure the selection box stays within the bounds of the sprite sheet panel.
+        this.clampSelectionToArea();
     }
 
     /**
@@ -131,7 +134,8 @@ public class SpriteSheetArea extends InteractableElement {
         this.selectionPosition.setX(positionX);
         this.selectionPosition.setY(positionY);
 
-        // TODO Clamp the selection position to ensure the selection box stays within the bounds of the sprite sheet panel.
+        // Clamp the selection position to ensure the selection box stays within the bounds of the sprite sheet panel.
+        this.clampSelectionToArea();
 
         // We handled the click.
         return true;
@@ -201,5 +205,26 @@ public class SpriteSheetArea extends InteractableElement {
 
         // Create a drawable texture based on the contents of the display pixmap.
         this.displayPixmapTexture = new Texture(this.spriteSheetPixmap, Pixmap.Format.RGB888, false);
+    }
+
+    /**
+     * Clamp the selection position to ensure the selection box stays within the bounds of the sprite sheet panel.
+     */
+    private void clampSelectionToArea() {
+        int selectionUnitsSize = 0;
+        switch (this.viewMode) {
+            case SMALL:
+                selectionUnitsSize = 1;
+                break;
+            case MEDIUM:
+                selectionUnitsSize = 2;
+                break;
+            case LARGE:
+                selectionUnitsSize = 4;
+                break;
+        }
+
+        this.selectionPosition.setX(Math.min(this.selectionPosition.getX(), Constants.SPRITE_EDITOR_SHEET_UNITS_WIDE - selectionUnitsSize + 1));
+        this.selectionPosition.setY(Math.min(this.selectionPosition.getY(), Constants.SPRITE_EDITOR_SHEET_UNITS_HIGH - selectionUnitsSize + 1));
     }
 }
