@@ -17,6 +17,10 @@ public class Pixels {
      */
     private Pixmap pixelsPixmap = new Pixmap(Constants.SPRITE_EDITOR_PAINT_AREA_SIZE, Constants.SPRITE_EDITOR_PAINT_AREA_SIZE, Pixmap.Format.RGBA8888);
     /**
+     * The last texture generated from the pixels pixmap.
+     */
+    private Texture pixmapTexture = null;
+    /**
      * The size of the pixels area in pixels wide/high.
      */
     private int pixelSize;
@@ -72,6 +76,12 @@ public class Pixels {
      * @return The pixels area texture.
      */
     public Texture getTexture() {
-        return new Texture(this.pixelsPixmap, Pixmap.Format.RGB888, false);
+        if (this.pixmapTexture != null) {
+            this.pixmapTexture.dispose();
+        }
+
+        this.pixmapTexture = new Texture(this.pixelsPixmap, Pixmap.Format.RGB888, false);
+
+        return this.pixmapTexture;
     }
 }

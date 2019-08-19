@@ -91,10 +91,8 @@ public class PaintArea {
      * Update the paint area to reflect changes made to the paintable target.
      */
     public void update() {
-        // Update the pixels collection.
+        // Update the pixels collection. TODO Eventually only do this when sprite data changes.
         this.pixels.update(this.paintableTarget);
-
-        // TODO Clear any selection.
     };
 
     /**
@@ -147,7 +145,9 @@ public class PaintArea {
      * @param batch The sprite batch.
      */
     public void draw(SpriteBatch batch) {
-        // TODO Draw the display pixmap.
+        // Draw the pixels display pixmap.
+        batch.draw(this.pixels.getTexture(), x, y, size, size);
+
         // TODO Draw the selection outline if there is a selection.
         // TODO Draw the pixel outline if the cursor is hovering over the area.
     }

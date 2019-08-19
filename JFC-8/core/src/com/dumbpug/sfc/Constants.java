@@ -52,7 +52,7 @@ public class Constants {
     //===========================================================
     // SPRITE EDITOR
     //===========================================================
-    public static final int SPRITE_EDITOR_PAINT_AREA_SIZE	        = 48;
+    public static final int SPRITE_EDITOR_PAINT_AREA_SIZE	        = 64;
     public static final int SPRITE_EDITOR_SHEET_UNIT            	= 16;
     public static final int SPRITE_EDITOR_SHEET_UNITS_HIGH          = 15;
     public static final int SPRITE_EDITOR_SHEET_UNITS_WIDE          = 13;

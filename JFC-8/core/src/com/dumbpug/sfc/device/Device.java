@@ -9,11 +9,11 @@ public class Device {
     /**
      * The loaded cartridge.
      */
-    private com.dumbpug.sfc.device.Cartridge cartridge = null;
+    private Cartridge cartridge = null;
     /**
      * The device file system.
      */
-    private com.dumbpug.sfc.device.filesystem.FileSystem fileSystem = new com.dumbpug.sfc.device.filesystem.FileSystem();
+    private FileSystem fileSystem = new FileSystem();
     /**
      * The script data in the context of the console device.
      */
@@ -27,7 +27,7 @@ public class Device {
      * Gets the currently loaded cartridge.
      * @return The currently loaded cartridge.
      */
-    public com.dumbpug.sfc.device.Cartridge getCartridge() {
+    public Cartridge getCartridge() {
         return cartridge;
     }
 

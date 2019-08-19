@@ -66,7 +66,7 @@ public class SpriteEditorState extends State {
         this.paintArea = new PaintArea(
                 this.spriteSheetArea.getPaintableTarget(),
                 14 * Constants.DISPLAY_PIXEL_SIZE,
-                124 * Constants.DISPLAY_PIXEL_SIZE,
+                96 * Constants.DISPLAY_PIXEL_SIZE,
                 128 * Constants.DISPLAY_PIXEL_SIZE
         );
 
@@ -102,6 +102,9 @@ public class SpriteEditorState extends State {
 
     @Override
     public void update() {
+        // Update the paintable area to reflect any changes made to the sprite sheet area.
+        this.paintArea.update();
+
         // Check whether the user is attempting to move state.
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             this.changeState("TERMINAL");
