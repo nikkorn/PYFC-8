@@ -8,6 +8,10 @@ import com.dumbpug.sfc.palette.Colour;
  */
 public class PaintArea {
     /**
+     * The input processor for this paint area.
+     */
+    private PaintAreaInputProcessor inputProcessor = new PaintAreaInputProcessor(this);
+    /**
      * The paintable target.
      */
     private IPaintableTarget paintableTarget;
@@ -85,6 +89,14 @@ public class PaintArea {
      */
     public void setColour(Colour colour) {
         this.colour = colour;
+    }
+
+    /**
+     * Gets the paint editor input processor.
+     * @return The paint editor input processor.
+     */
+    public PaintAreaInputProcessor getInputProcessor() {
+        return inputProcessor;
     }
 
     /**

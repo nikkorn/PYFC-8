@@ -2,6 +2,7 @@ package com.dumbpug.sfc.spriteeditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -37,9 +38,9 @@ public class SpriteEditorState extends State {
      */
     private SpriteEditorToolbar editorToolbar;
     /**
-     * The input processor for this state.
+     * The input multiplexer for this state.
      */
-    private SpriteEditorStateInputProcessor stateInputProcessor;
+    private InputMultiplexer stateInputMultiplexer;
     /**
      * The background sprite.
      */
@@ -78,8 +79,10 @@ public class SpriteEditorState extends State {
                 42 * Constants.DISPLAY_PIXEL_SIZE
         );
 
-        // Create the input processor for this state.
-        this.stateInputProcessor = new SpriteEditorStateInputProcessor(device, this.createSpriteEditorInteractableArea());
+        // Create the input multiplexer for this state.
+        this.stateInputMultiplexer = new InputMultiplexer();
+        this.stateInputMultiplexer.addProcessor(new SpriteEditorStateInputProcessor(device, this.createSpriteEditorInteractableArea()));
+        this.stateInputMultiplexer.addProcessor(this.paintArea.getInputProcessor());
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/sprite_editor/background.png")));
@@ -90,7 +93,7 @@ public class SpriteEditorState extends State {
     @Override
     public void onEntry(State state) {
         // Set the application input processor to be the one associated with this state.
-        Gdx.input.setInputProcessor(this.stateInputProcessor);
+        Gdx.input.setInputProcessor(this.stateInputMultiplexer);
 
         // Refresh the sprite sheet area so that the pixels displayed match the device sprite data.
         this.spriteSheetArea.refresh();
