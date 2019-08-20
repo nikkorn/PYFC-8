@@ -1,6 +1,7 @@
 package com.dumbpug.sfc.components.paintarea;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
 
 /**
@@ -124,6 +125,20 @@ public class PaintArea {
      * @return Whether the pointer down event was processed by the paint area.
      */
     public boolean processPointerDown(int pointerX, int pointerY) {
+        if (!this.isPointerInTextAreaBounds(pointerX, pointerY)) {
+            return false;
+        }
+
+        // Get the relative x/y pointer position in the paint area.
+        int relativeX  = pointerX - (int)this.getX();
+        int relativeY  = (int) this.size - (int) (pointerY - this.getY());
+
+        // Get the position of the pixel within the context of the paintable area.
+        int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
+        int pixelY = (relativeY / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
+
+        this.paintableTarget.setPixel(pixelX, pixelY, Colour.LIME);
+
         return true;
     }
 
@@ -134,6 +149,20 @@ public class PaintArea {
      * @return Whether the pointer drag event was processed by the paint area.
      */
     public boolean processPointerDrag(int pointerX, int pointerY) {
+        if (!this.isPointerInTextAreaBounds(pointerX, pointerY)) {
+            return false;
+        }
+
+        // Get the relative x/y pointer position in the paint area.
+        int relativeX  = pointerX - (int)this.getX();
+        int relativeY  = (int) this.size - (int) (pointerY - this.getY());
+
+        // Get the position of the pixel within the context of the paintable area.
+        int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
+        int pixelY = (relativeY / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
+
+        this.paintableTarget.setPixel(pixelX, pixelY, Colour.LIME);
+
         return true;
     }
 
