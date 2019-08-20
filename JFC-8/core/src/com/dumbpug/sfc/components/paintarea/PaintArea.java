@@ -130,8 +130,8 @@ public class PaintArea {
         }
 
         // Get the relative x/y pointer position in the paint area.
-        int relativeX  = pointerX - (int)this.getX();
-        int relativeY  = (int) this.size - (int) (pointerY - this.getY());
+        int relativeX = pointerX - (int)this.getX();
+        int relativeY = (int) this.size - (int) (pointerY - this.getY());
 
         // Get the position of the pixel within the context of the paintable area.
         int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
@@ -153,9 +153,11 @@ public class PaintArea {
             return false;
         }
 
+        // TODO Maybe use mouse delta to determine which pixels we have dragged across between updates.
+
         // Get the relative x/y pointer position in the paint area.
-        int relativeX  = pointerX - (int)this.getX();
-        int relativeY  = (int) this.size - (int) (pointerY - this.getY());
+        int relativeX = pointerX - (int)this.getX();
+        int relativeY = (int) this.size - (int) (pointerY - this.getY());
 
         // Get the position of the pixel within the context of the paintable area.
         int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;

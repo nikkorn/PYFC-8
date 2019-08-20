@@ -78,7 +78,7 @@ public class SpriteSheetArea extends InteractableElement {
                 spriteData.setPixel(targetX, targetY, colour);
 
                 // The sprite sheet pixmap will have to be updated to reflect this change.
-                updateSheetPixmapPixel(x, y);
+                updateSheetPixmapPixel(targetX, targetY);
             }
 
             @Override
