@@ -105,6 +105,12 @@ public class SpriteEditorState extends State {
 
     @Override
     public void update() {
+        // Set the current colour for the paintable area to be the one selected via the toolbar.
+        this.paintArea.setColour(this.editorToolbar.getColour());
+
+        // Set the current input mode for the paintable area to be the one selected via the toolbar.
+        this.paintArea.setInputMode(this.editorToolbar.getInputMode());
+
         // Update the paintable area to reflect any changes made to the sprite sheet area.
         this.paintArea.update();
 

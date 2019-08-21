@@ -35,7 +35,7 @@ public class PaintArea {
     /**
      * The current colour.
      */
-    private Colour colour = Colour.NOT_SET;
+    private Colour colour = Colour.WHITE;
 
     /**
      * Creates a new instance of the PaintArea class.
@@ -137,7 +137,7 @@ public class PaintArea {
         int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
         int pixelY = (relativeY / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
 
-        this.paintableTarget.setPixel(pixelX, pixelY, Colour.LIME);
+        this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
 
         return true;
     }
@@ -163,7 +163,7 @@ public class PaintArea {
         int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
         int pixelY = (relativeY / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
 
-        this.paintableTarget.setPixel(pixelX, pixelY, Colour.LIME);
+        this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
 
         return true;
     }
