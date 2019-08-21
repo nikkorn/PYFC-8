@@ -1,11 +1,13 @@
 package com.dumbpug.sfc.spriteeditor;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.components.interactable.IInteractionHandler;
 import com.dumbpug.sfc.components.interactable.InteractableArea;
 import com.dumbpug.sfc.components.interactable.InteractableElement;
 import com.dumbpug.sfc.components.paintarea.InputMode;
 import com.dumbpug.sfc.palette.Colour;
+import com.dumbpug.sfc.state.states.SpriteEditor;
 
 /**
  * The toolbar wrapping the colour selection, input selection and selection transformation controls.
@@ -63,6 +65,14 @@ public class SpriteEditorToolbar extends InteractableArea {
      */
     public InputMode getInputMode() {
         return inputMode;
+    }
+
+    /**
+     * Draw the toolbar.
+     * @param batch The sprite batch.
+     */
+    public void draw(SpriteBatch batch) {
+
     }
 
     /**

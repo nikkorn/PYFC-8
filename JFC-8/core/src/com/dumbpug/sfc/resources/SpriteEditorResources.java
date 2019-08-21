@@ -12,6 +12,7 @@ public class SpriteEditorResources {
     private static Sprite selection_box_small;
     private static Sprite selection_box_medium;
     private static Sprite selection_box_large;
+    private static Sprite button_selection_pointer;
 
     static {
         selection_box_small = new Sprite(new Texture(Gdx.files.internal("images/sprite_editor/selection_small.png")));
@@ -29,6 +30,11 @@ public class SpriteEditorResources {
                 Constants.SPRITE_EDITOR_SELECTION_LARGE_PIXELS * Constants.DISPLAY_PIXEL_SIZE,
                 Constants.SPRITE_EDITOR_SELECTION_LARGE_PIXELS * Constants.DISPLAY_PIXEL_SIZE
         );
+        button_selection_pointer = new Sprite(new Texture(Gdx.files.internal("images/sprite_editor/button_selection_pointer.png")));
+        button_selection_pointer.setSize(
+                Constants.SPRITE_EDITOR_SELECTION_POINTER_PIXELS * Constants.DISPLAY_PIXEL_SIZE,
+                Constants.SPRITE_EDITOR_SELECTION_POINTER_PIXELS * Constants.DISPLAY_PIXEL_SIZE
+        );
     }
 
     public static Sprite getSelectionBoxSmall() {
@@ -41,5 +47,9 @@ public class SpriteEditorResources {
 
     public static Sprite getSelectionBoxLarge() {
         return selection_box_large;
+    }
+
+    public static Sprite getButtonSelectionPointer() {
+        return button_selection_pointer;
     }
 }

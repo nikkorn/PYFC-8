@@ -59,6 +59,7 @@ public class Constants {
     public static final int SPRITE_EDITOR_SELECTION_SMALL_PIXELS    = 16;
     public static final int SPRITE_EDITOR_SELECTION_MEDIUM_PIXELS   = 32;
     public static final int SPRITE_EDITOR_SELECTION_LARGE_PIXELS    = 64;
+    public static final int SPRITE_EDITOR_SELECTION_POINTER_PIXELS  = 10;
 
     //===========================================================
     // FILE SYSTEM
