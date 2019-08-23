@@ -137,7 +137,21 @@ public class PaintArea {
         int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
         int pixelY = (relativeY / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
 
-        this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
+        // How we process the click will depend on the current input mode.
+        switch (this.inputMode) {
+            case PAINT_SMALL:
+            case PAINT_MEDIUM:
+            case PAINT_LARGE:
+                // Paint the pixel at the specified x/y location with a thickness defined by the input mode.
+                this.paint(pixelX, pixelY);
+                break;
+            case FILL:
+                // TODO Do Fill.
+                break;
+            case SELECTION:
+                // TODO Create selection
+                break;
+        }
 
         return true;
     }
@@ -163,7 +177,18 @@ public class PaintArea {
         int pixelX = (relativeX / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
         int pixelY = (relativeY / Constants.DISPLAY_PIXEL_SIZE) / (Constants.SPRITE_EDITOR_PAINT_AREA_SIZE / this.paintableTarget.getSize()) / Constants.DISPLAY_PIXEL_SIZE;
 
-        this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
+        // How we process the drag will depend on the current input mode.
+        switch (this.inputMode) {
+            case PAINT_SMALL:
+            case PAINT_MEDIUM:
+            case PAINT_LARGE:
+                // Paint the pixel at the specified x/y location with a thickness defined by the input mode.
+                this.paint(pixelX, pixelY);
+                break;
+            case SELECTION:
+                // TODO Extend selection
+                break;
+        }
 
         return true;
     }
@@ -193,6 +218,36 @@ public class PaintArea {
 
         // TODO Draw the selection outline if there is a selection.
         // TODO Draw the pixel outline if the cursor is hovering over the area.
+    }
+
+    /**
+     * Paint the pixel at the specified x/y location with a thickness defined by the input mode.
+     * @param pixelX The pixel x position.
+     * @param pixelY The pixel Y position.
+     */
+    private void paint(int pixelX, int pixelY) {
+        switch (this.inputMode) {
+            case PAINT_SMALL:
+                this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
+                break;
+            case PAINT_MEDIUM:
+                this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
+                this.paintableTarget.setPixel(pixelX - 1, pixelY, this.colour);
+                this.paintableTarget.setPixel(pixelX, pixelY - 1, this.colour);
+                this.paintableTarget.setPixel(pixelX - 1, pixelY -1, this.colour);
+                break;
+            case PAINT_LARGE:
+                this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
+                this.paintableTarget.setPixel(pixelX, pixelY - 1, this.colour);
+                this.paintableTarget.setPixel(pixelX, pixelY - 2, this.colour);
+                this.paintableTarget.setPixel(pixelX - 1, pixelY, this.colour);
+                this.paintableTarget.setPixel(pixelX - 1, pixelY -1, this.colour);
+                this.paintableTarget.setPixel(pixelX - 1, pixelY - 2, this.colour);
+                this.paintableTarget.setPixel(pixelX - 2, pixelY, this.colour);
+                this.paintableTarget.setPixel(pixelX - 2, pixelY - 1, this.colour);
+                this.paintableTarget.setPixel(pixelX - 2, pixelY - 2, this.colour);
+                break;
+        }
     }
 
     /**
