@@ -73,6 +73,12 @@ public class SpriteSheetArea extends InteractableElement {
 
             @Override
             public void setPixel(int x, int y, Colour colour) {
+                // Ignore any requests to set values for pixels outside the paintable area.
+                if (x < 0 || y < 0 || x >= this.getSize() || y >= this.getSize()) {
+                    return;
+                }
+
+                // Convert the relative x/y position to an absolute sprite sheet position.
                 int targetX = (selectionPosition.getX() * Constants.SPRITE_EDITOR_SHEET_UNIT) + x;
                 int targetY = (selectionPosition.getY() * Constants.SPRITE_EDITOR_SHEET_UNIT) + y;
                 spriteData.setPixel(targetX, targetY, colour);
