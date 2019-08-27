@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
 
+import java.util.ArrayList;
+
 /**
  * A control that represents a paintable area.
  */
@@ -146,7 +148,8 @@ public class PaintArea {
                 this.paint(pixelX, pixelY);
                 break;
             case FILL:
-                // TODO Do Fill.
+                // Carry out a fill operation using the current colour from the given x/y pixel origin.
+                this.fill(pixelX, pixelY);
                 break;
             case SELECTION:
                 // TODO Create selection
@@ -248,6 +251,54 @@ public class PaintArea {
                 this.paintableTarget.setPixel(pixelX - 2, pixelY - 2, this.colour);
                 break;
         }
+    }
+
+    /**
+     * Carry out a fill operation using the current colour from the given x/y pixel origin.
+     * @param pixelOriginX The x pixel origin.
+     * @param pixelOriginY The y pixel origin.
+     */
+    private void fill(int pixelOriginX, int pixelOriginY) {
+        this.fillAtPosition(
+                pixelOriginX,
+                pixelOriginY,
+                this.paintableTarget.getPixel(pixelOriginX, pixelOriginY),
+                new ArrayList<String>()
+        );
+    }
+
+    /**
+     * Carry out a fill operation at a single pixel position and move out if we need to.
+     * @param pixelX The x pixel position.
+     * @param pixelY The y pixel position.
+     */
+    private void fillAtPosition(int pixelX, int pixelY, Colour originalColour, ArrayList<String> visited) {
+        // Ignore any requests to set values for pixels outside the paintable area.
+        if (x < 0 || y < 0 || x >= this.getSize() || y >= this.getSize()) {
+            return;
+        }
+
+        // Have we already attempted to fill at this position?
+        if (visited.contains(pixelX + "_" + pixelY)) {
+            return;
+        }
+
+        // Does the pixel at the given position need updating?
+        if (this.paintableTarget.getPixel(pixelX, pixelY) != originalColour) {
+            return;
+        }
+
+        // Update the pixel at the position.
+        this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
+
+        // We need to keep track of which position we have visited to avoid re-doing a position.
+        visited.add(pixelX + "_" + pixelY);
+
+        // Move outwards to other pixels.
+        fillAtPosition(pixelX - 1, pixelY, originalColour, visited);
+        fillAtPosition(pixelX + 1, pixelY, originalColour, visited);
+        fillAtPosition(pixelX, pixelY - 1, originalColour, visited);
+        fillAtPosition(pixelX, pixelY + 1, originalColour, visited);
     }
 
     /**
