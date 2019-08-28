@@ -12,6 +12,7 @@ import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.resources.SpriteEditorResources;
 import com.dumbpug.sfc.utility.Position;
+import java.util.ArrayList;
 
 /**
  * An area in which one of multiple sprite sheets can have selections made on it.
@@ -55,7 +56,7 @@ public class SpriteSheetArea extends InteractableElement {
 
         this.spriteData = spriteData;
 
-        // Create the paintable target which will always be represented by the current sheet and selection.
+        // Create the paint-able target which will always be represented by the current sheet and selection.
         this.paintableTarget = new IPaintableTarget() {
             @Override
             public int getSize() {
@@ -73,6 +74,36 @@ public class SpriteSheetArea extends InteractableElement {
 
             @Override
             public void setPixel(int x, int y, Colour colour) {
+                this._setPixel(x, y, colour);
+
+                // Update the pixmap texture.
+                updateSheetPixmapTexture();
+            }
+
+            @Override
+            public void setPixels(ArrayList<Position<Integer>> positions, Colour colour) {
+                for (Position<Integer> position : positions) {
+                    this._setPixel(position.getX(), position.getY(), colour);
+                }
+
+                // Update the pixmap texture.
+                updateSheetPixmapTexture();
+            }
+
+            @Override
+            public Colour getPixel(int x, int y) {
+                int targetX = (selectionPosition.getX() * Constants.SPRITE_EDITOR_SHEET_UNIT) + x;
+                int targetY = (selectionPosition.getY() * Constants.SPRITE_EDITOR_SHEET_UNIT) + y;
+                return spriteData.getPixel(targetX, targetY);
+            }
+
+            /**
+             * Sets the colour of the pixel at the given x/y location and updates the sprite sheet pixmap.
+             * @param x The x pixel position.
+             * @param y The y pixel position.
+             * @param colour The colour to set the pixel.
+             */
+            private void _setPixel(int x, int y, Colour colour) {
                 // Ignore any requests to set values for pixels outside the paintable area.
                 if (x < 0 || y < 0 || x >= this.getSize() || y >= this.getSize()) {
                     return;
@@ -81,17 +112,17 @@ public class SpriteSheetArea extends InteractableElement {
                 // Convert the relative x/y position to an absolute sprite sheet position.
                 int targetX = (selectionPosition.getX() * Constants.SPRITE_EDITOR_SHEET_UNIT) + x;
                 int targetY = (selectionPosition.getY() * Constants.SPRITE_EDITOR_SHEET_UNIT) + y;
+
+                // If the pixel at the specified position already matches the colour se are setting then do nothing.
+                if (spriteData.getPixel(targetX, targetY) == colour) {
+                    return;
+                }
+
+                // Set the pixel colour.
                 spriteData.setPixel(targetX, targetY, colour);
 
                 // The sprite sheet pixmap will have to be updated to reflect this change.
                 updateSheetPixmapPixel(targetX, targetY);
-            }
-
-            @Override
-            public Colour getPixel(int x, int y) {
-                int targetX = (selectionPosition.getX() * Constants.SPRITE_EDITOR_SHEET_UNIT) + x;
-                int targetY = (selectionPosition.getY() * Constants.SPRITE_EDITOR_SHEET_UNIT) + y;
-                return spriteData.getPixel(targetX, targetY);
             }
         };
 
@@ -205,7 +236,12 @@ public class SpriteSheetArea extends InteractableElement {
     private void updateSheetPixmapPixel(int x, int y) {
         this.spriteSheetPixmap.setColor(Palette.getColour(spriteData.getPixel(x, y)));
         this.spriteSheetPixmap.drawPixel(x, y);
+    }
 
+    /**
+     * Update the sprite sheet pixmap texture.
+     */
+    private void updateSheetPixmapTexture() {
         // Dispose of any previously created texture to avoid memory leaks.
         this.displayPixmapTexture.dispose();
 

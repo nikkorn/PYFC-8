@@ -3,6 +3,8 @@ package com.dumbpug.sfc.components.paintarea;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
+import com.dumbpug.sfc.utility.Position;
+
 import java.util.ArrayList;
 
 /**
@@ -258,26 +260,38 @@ public class PaintArea {
      * @param pixelOriginY The y pixel origin.
      */
     private void fill(int pixelOriginX, int pixelOriginY) {
-        this.fillAtPosition(
-                pixelOriginX,
-                pixelOriginY,
-                this.paintableTarget.getPixel(pixelOriginX, pixelOriginY),
-                new ArrayList<String>()
-        );
+        // Get the colour of the origin pixel.
+        Colour originColour = this.paintableTarget.getPixel(pixelOriginX, pixelOriginY);
+
+        // If the origin pixel colour already matches the currently selected colour then there is nothing to do.
+        if (originColour == this.colour) {
+            return;
+        }
+
+        ArrayList<Position<Integer>> fillablePixelPositions = new ArrayList<Position<Integer>>();
+
+        // Call a recursive method that populates a list of positions to update in batch for speed improvements.
+        this.collectFillablePixelPositions(pixelOriginX, pixelOriginY, originColour, new ArrayList<String>(), fillablePixelPositions);
+
+        // Set the colour for all fill-able pixel positions.
+        this.paintableTarget.setPixels(fillablePixelPositions, this.colour);
     }
 
     /**
-     * Carry out a fill operation at a single pixel position and move out if we need to.
-     * @param pixelX The x pixel position.
-     * @param pixelY The y pixel position.
+     * Find all reachable and fill-able pixel positions from an origin pixel position.
+     * @param pixelX The origin x pixel position.
+     * @param pixelY The origin y pixel position.
+     * @param originalColour The original colour at the original pixel position.
+     * @param visited The list of visited positions.
+     * @param positions The list fill-able positions found.
      */
-    private void fillAtPosition(int pixelX, int pixelY, Colour originalColour, ArrayList<String> visited) {
+    private void collectFillablePixelPositions(int pixelX, int pixelY, Colour originalColour, ArrayList<String> visited, ArrayList<Position<Integer>> positions) {
         // Ignore any requests to set values for pixels outside the paintable area.
         if (pixelX < 0 || pixelY < 0 || pixelX >= this.getSize() || pixelY >= this.getSize()) {
             return;
         }
 
-        // Have we already attempted to fill at this position?
+        // Have we already checked this position?
         if (visited.contains(pixelX + "_" + pixelY)) {
             return;
         }
@@ -287,17 +301,17 @@ public class PaintArea {
             return;
         }
 
-        // Update the pixel at the position.
-        this.paintableTarget.setPixel(pixelX, pixelY, this.colour);
+        // We have found a valid fill-able pixel position.
+        positions.add(new Position<Integer>(pixelX, pixelY));
 
         // We need to keep track of which position we have visited to avoid re-doing a position.
         visited.add(pixelX + "_" + pixelY);
 
-        // Move outwards to other pixels.
-        fillAtPosition(pixelX - 1, pixelY, originalColour, visited);
-        fillAtPosition(pixelX + 1, pixelY, originalColour, visited);
-        fillAtPosition(pixelX, pixelY - 1, originalColour, visited);
-        fillAtPosition(pixelX, pixelY + 1, originalColour, visited);
+        // Move outwards to other pixel positions.
+        collectFillablePixelPositions(pixelX - 1, pixelY, originalColour, visited, positions);
+        collectFillablePixelPositions(pixelX + 1, pixelY, originalColour, visited, positions);
+        collectFillablePixelPositions(pixelX, pixelY - 1, originalColour, visited, positions);
+        collectFillablePixelPositions(pixelX, pixelY + 1, originalColour, visited, positions);
     }
 
     /**
