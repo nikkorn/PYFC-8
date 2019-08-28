@@ -1,8 +1,10 @@
 package com.dumbpug.sfc.components.paintarea;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
+import com.dumbpug.sfc.resources.SpriteEditorResources;
 import com.dumbpug.sfc.utility.Position;
 
 import java.util.ArrayList;
@@ -35,6 +37,11 @@ public class PaintArea {
      * The current input mode.
      */
     private InputMode inputMode = InputMode.PAINT_SMALL;
+    /**
+     * The paint selection.
+     * This is only applicable when the current input mode is 'selection'.
+     */
+    private Selection selection = null;
     /**
      * The current colour.
      */
@@ -107,6 +114,11 @@ public class PaintArea {
      * Update the paint area to reflect changes made to the paintable target.
      */
     public void update() {
+        // If the input mode is not 'selection' then any existing selection will have to be thrown away.
+        if (this.inputMode != InputMode.SELECTION) {
+            this.selection = null;
+        }
+
         // Update the pixels collection. TODO Eventually only do this when sprite data changes.
         this.pixels.update(this.paintableTarget);
     };
@@ -132,6 +144,9 @@ public class PaintArea {
             return false;
         }
 
+        // Clear any previously made selection.
+        this.selection = null;
+
         // Get the relative x/y pointer position in the paint area.
         int relativeX = pointerX - (int)this.getX();
         int relativeY = (int) this.size - (int) (pointerY - this.getY());
@@ -153,7 +168,8 @@ public class PaintArea {
                 this.fill(pixelX, pixelY);
                 break;
             case SELECTION:
-                // TODO Create selection
+                // Create selection.
+                this.selection = new Selection(pixelX, pixelY);
                 break;
         }
 
@@ -190,7 +206,11 @@ public class PaintArea {
                 this.paint(pixelX, pixelY);
                 break;
             case SELECTION:
-                // TODO Extend selection
+                // Extend the selection target if the selection exists.
+                if (this.selection != null) {
+                    this.selection.getTarget().setX(pixelX);
+                    this.selection.getTarget().setY(pixelY);
+                }
                 break;
         }
 
@@ -220,8 +240,14 @@ public class PaintArea {
         // Draw the pixels display pixmap.
         batch.draw(this.pixels.getTexture(), x, y, size, size);
 
-        // TODO Draw the selection outline if there is a selection.
-        // TODO Draw the pixel outline if the cursor is hovering over the area.
+        // Draw the selection outline if there is a selection.
+        // TODO Do this properly!
+        if (this.selection != null) {
+            Sprite paintSelectionSprite = SpriteEditorResources.getPaintSelection();
+            paintSelectionSprite.setPosition(x + this.selection.getX(), y + this.selection.getY());
+            paintSelectionSprite.setSize(this.selection.getWidth(), this.selection.getHeight());
+            paintSelectionSprite.draw(batch);
+        }
     }
 
     /**
