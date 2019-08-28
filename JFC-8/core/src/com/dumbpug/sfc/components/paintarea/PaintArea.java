@@ -3,7 +3,6 @@ package com.dumbpug.sfc.components.paintarea;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
-
 import java.util.ArrayList;
 
 /**
@@ -274,7 +273,7 @@ public class PaintArea {
      */
     private void fillAtPosition(int pixelX, int pixelY, Colour originalColour, ArrayList<String> visited) {
         // Ignore any requests to set values for pixels outside the paintable area.
-        if (x < 0 || y < 0 || x >= this.getSize() || y >= this.getSize()) {
+        if (pixelX < 0 || pixelY < 0 || pixelX >= this.getSize() || pixelY >= this.getSize()) {
             return;
         }
 
