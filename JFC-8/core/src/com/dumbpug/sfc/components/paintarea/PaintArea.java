@@ -6,7 +6,6 @@ import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.resources.SpriteEditorResources;
 import com.dumbpug.sfc.utility.Position;
-
 import java.util.ArrayList;
 
 /**
@@ -244,8 +243,15 @@ public class PaintArea {
         // TODO Do this properly!
         if (this.selection != null) {
             Sprite paintSelectionSprite = SpriteEditorResources.getPaintSelection();
-            paintSelectionSprite.setPosition(x + this.selection.getX(), y + this.selection.getY());
-            paintSelectionSprite.setSize(this.selection.getWidth(), this.selection.getHeight());
+
+            int relativeX = (int) this.getX() + (int)(this.selection.getX() * (this.getSize() / this.paintableTarget.getSize()));
+            int relativeY = (int) this.getY() + (int)(this.selection.getY() * (this.getSize() / this.paintableTarget.getSize()));
+
+            paintSelectionSprite.setPosition(relativeX, relativeY);
+            paintSelectionSprite.setSize(
+                    this.selection.getWidth() * (this.getSize() / this.paintableTarget.getSize()),
+                    this.selection.getHeight() * (this.getSize() / this.paintableTarget.getSize())
+            );
             paintSelectionSprite.draw(batch);
         }
     }
