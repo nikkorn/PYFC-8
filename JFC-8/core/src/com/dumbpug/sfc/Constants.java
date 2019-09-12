@@ -24,6 +24,7 @@ public class Constants {
     //===========================================================
     public static final int DISPLAY_HEIGHT 	                        = 256;
     public static final int DISPLAY_WIDTH	                        = 384;
+    public static final float DISPLAY_ASPECT_RATIO                  = DISPLAY_HEIGHT / DISPLAY_WIDTH;
     public static final int DISPLAY_PIXEL_SIZE 	                    = Gdx.graphics.getHeight() / DISPLAY_HEIGHT;
     public static final int DISPLAY_CURSOR_SIZE 	                = 10;
 

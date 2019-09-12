@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.display.Screenshot;
@@ -33,6 +34,10 @@ public class SFC extends ApplicationAdapter {
 	 * The sprite batch to use throughout the application.
 	 */
 	private SpriteBatch batch;
+	/**
+	 * The application camera.
+	 */
+	private OrthographicCamera camera;
 	
 	@Override
 	public void create () {
@@ -49,6 +54,12 @@ public class SFC extends ApplicationAdapter {
 
 		// Set the initial application state.
 		stateManager.setCurrentState("TERMINAL");
+
+		// Constructs a new OrthographicCamera, using the given viewport width and height.
+		camera = new OrthographicCamera(Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT);
+		camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
+		camera.zoom = 3;
+		camera.update();
 
 		// Create the application sprite batch.
 		batch = new SpriteBatch();
@@ -69,6 +80,10 @@ public class SFC extends ApplicationAdapter {
 
 		// Update the current application state.
 		this.stateManager.update();
+
+		// Update the sprite batch position to match the camera.
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(0.219f, 0.219f, 0.239f, 1);
