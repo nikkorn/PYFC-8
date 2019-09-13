@@ -2,6 +2,7 @@ package com.dumbpug.sfc;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -58,7 +59,7 @@ public class SFC extends ApplicationAdapter {
 		// Constructs a new OrthographicCamera, using the given viewport width and height.
 		camera = new OrthographicCamera(Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT);
 		camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
-		camera.zoom = 3;
+		camera.zoom = 2;
 		camera.update();
 
 		// Create the application sprite batch.
@@ -73,6 +74,15 @@ public class SFC extends ApplicationAdapter {
 		// Toggle whether the system cursor is caught on presses of the F12 key.
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
 			Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
+		}
+
+		// Toggle full screen on/off on presses of the F11 key.
+		if (Gdx.input.isKeyPressed(Input.Keys.F11)){
+			if (Gdx.graphics.isFullscreen()) {
+				Gdx.graphics.setWindowedMode(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+			} else {
+				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+			}
 		}
 
 		// Write the FPS to the console.
