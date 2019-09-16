@@ -82,7 +82,7 @@ public class SFC extends ApplicationAdapter {
 		}
 
 		// Toggle full screen on/off on presses of the F11 key.
-		if (Gdx.input.isKeyPressed(Input.Keys.F11)){
+		if (Gdx.input.isKeyJustPressed(Input.Keys.F11)){
 			if (Gdx.graphics.isFullscreen()) {
 				camera.zoom = 1;
 				Gdx.graphics.setWindowedMode(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
