@@ -2,11 +2,12 @@ package com.dumbpug.sfc;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.display.Screenshot;
 import com.dumbpug.sfc.runtime.RuntimeState;
@@ -39,6 +40,10 @@ public class SFC extends ApplicationAdapter {
 	 * The application camera.
 	 */
 	private OrthographicCamera camera;
+	/**
+	 * The application viewport.
+	 */
+	private Viewport viewport;
 	
 	@Override
 	public void create () {
@@ -56,11 +61,11 @@ public class SFC extends ApplicationAdapter {
 		// Set the initial application state.
 		stateManager.setCurrentState("TERMINAL");
 
-		// Constructs a new OrthographicCamera, using the given viewport width and height.
-		camera = new OrthographicCamera(Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT);
-		camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
-		camera.zoom = 2;
-		camera.update();
+		camera = new OrthographicCamera();
+		viewport = new FitViewport(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, camera);
+		viewport.apply();
+
+		camera.position.set(camera.viewportWidth / 2,camera.viewportHeight / 2,0);
 
 		// Create the application sprite batch.
 		batch = new SpriteBatch();
@@ -79,8 +84,10 @@ public class SFC extends ApplicationAdapter {
 		// Toggle full screen on/off on presses of the F11 key.
 		if (Gdx.input.isKeyPressed(Input.Keys.F11)){
 			if (Gdx.graphics.isFullscreen()) {
+				camera.zoom = 1;
 				Gdx.graphics.setWindowedMode(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 			} else {
+				camera.zoom = 1.2f;
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 			}
 		}
@@ -116,6 +123,12 @@ public class SFC extends ApplicationAdapter {
 				Screenshot.write(this.device.getFileSystem().getCurrentDirectory(), dateFormat.format(new Date()));
 			}
 		}
+	}
+
+	@Override
+	public void resize(int width, int height){
+		viewport.update(width, height);
+		camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
 	}
 	
 	@Override
