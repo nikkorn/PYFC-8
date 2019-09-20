@@ -298,6 +298,9 @@ public class TerminalArea {
         // As we are about to use the shape renderer content we should end our batch render temporarily.
         batch.end();
 
+        // Update the shape renderer projection matrix to match the application batch one.
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+
         // Draw the cursor.
         this.fillColumn(
                 this.lines.indexOf(this.inputLine) - lineOffset,

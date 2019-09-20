@@ -434,6 +434,9 @@ public class TextArea {
         // As we are about to use the shape renderer content we should end our batch render temporarily.
         batch.end();
 
+        // Update the shape renderer projection matrix to match the application batch one.
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+
         // Draw the selection highlighting if there is actually a selection.
         if (this.cursor.getSelectionOrigin() != null) {
             // Get the positions of the cursor and selection origin.

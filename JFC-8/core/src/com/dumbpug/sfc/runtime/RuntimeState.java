@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.device.Device;
@@ -109,7 +110,12 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
     public void render(SpriteBatch batch) {
         // Draw the pixmap texture to the screen.
         if (this.displayPixmapTexture != null) {
-            batch.draw(this.displayPixmapTexture,0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            batch.draw(this.displayPixmapTexture,
+                0,
+                0,
+                Constants.DISPLAY_WIDTH * Constants.DISPLAY_PIXEL_SIZE,
+                Constants.DISPLAY_HEIGHT * Constants.DISPLAY_PIXEL_SIZE
+            );
         }
     }
 

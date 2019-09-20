@@ -4,7 +4,12 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.display.Screenshot;
 import com.dumbpug.sfc.runtime.RuntimeState;
@@ -33,6 +38,18 @@ public class SFC extends ApplicationAdapter {
 	 * The sprite batch to use throughout the application.
 	 */
 	private SpriteBatch batch;
+	/**
+	 * The application camera.
+	 */
+	private OrthographicCamera camera;
+	/**
+	 * The application viewport.
+	 */
+	private Viewport viewport;
+	/**
+	 * The application background.
+	 */
+	private Sprite background;
 	
 	@Override
 	public void create () {
@@ -50,8 +67,19 @@ public class SFC extends ApplicationAdapter {
 		// Set the initial application state.
 		stateManager.setCurrentState("TERMINAL");
 
+		camera = new OrthographicCamera();
+		viewport = new ExtendViewport(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, camera);
+		viewport.apply();
+
+		camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
+
 		// Create the application sprite batch.
 		batch = new SpriteBatch();
+
+		// Create and position the application background sprite.
+		background = new Sprite(new Texture(Gdx.files.internal("images/general/full_background.png")));
+		background.setSize(Gdx.graphics.getWidth() * 3, Gdx.graphics.getHeight() * 3);
+		background.setPosition(-Gdx.graphics.getWidth(), -Gdx.graphics.getHeight());
 
 		// Capture the system cursor.
 		// Gdx.input.setCursorCatched(true);
@@ -64,17 +92,31 @@ public class SFC extends ApplicationAdapter {
 			Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
 		}
 
+		// Toggle full screen on/off on presses of the F11 key.
+		if (Gdx.input.isKeyJustPressed(Input.Keys.F11)){
+			if (Gdx.graphics.isFullscreen()) {
+				Gdx.graphics.setWindowedMode(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+			} else {
+				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+			}
+		}
+
 		// Write the FPS to the console.
 		// System.out.println(Gdx.graphics.getFramesPerSecond() + " FPS");
 
 		// Update the current application state.
 		this.stateManager.update();
 
+		// Update the sprite batch position to match the camera.
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
+
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		Gdx.gl.glClearColor(0.219f, 0.219f, 0.239f, 1);
 
 		// Render the current application state.
 		batch.begin();
+		this.background.draw(batch);
 		this.stateManager.render(batch);
 		batch.end();
 
@@ -91,6 +133,12 @@ public class SFC extends ApplicationAdapter {
 				Screenshot.write(this.device.getFileSystem().getCurrentDirectory(), dateFormat.format(new Date()));
 			}
 		}
+	}
+
+	@Override
+	public void resize(int width, int height){
+		viewport.update(width, height);
+		camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
 	}
 	
 	@Override
