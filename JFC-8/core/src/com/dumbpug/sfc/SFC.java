@@ -5,8 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.display.Screenshot;
@@ -44,6 +46,10 @@ public class SFC extends ApplicationAdapter {
 	 * The application viewport.
 	 */
 	private Viewport viewport;
+	/**
+	 * The application background.
+	 */
+	private Sprite background;
 	
 	@Override
 	public void create () {
@@ -62,13 +68,18 @@ public class SFC extends ApplicationAdapter {
 		stateManager.setCurrentState("TERMINAL");
 
 		camera = new OrthographicCamera();
-		viewport = new FitViewport(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, camera);
+		viewport = new ExtendViewport(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, camera);
 		viewport.apply();
 
-		camera.position.set(camera.viewportWidth / 2,camera.viewportHeight / 2,0);
+		camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
 
 		// Create the application sprite batch.
 		batch = new SpriteBatch();
+
+		// Create and position the application background sprite.
+		background = new Sprite(new Texture(Gdx.files.internal("images/general/full_background.png")));
+		background.setSize(Gdx.graphics.getWidth() * 3, Gdx.graphics.getHeight() * 3);
+		background.setPosition(-Gdx.graphics.getWidth(), -Gdx.graphics.getHeight());
 
 		// Capture the system cursor.
 		// Gdx.input.setCursorCatched(true);
@@ -84,10 +95,8 @@ public class SFC extends ApplicationAdapter {
 		// Toggle full screen on/off on presses of the F11 key.
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F11)){
 			if (Gdx.graphics.isFullscreen()) {
-				camera.zoom = 1;
 				Gdx.graphics.setWindowedMode(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 			} else {
-				camera.zoom = 1.2f;
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 			}
 		}
@@ -107,6 +116,7 @@ public class SFC extends ApplicationAdapter {
 
 		// Render the current application state.
 		batch.begin();
+		this.background.draw(batch);
 		this.stateManager.render(batch);
 		batch.end();
 
@@ -128,7 +138,7 @@ public class SFC extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height){
 		viewport.update(width, height);
-		camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+		camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
 	}
 	
 	@Override
