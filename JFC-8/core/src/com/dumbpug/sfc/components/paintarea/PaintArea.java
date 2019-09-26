@@ -245,13 +245,13 @@ public class PaintArea {
             Sprite paintSelectionSprite = SpriteEditorResources.getPaintSelection();
 
             int relativeX = (int) this.getX() + (int)(this.selection.getX() * (this.getSize() / this.paintableTarget.getSize()));
-            int relativeY = (int) this.getY() + (int)(this.selection.getY() * (this.getSize() / this.paintableTarget.getSize()));
+            int relativeY = (int) (this.getY() + this.getSize()) - (int)(this.selection.getY() * (this.getSize() / this.paintableTarget.getSize()));
 
-            paintSelectionSprite.setPosition(relativeX, relativeY);
-            paintSelectionSprite.setSize(
-                    this.selection.getWidth() * (this.getSize() / this.paintableTarget.getSize()),
-                    this.selection.getHeight() * (this.getSize() / this.paintableTarget.getSize())
-            );
+            float width  = (this.selection.getWidth() + 1) * (this.getSize() / this.paintableTarget.getSize());
+            float height = (this.selection.getHeight() + 1) * (this.getSize() / this.paintableTarget.getSize());
+
+            paintSelectionSprite.setPosition(relativeX, relativeY - height);
+            paintSelectionSprite.setSize(width, height);
             paintSelectionSprite.draw(batch);
         }
     }
