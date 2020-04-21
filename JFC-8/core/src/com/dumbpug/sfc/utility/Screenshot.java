@@ -1,4 +1,4 @@
-package com.dumbpug.sfc.display;
+package com.dumbpug.sfc.utility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;

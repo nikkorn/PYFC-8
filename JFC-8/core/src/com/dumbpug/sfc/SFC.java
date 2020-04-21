@@ -11,21 +11,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dumbpug.sfc.device.Device;
-import com.dumbpug.sfc.display.Screenshot;
-import com.dumbpug.sfc.runtime.RuntimeState;
-import com.dumbpug.sfc.scripteditor.ScriptEditorState;
-import com.dumbpug.sfc.spriteeditor.SpriteEditorState;
+import com.dumbpug.sfc.utility.ConcurrentQueue;
+import com.dumbpug.sfc.utility.Screenshot;
+import com.dumbpug.sfc.state.runtime.RuntimeState;
 import com.dumbpug.sfc.state.StateManager;
-import com.dumbpug.sfc.state.states.Splash;
-import com.dumbpug.sfc.terminal.TerminalState;
+import com.dumbpug.sfc.state.splash.SplashState;
+import com.dumbpug.sfc.state.terminal.TerminalState;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * The SFC application.
  */
 public class SFC extends ApplicationAdapter {
+	/**
+	 * The application message queue from which to read user commands.
+	 */
+	private ConcurrentQueue<String> commandQueue;
 	/**
 	 * The console device.
 	 */
@@ -50,6 +52,21 @@ public class SFC extends ApplicationAdapter {
 	 * The application background.
 	 */
 	private Sprite background;
+
+	/**
+	 * Creates a new instance of the SFC class.
+	 * @param commandQueue The application message queue from which to read user commands.
+	 */
+	public SFC(ConcurrentQueue<String> commandQueue) {
+		this.commandQueue = commandQueue;
+	}
+
+	/**
+	 * Creates a new instance of the SFC class.
+	 */
+	public SFC() {
+		this(null);
+	}
 	
 	@Override
 	public void create () {
@@ -58,14 +75,12 @@ public class SFC extends ApplicationAdapter {
 
 		// Create the state manager and add the application states.
 		stateManager = new StateManager();
-		stateManager.addState(new Splash());
+		stateManager.addState(new SplashState());
 		stateManager.addState(new TerminalState(device));
-		stateManager.addState(new ScriptEditorState(device));
-		stateManager.addState(new SpriteEditorState(device));
 		stateManager.addState(new RuntimeState(device));
 
 		// Set the initial application state.
-		stateManager.setCurrentState("TERMINAL");
+		stateManager.setCurrentState("SPLASH");
 
 		camera = new OrthographicCamera();
 		viewport = new ExtendViewport(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, camera);
@@ -87,6 +102,22 @@ public class SFC extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		// Fetch all command queue messages and process each one in order.
+		if (this.commandQueue != null) {
+			while (this.commandQueue.hasNext()) {
+				// Get the next command.
+				String command = this.commandQueue.next();
+
+				// TODO Process the command!
+				System.out.println("I am SFC! I will process: " + command);
+
+				if (command.equals("exit")) {
+					// Exit the application now!
+					Gdx.app.exit();
+				}
+			}
+		}
+
 		// Toggle whether the system cursor is caught on presses of the F12 key.
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
 			Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
@@ -126,11 +157,13 @@ public class SFC extends ApplicationAdapter {
 			if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) {
 				// Set current cartridge label image if a cartridge is loaded.
 				if (this.device.getCartridge() != null) {
-					this.device.getCartridge().setLabel(com.dumbpug.sfc.display.Screenshot.capture());
+					this.device.getCartridge().setLabel(Screenshot.capture());
 				}
 			} else {
 				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss.SSS");
-				Screenshot.write(this.device.getFileSystem().getCurrentDirectory(), dateFormat.format(new Date()));
+
+				// TODO Save somewhere sensible!
+				// Screenshot.write(this.device.getFileSystem().getCurrentDirectory(), dateFormat.format(new Date()));
 			}
 		}
 	}

@@ -1,7 +1,6 @@
-package com.dumbpug.sfc.terminal;
+package com.dumbpug.sfc.state.terminal;
 
 import com.badlogic.gdx.Gdx;
-import com.dumbpug.sfc.terminal.TerminalState;
 
 /**
  * Processor of terminalState commands.
@@ -10,7 +9,7 @@ public class CommandProcessor {
     /**
      * The terminalState.
      */
-    private com.dumbpug.sfc.terminal.TerminalState terminalState;
+    private com.dumbpug.sfc.state.terminal.TerminalState terminalState;
 
     /**
      * Creates a new instance of the CommandProcessor
@@ -47,24 +46,6 @@ public class CommandProcessor {
         // Is this a 'help' command?
         if (command.toLowerCase().equals("help")) {
             this.terminalState.onHelpCommand();
-            return;
-        }
-
-        // Is this a 'ls' command?
-        if (command.toLowerCase().equals("ls")) {
-            this.terminalState.onListFilesCommand();
-            return;
-        }
-
-        // Is this a 'cd' command?
-        if (command.length() >= 3 && command.toLowerCase().substring(0, 3).equals("cd ")) {
-            this.terminalState.onChangeDirectoryCommand(command.substring(3).trim());
-            return;
-        }
-
-        // Is this a 'mkdir' command?
-        if (command.length() >= 6 && command.toLowerCase().substring(0, 6).equals("mkdir ")) {
-            this.terminalState.onMakeDirectoryCommand(command.substring(6).trim());
             return;
         }
 

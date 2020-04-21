@@ -1,4 +1,4 @@
-package com.dumbpug.sfc.runtime;
+package com.dumbpug.sfc.state.runtime;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.dumbpug.sfc.palette.Colour;

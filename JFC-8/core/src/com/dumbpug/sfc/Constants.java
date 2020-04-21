@@ -33,7 +33,7 @@ public class Constants {
     //===========================================================
     // SPLASH
     //===========================================================
-    public static final long SPLASH_DURATION 	                    = 4000l;
+    public static final long SPLASH_DURATION 	                    = 500l;
     public static final int SPLASH_LOGO_SIZE 	                    = DISPLAY_PIXEL_SIZE * (DISPLAY_HEIGHT / 2);
 
     //===========================================================

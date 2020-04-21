@@ -1,4 +1,4 @@
-package com.dumbpug.sfc.terminal;
+package com.dumbpug.sfc.state.terminal;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dumbpug.sfc.device.filesystem.InvalidPathException;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
 import com.dumbpug.sfc.Constants;
@@ -18,7 +17,6 @@ import com.dumbpug.sfc.components.terminal.TerminalAreaConfiguration;
 import com.dumbpug.sfc.device.Device;
 import com.dumbpug.sfc.font.FontProvider;
 import com.dumbpug.sfc.state.State;
-
 import java.util.ArrayList;
 
 /**
@@ -109,12 +107,6 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
     public void onHelpCommand() {
         terminalArea.printLine("commands", Colour.PURPLE);
         terminalArea.print("clear                ", Colour.YELLOW);
-        terminalArea.printLine("create [name]        ", Colour.YELLOW);
-        terminalArea.print("load [name]          ", Colour.YELLOW);
-        terminalArea.printLine("save                 ", Colour.YELLOW);
-        terminalArea.print("ls                   ", Colour.YELLOW);
-        terminalArea.printLine("cd [path]            ", Colour.YELLOW);
-        terminalArea.print("mkdir [path]         ", Colour.YELLOW);
         terminalArea.printLine("version              ", Colour.YELLOW);
         terminalArea.print("exit                 ", Colour.YELLOW);
 
@@ -122,11 +114,7 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
         terminalArea.print("F1             ", Colour.YELLOW);
         terminalArea.printLine("go to terminal", Colour.GREY);
         terminalArea.print("F2             ", Colour.YELLOW);
-        terminalArea.printLine("go to script editor", Colour.GREY);
-        terminalArea.print("F3             ", Colour.YELLOW);
-        terminalArea.printLine("go to sprite editor", Colour.GREY);
-        terminalArea.print("F4             ", Colour.YELLOW);
-        terminalArea.printLine("run", Colour.GREY);
+        terminalArea.printLine("go to cart", Colour.GREY);
         terminalArea.print("F9             ", Colour.YELLOW);
         terminalArea.printLine("take screenshot", Colour.GREY);
     }
@@ -136,43 +124,6 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
      */
     public void onVersionCommand() {
         terminalArea.printLine(com.dumbpug.sfc.Constants.APPLICATION_VERSION, Colour.YELLOW);
-    }
-
-    /**
-     * Handle a 'list files' command.
-     */
-    public void onListFilesCommand() {
-        for (String name : this.device.getFileSystem().getDirectoryNamesInCurrentDirectory()) {
-            terminalArea.printLine(name + "/", Colour.PURPLE);
-        }
-        for (String name : this.device.getFileSystem().getFileNamesInCurrentDirectory()) {
-            terminalArea.printLine(name, Colour.YELLOW);
-        }
-    }
-
-    /**
-     * Handle a 'change directory' command.
-     * @param path The directory path.
-     */
-    public void onChangeDirectoryCommand(String path) {
-        try {
-            // Attempt to change the current directory in the filesystem.
-            this.device.getFileSystem().changeDirectory(path);
-
-            // Update the terminal input prefix to represent the current path.
-            this.terminalArea.setInputLinePrefix(this.device.getFileSystem().getPath(), Colour.FOREST);
-        } catch (InvalidPathException exception) {
-            terminalArea.printLine("invalid path: " + exception.getPath(), Colour.RED);
-        }
-    }
-
-    /**
-     * Handle a 'make directory' command.
-     * @param path The directory path.
-     */
-    public void onMakeDirectoryCommand(String path) {
-        // Attempt to change the current directory in the filesystem.
-        this.device.getFileSystem().makeDirectory(path);
     }
 
     @Override
@@ -191,12 +142,6 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
     public void update() {
         // Check whether the user is attempting to move state.
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
-            this.changeState("SCRIPT_EDITOR");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
-            this.changeState("SPRITE_EDITOR");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             this.changeState("RUNTIME");
         }
     }

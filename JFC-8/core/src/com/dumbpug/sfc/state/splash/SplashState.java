@@ -1,4 +1,4 @@
-package com.dumbpug.sfc.state.states;
+package com.dumbpug.sfc.state.splash;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,7 +10,7 @@ import com.dumbpug.sfc.state.State;
 /**
  * The splash state of the application.
  */
-public class Splash extends com.dumbpug.sfc.state.State {
+public class SplashState extends com.dumbpug.sfc.state.State {
     /**
      * The time since the state was last entered.
      */
@@ -23,7 +23,7 @@ public class Splash extends com.dumbpug.sfc.state.State {
     /**
      * Create a new instance of the Splash class.
      */
-    public Splash() {
+    public SplashState() {
         // Create and position the logo sprite.
         logo = new Sprite(new Texture(Gdx.files.internal("images/splash/splash_logo.png")));
         logo.setOrigin(logo.getWidth() / 2,logo.getHeight() / 2);
@@ -43,9 +43,9 @@ public class Splash extends com.dumbpug.sfc.state.State {
 
     @Override
     public void update() {
-        // Have we shown the splash long enough? If so then move to the terminal.
+        // Have we shown the splash long enough? If so then move to the runtime.
         if ((System.currentTimeMillis() - this.startTime) >= Constants.SPLASH_DURATION) {
-            this.changeState("TERMINAL");
+            this.changeState("RUNTIME");
         }
     }
 

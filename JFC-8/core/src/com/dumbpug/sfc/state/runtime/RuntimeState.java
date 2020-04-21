@@ -1,4 +1,4 @@
-package com.dumbpug.sfc.runtime;
+package com.dumbpug.sfc.state.runtime;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -24,7 +24,7 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
     /**
      * The runtime script executor.
      */
-    private com.dumbpug.sfc.runtime.RuntimeScriptExecutor runtimeScriptExecutor;
+    private com.dumbpug.sfc.state.runtime.RuntimeScriptExecutor runtimeScriptExecutor;
     /**
      * The display pixmap.
      */
@@ -74,12 +74,6 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
         // Check whether the user is attempting to move state.
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             this.changeState("TERMINAL");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
-            this.changeState("SCRIPT_EDITOR");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
-            this.changeState("SPRITE_EDITOR");
         }
 
         // Attempt to invoke the script 'update' function.

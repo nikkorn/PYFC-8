@@ -1,7 +1,5 @@
 package com.dumbpug.sfc.device;
 
-import com.dumbpug.sfc.device.filesystem.FileSystem;
-
 /**
  * Represents the physical console device.
  */
@@ -10,10 +8,6 @@ public class Device {
      * The loaded cartridge.
      */
     private Cartridge cartridge = null;
-    /**
-     * The device file system.
-     */
-    private FileSystem fileSystem = new FileSystem();
     /**
      * The script data in the context of the console device.
      */
@@ -44,14 +38,6 @@ public class Device {
      */
     public void unload() {
         this.cartridge = null;
-    }
-
-    /**
-     * Get the file system of the device.
-     * @return The device file system.
-     */
-    public FileSystem getFileSystem() {
-        return this.fileSystem;
     }
 
     /**
