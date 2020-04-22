@@ -1,6 +1,6 @@
 package com.dumbpug.sfc.cli;
 
-import com.dumbpug.sfc.utility.ConcurrentQueue;
+import com.dumbpug.sfc.SFC;
 
 /**
  * Represents a launcher of SFC.
@@ -8,7 +8,7 @@ import com.dumbpug.sfc.utility.ConcurrentQueue;
 public interface ISFCLauncher {
     /**
      * Launch SFC.
-     * @return A queue used to push messages to the SFC application.
+     * @return The SFC application instance.
      */
-    ConcurrentQueue<String> launch();
+    SFC launch();
 }

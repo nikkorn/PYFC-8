@@ -27,7 +27,7 @@ public class SFC extends ApplicationAdapter {
 	/**
 	 * The application message queue from which to read user commands.
 	 */
-	private ConcurrentQueue<String> commandQueue;
+	private ConcurrentQueue<String> commandQueue = new ConcurrentQueue<String>();
 	/**
 	 * The console device.
 	 */
@@ -52,20 +52,25 @@ public class SFC extends ApplicationAdapter {
 	 * The application background.
 	 */
 	private Sprite background;
+	/**
+	 * Whether this application has been disposed of.
+	 */
+	private boolean isDisposed;
 
 	/**
-	 * Creates a new instance of the SFC class.
-	 * @param commandQueue The application message queue from which to read user commands.
+	 * Gets whether this application has been disposed of.
+	 * @return Whether this application has been disposed of.
 	 */
-	public SFC(ConcurrentQueue<String> commandQueue) {
-		this.commandQueue = commandQueue;
+	public boolean isDisposed() {
+		return this.isDisposed;
 	}
 
 	/**
-	 * Creates a new instance of the SFC class.
+	 * Add a command to the SFC application command queue to be processed as part of its update.
+	 * @param command The command to add.
 	 */
-	public SFC() {
-		this(null);
+	public void addCommand(String command) {
+		this.commandQueue.add(command);
 	}
 	
 	@Override
@@ -176,6 +181,10 @@ public class SFC extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
+		// Dispose of the application sprite batch.
 		batch.dispose();
+
+		// Mark this application as having been disposed of.
+		this.isDisposed = true;
 	}
 }

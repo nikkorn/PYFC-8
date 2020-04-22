@@ -1,6 +1,6 @@
 package com.dumbpug.sfc.cli;
 
-import com.dumbpug.sfc.utility.ConcurrentQueue;
+import com.dumbpug.sfc.SFC;
 import java.util.Scanner;
 
 /**
@@ -12,9 +12,9 @@ public class REPL {
      */
     private ISFCLauncher sfcLauncher;
     /**
-     * The command queue for the currently active SFC.
+     * The currently active SFC.
      */
-    private ConcurrentQueue<String> commandQueue = null;
+    private SFC activeSFC = null;
 
     /**
      * Creates a new instance of the REPL class.
@@ -69,13 +69,23 @@ public class REPL {
                     break;
 
                 case "launch":
-                    this.commandQueue = this.sfcLauncher.launch();
+                    if (this.activeSFC == null) {
+                        this.activeSFC = this.sfcLauncher.launch();
+                    }
+                    break;
+
+                case "close":
+                    // Close active SFC application if there is one.
+                    if (this.activeSFC != null) {
+                        this.activeSFC.addCommand("exit");
+                        this.activeSFC = null;
+                    }
                     break;
 
                 case "exit":
-                    // Close active SFC application if there is one.
-                    if (this.commandQueue != null) {
-                        this.commandQueue.add("exit");
+                    // Close active SFC application if there is one and leave REPL.
+                    if (this.activeSFC != null) {
+                        this.activeSFC.addCommand("exit");
                     }
                     return;
 
