@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
-import com.dumbpug.sfc.Constants;
 import com.dumbpug.sfc.components.terminal.CursorMovement;
 import com.dumbpug.sfc.components.terminal.TerminalArea;
 import com.dumbpug.sfc.components.terminal.TerminalAreaConfiguration;
@@ -61,15 +61,15 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
         this.device = device;
 
         // Create the terminal font.
-        terminalFont = FontProvider.getFont(com.dumbpug.sfc.Constants.SCRIPT_EDITOR_FONT_SIZE * com.dumbpug.sfc.Constants.DISPLAY_PIXEL_SIZE);
+        terminalFont = FontProvider.getFont(Constants.TEXT_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
         terminalFont.setColor(Palette.getColour(Colour.WHITE));
 
         // Create the terminal text area.
         terminalArea = new TerminalArea(
-                (com.dumbpug.sfc.Constants.SCRIPT_EDITOR_MARGIN_SIZE * 3) * com.dumbpug.sfc.Constants.DISPLAY_PIXEL_SIZE,
-                (com.dumbpug.sfc.Constants.SCRIPT_EDITOR_MARGIN_SIZE * 2) * com.dumbpug.sfc.Constants.DISPLAY_PIXEL_SIZE,
-                (com.dumbpug.sfc.Constants.SCRIPT_EDITOR_FONT_SIZE + com.dumbpug.sfc.Constants.SCRIPT_EDITOR_LINE_MARGIN_SIZE) * com.dumbpug.sfc.Constants.DISPLAY_PIXEL_SIZE,
-                (com.dumbpug.sfc.Constants.SCRIPT_EDITOR_FONT_SIZE + com.dumbpug.sfc.Constants.SCRIPT_EDITOR_COLUMN_MARGIN_SIZE) * com.dumbpug.sfc.Constants.DISPLAY_PIXEL_SIZE,
+                (Constants.TEXT_MARGIN_SIZE * 3) * Constants.DISPLAY_PIXEL_SIZE,
+                (Constants.TEXT_MARGIN_SIZE * 2) * Constants.DISPLAY_PIXEL_SIZE,
+                (Constants.TEXT_FONT_SIZE + Constants.TEXT_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
+                (Constants.TEXT_FONT_SIZE + Constants.TEXT_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
                 18,
                 44,
                 new TerminalAreaConfiguration()
@@ -77,7 +77,7 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
 
         // Print the terminal header.
         terminalArea.print("(c) nikolas howard 2019 ", Colour.GREY);
-        terminalArea.printLine("v" + com.dumbpug.sfc.Constants.APPLICATION_VERSION, Colour.IRON);
+        terminalArea.printLine("v" + Constants.APPLICATION_VERSION, Colour.IRON);
         terminalArea.printLine("Type 'help' for help\n", Colour.GREY);
 
         // Create and position the background sprite.
@@ -123,7 +123,7 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
      * Handle a version request command.
      */
     public void onVersionCommand() {
-        terminalArea.printLine(com.dumbpug.sfc.Constants.APPLICATION_VERSION, Colour.YELLOW);
+        terminalArea.printLine(Constants.APPLICATION_VERSION, Colour.YELLOW);
     }
 
     @Override

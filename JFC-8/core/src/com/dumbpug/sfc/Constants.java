@@ -37,18 +37,23 @@ public class Constants {
     public static final int SPLASH_LOGO_SIZE 	                    = DISPLAY_PIXEL_SIZE * (DISPLAY_HEIGHT / 2);
 
     //===========================================================
+    // TEXT
+    //===========================================================
+    public static final int TEXT_FONT_SIZE	                        = 8;
+    public static final int TEXT_MARGIN_SIZE                        = 4;
+    public static final int TEXT_LINE_MARGIN_SIZE                   = 4;
+    public static final int TEXT_COLUMN_MARGIN_SIZE                 = 0;
+
+
+    //===========================================================
     // TERMINAL
     //===========================================================
-    public static final int TERMINAL_FONT_SIZE 	                    = 8;
-    public static final int TERMINAL_MARGIN_SIZE                    = 8;
+    public static final int TERMINAL_LINE_COUNT	                    = 18;
+    public static final int TERMINAL_COLUMN_COUNT                   = 44;
 
     //===========================================================
     // SCRIPT EDITOR
     //===========================================================
-    public static final int SCRIPT_EDITOR_FONT_SIZE	                = 8;
-    public static final int SCRIPT_EDITOR_MARGIN_SIZE               = 4;
-    public static final int SCRIPT_EDITOR_LINE_MARGIN_SIZE          = 4;
-    public static final int SCRIPT_EDITOR_COLUMN_MARGIN_SIZE        = 0;
     public static final int SCRIPT_EDITOR_MAX_CHARACTERS            = 40000;
     public static final int SCRIPT_EDITOR_MAX_HISTORY_SNAPSHOTS     = 25;
 

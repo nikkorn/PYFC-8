@@ -4,24 +4,20 @@ import com.dumbpug.sfc.SFC;
 import java.util.Scanner;
 
 /**
- * Handles the application Read-Evaluate-Print loop to process user commands and launch/interact with SFC.
+ * Handles the application Read-Evaluate-Print loop to process user commands and interaction with SFC.
  */
 public class REPL {
     /**
-     * The SFC launcher.
-     */
-    private ISFCLauncher sfcLauncher;
-    /**
      * The currently active SFC.
      */
-    private SFC activeSFC = null;
+    private SFC sfc;
 
     /**
      * Creates a new instance of the REPL class.
-     * @param sfcLauncher The SFC launcher.
+     * @param sfc The currently active SFC.
      */
-    public REPL(ISFCLauncher sfcLauncher) {
-        this.sfcLauncher = sfcLauncher;
+    public REPL(SFC sfc) {
+        this.sfc = sfc;
     }
 
     /**
@@ -68,25 +64,9 @@ public class REPL {
                     System.out.println("here is some help!");
                     break;
 
-                case "launch":
-                    if (this.activeSFC == null) {
-                        this.activeSFC = this.sfcLauncher.launch();
-                    }
-                    break;
-
-                case "close":
-                    // Close active SFC application if there is one.
-                    if (this.activeSFC != null) {
-                        this.activeSFC.addCommand("exit");
-                        this.activeSFC = null;
-                    }
-                    break;
-
                 case "exit":
-                    // Close active SFC application if there is one and leave REPL.
-                    if (this.activeSFC != null) {
-                        this.activeSFC.addCommand("exit");
-                    }
+                    // Close the active SFC application and leave REPL.
+                    this.sfc.addCommand("exit");
                     return;
 
                 default:

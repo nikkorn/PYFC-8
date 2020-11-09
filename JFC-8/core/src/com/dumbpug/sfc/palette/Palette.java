@@ -1,8 +1,6 @@
 package com.dumbpug.sfc.palette;
 
 import com.badlogic.gdx.graphics.Color;
-import com.dumbpug.sfc.palette.Colour;
-
 import java.util.HashMap;
 
 /**

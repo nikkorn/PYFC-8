@@ -52,18 +52,6 @@ public class SFC extends ApplicationAdapter {
 	 * The application background.
 	 */
 	private Sprite background;
-	/**
-	 * Whether this application has been disposed of.
-	 */
-	private boolean isDisposed;
-
-	/**
-	 * Gets whether this application has been disposed of.
-	 * @return Whether this application has been disposed of.
-	 */
-	public boolean isDisposed() {
-		return this.isDisposed;
-	}
 
 	/**
 	 * Add a command to the SFC application command queue to be processed as part of its update.
@@ -176,15 +164,12 @@ public class SFC extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height){
 		viewport.update(width, height);
-		camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
+		//camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
 	}
 	
 	@Override
 	public void dispose () {
 		// Dispose of the application sprite batch.
 		batch.dispose();
-
-		// Mark this application as having been disposed of.
-		this.isDisposed = true;
 	}
 }
