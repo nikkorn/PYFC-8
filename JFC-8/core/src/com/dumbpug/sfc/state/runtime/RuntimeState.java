@@ -49,7 +49,7 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
     @Override
     public void onEntry(State state) {
         // Create the display pixmap.
-        this.displayPixmap = new Pixmap( 384, 256, Pixmap.Format.RGBA8888);
+        this.displayPixmap = new Pixmap( Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT, Pixmap.Format.RGBA8888);
         this.displayPixmap.setColor(Palette.getColour(Colour.BLACK));
         this.displayPixmap.fill();
 
@@ -102,14 +102,9 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
 
     @Override
     public void render(SpriteBatch batch) {
-        // Draw the pixmap texture to the screen.
+        // Draw the pixmap texture to the screen if we have one.
         if (this.displayPixmapTexture != null) {
-            batch.draw(this.displayPixmapTexture,
-                0,
-                0,
-                Constants.DISPLAY_WIDTH * Constants.DISPLAY_PIXEL_SIZE,
-                Constants.DISPLAY_HEIGHT * Constants.DISPLAY_PIXEL_SIZE
-            );
+            batch.draw(this.displayPixmapTexture, 0, 0, Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT);
         }
     }
 

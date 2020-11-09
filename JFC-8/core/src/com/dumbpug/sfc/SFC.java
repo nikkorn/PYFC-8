@@ -76,10 +76,10 @@ public class SFC extends ApplicationAdapter {
 		stateManager.setCurrentState("SPLASH");
 
 		camera = new OrthographicCamera();
-		viewport = new ExtendViewport(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, camera);
+		viewport = new ExtendViewport(Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT, camera);
 		viewport.apply();
 
-		camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
+		camera.position.set(Constants.DISPLAY_WIDTH / 2, Constants.DISPLAY_HEIGHT / 2,0);
 
 		// Create the application sprite batch.
 		batch = new SpriteBatch();
@@ -164,7 +164,7 @@ public class SFC extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height){
 		viewport.update(width, height);
-		//camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2,0);
+		camera.position.set(Constants.DISPLAY_WIDTH / 2, Constants.DISPLAY_HEIGHT / 2,0);
 	}
 	
 	@Override

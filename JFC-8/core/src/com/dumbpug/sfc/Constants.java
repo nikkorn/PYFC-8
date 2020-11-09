@@ -22,8 +22,6 @@ public class Constants {
     //===========================================================
     // DISPLAY
     //===========================================================
-    public static final int WINDOW_HEIGHT 	                        = 512;
-    public static final int WINDOW_WIDTH	                        = 768;
     public static final int DISPLAY_HEIGHT 	                        = 256;
     public static final int DISPLAY_WIDTH	                        = 384;
     public static final float DISPLAY_ASPECT_RATIO                  = DISPLAY_HEIGHT / DISPLAY_WIDTH;
@@ -34,7 +32,7 @@ public class Constants {
     // SPLASH
     //===========================================================
     public static final long SPLASH_DURATION 	                    = 500l;
-    public static final int SPLASH_LOGO_SIZE 	                    = DISPLAY_PIXEL_SIZE * (DISPLAY_HEIGHT / 2);
+    public static final int SPLASH_LOGO_SIZE 	                    = DISPLAY_HEIGHT / 2;
 
     //===========================================================
     // TEXT
@@ -43,7 +41,6 @@ public class Constants {
     public static final int TEXT_MARGIN_SIZE                        = 4;
     public static final int TEXT_LINE_MARGIN_SIZE                   = 4;
     public static final int TEXT_COLUMN_MARGIN_SIZE                 = 0;
-
 
     //===========================================================
     // TERMINAL
@@ -74,4 +71,8 @@ public class Constants {
     //===========================================================
     public static final String FILE_SYSTEM_ROOT	                    = "./filesystem/";
 
-}
+    //===========================================================
+    // WINDOW
+    //===========================================================
+    public static final int WINDOW_HEIGHT 	                        = DISPLAY_HEIGHT * 2;
+    public static final int WINDOW_WIDTH	                        = DISPLAY_WIDTH * 2;}

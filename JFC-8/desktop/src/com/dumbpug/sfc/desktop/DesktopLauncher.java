@@ -17,8 +17,8 @@ public class DesktopLauncher {
 		System.out.println("SFC v.0.0.1");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width         = Constants.WINDOW_WIDTH;
-		config.height        = Constants.WINDOW_HEIGHT;
+		config.width         = 768;
+		config.height        = 512;
 		config.backgroundFPS = 60;
 		config.foregroundFPS = 60;
 		config.vSyncEnabled  = false;
