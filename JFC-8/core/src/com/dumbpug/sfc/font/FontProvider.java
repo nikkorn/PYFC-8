@@ -22,8 +22,8 @@ public class FontProvider {
         parameter.size = size;
 
         // Give all fonts a cool shadow (for now)
-        parameter.shadowOffsetX = 2;
-        parameter.shadowOffsetY = 2;
+        parameter.shadowOffsetX = 1;
+        parameter.shadowOffsetY = 1;
 
         // Give all fonts a cool border (for now)
         // parameter.borderWidth = 2;

@@ -61,15 +61,15 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
         this.device = device;
 
         // Create the terminal font.
-        terminalFont = FontProvider.getFont(Constants.TEXT_FONT_SIZE * Constants.DISPLAY_PIXEL_SIZE);
+        terminalFont = FontProvider.getFont(Constants.TEXT_FONT_SIZE);
         terminalFont.setColor(Palette.getColour(Colour.WHITE));
 
         // Create the terminal text area.
         terminalArea = new TerminalArea(
-                (Constants.TEXT_MARGIN_SIZE * 3) * Constants.DISPLAY_PIXEL_SIZE,
-                (Constants.TEXT_MARGIN_SIZE * 2) * Constants.DISPLAY_PIXEL_SIZE,
-                (Constants.TEXT_FONT_SIZE + Constants.TEXT_LINE_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
-                (Constants.TEXT_FONT_SIZE + Constants.TEXT_COLUMN_MARGIN_SIZE) * Constants.DISPLAY_PIXEL_SIZE,
+                Constants.TEXT_MARGIN_SIZE * 3,
+                Constants.TEXT_MARGIN_SIZE * 2,
+                Constants.TEXT_FONT_SIZE + Constants.TEXT_LINE_MARGIN_SIZE,
+                Constants.TEXT_FONT_SIZE + Constants.TEXT_COLUMN_MARGIN_SIZE,
                 18,
                 44,
                 new TerminalAreaConfiguration()
@@ -82,7 +82,7 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
 
         // Create and position the background sprite.
         background = new Sprite(new Texture(Gdx.files.internal("images/terminal/background.png")));
-        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        background.setSize(Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT);
         background.setPosition(0, 0);
     }
 

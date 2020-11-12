@@ -85,9 +85,9 @@ public class SFC extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		// Create and position the application background sprite.
-		background = new Sprite(new Texture(Gdx.files.internal("images/general/full_background.png")));
-		background.setSize(Gdx.graphics.getWidth() * 3, Gdx.graphics.getHeight() * 3);
-		background.setPosition(-Gdx.graphics.getWidth(), -Gdx.graphics.getHeight());
+		background = new Sprite(new Texture(Gdx.files.internal("images/general/display_background.png")));
+		background.setSize(Constants.DISPLAY_BACKGROUND_WIDTH, Constants.DISPLAY_BACKGROUND_HEIGHT);
+		background.setPosition(-Constants.DISPLAY_WIDTH, -Constants.DISPLAY_HEIGHT);
 
 		// Capture the system cursor.
 		// Gdx.input.setCursorCatched(true);

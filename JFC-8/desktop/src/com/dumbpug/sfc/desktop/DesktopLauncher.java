@@ -22,7 +22,6 @@ public class DesktopLauncher {
 		config.backgroundFPS = 60;
 		config.foregroundFPS = 60;
 		config.vSyncEnabled  = false;
-		config.resizable     = false;
 		config.title         = "SFC";
 		config.addIcon("images/icon.png", Files.FileType.Internal);
 

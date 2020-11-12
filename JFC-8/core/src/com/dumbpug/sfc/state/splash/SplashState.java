@@ -26,9 +26,8 @@ public class SplashState extends com.dumbpug.sfc.state.State {
     public SplashState() {
         // Create and position the logo sprite.
         logo = new Sprite(new Texture(Gdx.files.internal("images/splash/splash_logo.png")));
-        logo.setOrigin(logo.getWidth() / 2,logo.getHeight() / 2);
-        logo.setSize(com.dumbpug.sfc.Constants.SPLASH_LOGO_SIZE, com.dumbpug.sfc.Constants.SPLASH_LOGO_SIZE);
-        logo.setPosition((Constants.DISPLAY_WIDTH / 2) - (logo.getWidth() / 2), (Constants.DISPLAY_HEIGHT / 2) - (logo.getHeight() / 2));
+        logo.setSize(Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT);
+        logo.setPosition(0, 0);
     }
 
     @Override

@@ -24,14 +24,15 @@ public class Constants {
     //===========================================================
     public static final int DISPLAY_HEIGHT 	                        = 256;
     public static final int DISPLAY_WIDTH	                        = 384;
+    public static final int DISPLAY_BACKGROUND_HEIGHT 	            = DISPLAY_HEIGHT * 3;
+    public static final int DISPLAY_BACKGROUND_WIDTH	            = DISPLAY_WIDTH * 3;
     public static final float DISPLAY_ASPECT_RATIO                  = DISPLAY_HEIGHT / DISPLAY_WIDTH;
-    public static final int DISPLAY_PIXEL_SIZE 	                    = Gdx.graphics.getHeight() / DISPLAY_HEIGHT;
     public static final int DISPLAY_CURSOR_SIZE 	                = 10;
 
     //===========================================================
     // SPLASH
     //===========================================================
-    public static final long SPLASH_DURATION 	                    = 500l;
+    public static final long SPLASH_DURATION 	                    = 2000l;
     public static final int SPLASH_LOGO_SIZE 	                    = DISPLAY_HEIGHT / 2;
 
     //===========================================================

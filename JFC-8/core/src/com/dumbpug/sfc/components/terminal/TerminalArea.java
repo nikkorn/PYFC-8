@@ -5,10 +5,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dumbpug.sfc.components.terminal.Column;
-import com.dumbpug.sfc.components.terminal.CursorMovement;
-import com.dumbpug.sfc.components.terminal.Line;
-import com.dumbpug.sfc.components.terminal.TerminalAreaConfiguration;
 import com.dumbpug.sfc.palette.Colour;
 import com.dumbpug.sfc.palette.Palette;
 import java.util.ArrayList;
@@ -20,7 +16,7 @@ public class TerminalArea {
     /**
      * The terminal area configuration.
      */
-    private com.dumbpug.sfc.components.terminal.TerminalAreaConfiguration configuration = new com.dumbpug.sfc.components.terminal.TerminalAreaConfiguration();
+    private TerminalAreaConfiguration configuration;
     /**
      * The number of rows and columns.
      */
