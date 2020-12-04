@@ -76,6 +76,12 @@ public class RuntimeState extends com.dumbpug.sfc.state.State {
             this.changeState("TERMINAL");
         }
 
+        // Check whether the user is attempting to refresh this state.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
+            // TODO Tidy this up and make a resetScript().
+            onEntry(this);
+        }
+
         // Attempt to invoke the script 'update' function.
         if (this.runtimeScriptExecutor != null) {
             try {

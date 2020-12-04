@@ -25,6 +25,10 @@ import java.text.SimpleDateFormat;
  */
 public class SFC extends ApplicationAdapter {
 	/**
+	 * The application context details.
+	 */
+	private SFCContextDetails contextDetails;
+	/**
 	 * The application message queue from which to read user commands.
 	 */
 	private ConcurrentQueue<String> commandQueue = new ConcurrentQueue<String>();
@@ -52,6 +56,14 @@ public class SFC extends ApplicationAdapter {
 	 * The application background.
 	 */
 	private Sprite background;
+
+	/**
+	 * Creates a new instance of the SFC class.
+	 * @param contextDetails The application context details.
+	 */
+	public SFC(SFCContextDetails contextDetails) {
+		this.contextDetails = contextDetails;
+	}
 
 	/**
 	 * Add a command to the SFC application command queue to be processed as part of its update.
@@ -89,8 +101,13 @@ public class SFC extends ApplicationAdapter {
 		background.setSize(Constants.DISPLAY_BACKGROUND_WIDTH, Constants.DISPLAY_BACKGROUND_HEIGHT);
 		background.setPosition(-Constants.DISPLAY_WIDTH, -Constants.DISPLAY_HEIGHT);
 
-		// Capture the system cursor.
-		// Gdx.input.setCursorCatched(true);
+		// Should the application be started in fullscreen mode?
+		if (this.contextDetails.isFullScreen()) {
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		}
+
+		// Don't capture the system cursor (for now).
+		Gdx.input.setCursorCatched(false);
 	}
 
 	@Override
@@ -118,11 +135,7 @@ public class SFC extends ApplicationAdapter {
 
 		// Toggle full screen on/off on presses of the F11 key.
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F11)){
-			if (Gdx.graphics.isFullscreen()) {
-				Gdx.graphics.setWindowedMode(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-			} else {
-				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-			}
+			ToggleFullScreenMode();
 		}
 
 		// Write the FPS to the console.
@@ -171,5 +184,16 @@ public class SFC extends ApplicationAdapter {
 	public void dispose () {
 		// Dispose of the application sprite batch.
 		batch.dispose();
+	}
+
+	/**
+	 * Toggle full screen mode.
+	 */
+	private void ToggleFullScreenMode() {
+		if (Gdx.graphics.isFullscreen()) {
+			Gdx.graphics.setWindowedMode(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+		} else {
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		}
 	}
 }

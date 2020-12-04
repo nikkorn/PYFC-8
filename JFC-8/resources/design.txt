@@ -1,0 +1,26 @@
+The application can be started with either a directory or a cart image file (*.sfc.png) as a context.
+
+When the context is a directory that becomes the root directory and the user can:
+- Create a new cart directory within the root one, containing default cart resources.
+- Validate a cart directory to determine whether it can be packed into a cart image file.
+- Validate and pack a cart directory into a cart image file.
+- Load and unload a cart directory or cart image file so that is is run/restarted on F2.
+
+
+When the context is a cart image file:
+- The cart image file is instantly validated, loaded and runtime started.
+- The terminal ONLY serves to:
+    - Show cart validation output in the event of a failure.
+    - Show runtime output.
+    - Show any errors raised by the runtime.
+
+
+Cart loading
+============
+Loading a cart from a directory context will cause the cart directory or cart image to be validated and loaded on the device so that it runs on F2.
+
+
+Runtime
+============
+A loaded cart will be run when F2 is pressed, and reloaded whenever F2 is pressed again.
+If at any point during the runtime an unhandled error occurs the terminal will be shown with any error displayed.

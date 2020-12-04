@@ -42,7 +42,7 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
     /**
      * The terminal command processor.
      */
-    private CommandProcessor commandProcessor = new CommandProcessor(this);
+    private CommandProcessor commandProcessor;
     /**
      * The previously executed commands.
      */
@@ -84,46 +84,9 @@ public class TerminalState extends com.dumbpug.sfc.state.State implements InputP
         background = new Sprite(new Texture(Gdx.files.internal("images/terminal/background.png")));
         background.setSize(Constants.DISPLAY_WIDTH, Constants.DISPLAY_HEIGHT);
         background.setPosition(0, 0);
-    }
 
-    /**
-     * Handle a clear command.
-     */
-    public void onClearCommand() {
-        this.terminalArea.clear();
-    }
-
-    /**
-     * Handle an unknown command.
-     * @param command The unknown command.
-     */
-    public void onUnknownCommand(String command) {
-        terminalArea.printLine("invalid command: " + command, Colour.RED);
-    }
-
-    /**
-     * Handle a help request command.
-     */
-    public void onHelpCommand() {
-        terminalArea.printLine("commands", Colour.PURPLE);
-        terminalArea.print("clear                ", Colour.YELLOW);
-        terminalArea.printLine("version              ", Colour.YELLOW);
-        terminalArea.print("exit                 ", Colour.YELLOW);
-
-        terminalArea.printLine("\nshortcuts", Colour.PURPLE);
-        terminalArea.print("F1             ", Colour.YELLOW);
-        terminalArea.printLine("go to terminal", Colour.GREY);
-        terminalArea.print("F2             ", Colour.YELLOW);
-        terminalArea.printLine("go to cart", Colour.GREY);
-        terminalArea.print("F9             ", Colour.YELLOW);
-        terminalArea.printLine("take screenshot", Colour.GREY);
-    }
-
-    /**
-     * Handle a version request command.
-     */
-    public void onVersionCommand() {
-        terminalArea.printLine(Constants.APPLICATION_VERSION, Colour.YELLOW);
+        // Create the terminal command processor.
+        commandProcessor = new CommandProcessor(terminalArea);
     }
 
     @Override

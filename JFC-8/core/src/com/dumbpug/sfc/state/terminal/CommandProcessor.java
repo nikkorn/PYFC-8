@@ -1,22 +1,25 @@
 package com.dumbpug.sfc.state.terminal;
 
 import com.badlogic.gdx.Gdx;
+import com.dumbpug.sfc.Constants;
+import com.dumbpug.sfc.components.terminal.TerminalArea;
+import com.dumbpug.sfc.palette.Colour;
 
 /**
  * Processor of terminalState commands.
  */
 public class CommandProcessor {
     /**
-     * The terminalState.
+     * The terminal area.
      */
-    private com.dumbpug.sfc.state.terminal.TerminalState terminalState;
+    TerminalArea terminalArea;
 
     /**
      * Creates a new instance of the CommandProcessor
-     * @param terminalState The terminalState.
+     * @param terminalArea The terminal area.
      */
-    public CommandProcessor(TerminalState terminalState) {
-        this.terminalState = terminalState;
+    public CommandProcessor(TerminalArea terminalArea) {
+        this.terminalArea = terminalArea;
     }
 
     /**
@@ -33,23 +36,63 @@ public class CommandProcessor {
 
         // Is this a 'version' command?
         if (command.toLowerCase().equals("version")) {
-            this.terminalState.onVersionCommand();
+            onVersionCommand();
             return;
         }
 
         // Is this a 'clear' command?
         if (command.toLowerCase().equals("clear")) {
-            this.terminalState.onClearCommand();
+            onClearCommand();
             return;
         }
 
         // Is this a 'help' command?
         if (command.toLowerCase().equals("help")) {
-            this.terminalState.onHelpCommand();
+            onHelpCommand();
             return;
         }
 
         // We have no idea what to do with this command.
-        this.terminalState.onUnknownCommand(command);
+        onUnknownCommand(command);
+    }
+
+    /**
+     * Handle a 'exit' command.
+     */
+    private void onClearCommand() {
+        this.terminalArea.clear();
+    }
+
+    /**
+     * Handle a help request command.
+     */
+    private void onHelpCommand() {
+        terminalArea.printLine("commands", Colour.PURPLE);
+        terminalArea.print("clear                ", Colour.YELLOW);
+        terminalArea.printLine("version              ", Colour.YELLOW);
+        terminalArea.print("exit                 ", Colour.YELLOW);
+
+        terminalArea.printLine("\nshortcuts", Colour.PURPLE);
+        terminalArea.print("F1             ", Colour.YELLOW);
+        terminalArea.printLine("go to terminal", Colour.GREY);
+        terminalArea.print("F2             ", Colour.YELLOW);
+        terminalArea.printLine("go to cart", Colour.GREY);
+        terminalArea.print("F9             ", Colour.YELLOW);
+        terminalArea.printLine("take screenshot", Colour.GREY);
+    }
+
+    /**
+     * Handle a version request command.
+     */
+    private void onVersionCommand() {
+        terminalArea.printLine(Constants.APPLICATION_VERSION, Colour.YELLOW);
+    }
+
+    /**
+     * Handle an unknown command.
+     * @param command The unknown command.
+     */
+    private void onUnknownCommand(String command) {
+        terminalArea.printLine("invalid command: " + command, Colour.RED);
     }
 }
